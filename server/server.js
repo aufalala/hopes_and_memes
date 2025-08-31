@@ -23,6 +23,31 @@ app.get('/', (req, res) => {
   res.send('Server is working!');
 });
 
+app.get('/status', async (req, res) => {
+  try {
+    const response = await fetch(AIRTABLE_URL, {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`
+      }
+    });
+    
+    if (!response.ok) {
+      return res.status(500).json({ status: 'failed', message: 'Failed to fetch Airtable data' });
+    }
+    
+    const data = await response.json();
+    // If you want, you can check if data.records exists
+    if (data.records) {
+      return res.json({ status: 'success', message: 'Proxy connected to Airtable' });
+    } else {
+      return res.status(500).json({ status: 'failed', message: 'No records found' });
+    }
+  } catch (error) {
+    return res.status(500).json({ status: 'failed', message: error.message });
+  }
+});
+
+
 //initial connection test
 async function getRecords() {
   const response = await fetch(AIRTABLE_URL, {
