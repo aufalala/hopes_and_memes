@@ -16,7 +16,7 @@ function App() {
           setStatus(`Error: ${data.message}`);
         }
       } catch {
-        setStatus("Cannot contact proxy server!");
+        setStatus("Cannot contact proxy server.");
       }
     }
     getStatus();
