@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
+import { fetchStatus } from "./utils/api";
 import "./App.css";
 
 function App() {
   const [status, setStatus] = useState("Checking connection...");
 
   useEffect(() => {
-    fetch("https://hopesandmemes-production.up.railway.app/status") // adjust URL/port if needed
-      .then(res => res.json())
-      .then(data => {
+    async function getStatus() {
+      try {
+        const data = await fetchStatus();
         if (data.status === "success") {
-          setStatus("Proxy server and Airtable are connected!");
+          setStatus(`Success: ${data.message}`);
         } else {
           setStatus(`Error: ${data.message}`);
         }
-      })
-      .catch(err => {
+      } catch {
         setStatus("Cannot contact proxy server.");
-      });
+      }
+    }
+    getStatus();
   }, []);
 
   return (
