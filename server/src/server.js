@@ -1,8 +1,10 @@
 import express from "express";
 import cors from "cors";
 
-import statusRoutes from "./routes/status.js";
-import { pingAirtable } from "./utils/airtable.js";
+import test from "./routes/test.js";
+import meme from "./routes/meme.js";
+import { pingAirtable } from "./utils/airtableAPI.js";
+import { getRandomMeme } from "./utils/memeAPI.js";
 
 
 const app = express();
@@ -12,7 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/status", statusRoutes);
+app.use("/test", test);
+app.use("/meme", meme);
 
 // Root
 app.get("/", (req, res) => {
@@ -30,3 +33,5 @@ app.listen(PORT, async () => {
     console.log("Airtable connection failed at startup.");
   }
 });
+
+console.log(getRandomMeme());
