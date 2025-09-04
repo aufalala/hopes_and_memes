@@ -14,7 +14,7 @@ if (!PUBLISHABLE_KEY) {
 createRoot(document.getElementById('root')).render(
   <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
     <StrictMode>
-      <BrowserRouter>
+      <BrowserRouter basename='/hopes_and_memes'>
         <App />
       </BrowserRouter>
     </StrictMode>
