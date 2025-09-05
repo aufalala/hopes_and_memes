@@ -23,10 +23,16 @@ export function useClerkAuthFetch() {
   // FETCH FUNCTION
   const fetchWithAuth = useCallback(
     async (path, options = {}, withAuth = false) => {
+      
+      if (withAuth && !token) {
+        throw new Error("Authentication required but no token available.");
+      }
+
       const finalOptions = {
         ...options,
         headers: {
-          ...(options.headers || {}),
+          ...options.headers,
+          ...(withAuth && token && { Authorization: `Bearer ${token}` }),
         },
       };
 
