@@ -1,7 +1,7 @@
 import { useState, useEffect} from "react";
 import { Routes, Route } from "react-router-dom";
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
-import { fetchStatus } from "./utils/api";
+import { fetchStatus } from "./utils/airtableAPI.js";
 
 import Header from "./components/Header/Header.jsx";
 import Body from "./components/Body/Body.jsx";

@@ -1,5 +1,4 @@
-const localServerURL = "http://localhost:3000";
-const serverURL = "https://hopesandmemes-production.up.railway.app";
+import { localServerURL, serverURL } from "./serverURL";
 
 export async function fetchStatus() {
   try {
@@ -12,7 +11,7 @@ export async function fetchStatus() {
   } catch (error) {
     console.warn("Local server failed, trying remote server:", error.message);
     try {
-      const res = await fetch(`${serverURL}/status`);
+      const res = await fetch(`${serverURL}/test`);
       if (!res.ok) throw new Error("Remote server response not ok");
       const data = await res.json();
       return data;
@@ -32,7 +31,7 @@ export async function fetchTestImage() {
   } catch (error) {
     console.warn("Local server failed, trying remote server:", error.message);
     try {
-      const res = await fetch(`${serverURL}/status`);
+      const res = await fetch(`${serverURL}/test/testImage`);
       if (!res.ok) throw new Error("Remote server response not ok");
       const data = await res.json();
       return data;

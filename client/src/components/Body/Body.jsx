@@ -2,7 +2,7 @@ import React from "react";
 
 function Body({ children }) {
   return (
-    <div className="body">
+    <div className="main-content">
       {children}
     </div>
   );
