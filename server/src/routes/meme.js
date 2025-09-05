@@ -1,7 +1,6 @@
 import express from "express";
 import { getRandomMeme } from "../utils/memeAPI.js";
 
-
 const router = express.Router();
 
 router.get("/", async (req, res) => {

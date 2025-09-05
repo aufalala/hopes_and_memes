@@ -1,7 +1,6 @@
 import express from "express";
+import { requireAuth } from "@clerk/express";
 
-import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
-// import { requireAuth } from "@clerk/clerk-sdk-node";
 import { pingAirtable, getTestImage } from "../utils/airtableAPI.js";
 
 const router = express.Router();
@@ -24,7 +23,7 @@ router.get("/testImage", async (req, res) => {
   }
 });
 
-router.get("/testImage/protected", ClerkExpressRequireAuth(), async (req, res) => {
+router.get("/testImage/protected", requireAuth(), async (req, res) => {
   const result = await getTestImage();
   if (result.status === "success") {
     res.json(result);

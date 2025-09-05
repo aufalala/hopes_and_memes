@@ -1,5 +1,6 @@
 import { AIRTABLE_URL, AIRTABLE_TOKEN } from "../config.js";
 
+//111/////////////////////////////// --- PING 
 export async function pingAirtable(table = "testTable") {
 
   try {
@@ -18,6 +19,7 @@ export async function pingAirtable(table = "testTable") {
   }
 }
 
+//111/////////////////////////////// --- TEST
 export async function getTestImage(username = "aufalala", table = "imageTest") {
 
   try {
@@ -53,3 +55,13 @@ export async function getTestImage(username = "aufalala", table = "imageTest") {
     console.error("Airtable fetch failed:", err.message);
   }
 }
+
+//111/////////////////////////////// --- ALL USERS
+
+
+
+//111/////////////////////////////// --- ALL MEMES
+
+
+
+//111/////////////////////////////// --- ALL RATINGS
