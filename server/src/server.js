@@ -28,9 +28,9 @@ app.listen(PORT, async () => {
 
   const ok = await pingAirtable();
   if (ok) {
-    console.log("Airtable connection confirmed at startup.");
+    console.log(ok.message);
   } else {
-    console.log("Airtable connection failed at startup.");
+    console.log(ok.message);
   }
 });
 

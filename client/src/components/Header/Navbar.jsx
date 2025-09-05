@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
-import React from "react";
-import { fetchTestImage } from "../../utils/airtableAPI";
+import { fetchTestImage, fetchTestImageProtected } from "../../utils/airtableAPI";
 import { fetchRandomMeme } from "../../utils/memeAPI";
+import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 
 function Navbar() {
+  
+  const { fetchWithAuth } = useClerkAuthFetch();
+
   return (
     <nav>
       <ul>
@@ -21,11 +24,16 @@ function Navbar() {
 
         <li>
           <div
-            onClick={() => {
-              console.log(fetchTestImage());
+            onClick={async () => {
+              try {
+                const meme = await fetchTestImage(fetchWithAuth);
+                console.log(meme);
+              } catch (err) {
+                console.error("Failed to fetch test image:", err.message);
+              }
             }}
           >
-            askdjahsdkjsa
+            get unprotected image in console
           </div>
         </li>
 
@@ -40,7 +48,22 @@ function Navbar() {
               }
             }}
           >
-            3231321321312
+            get random meme in console
+          </div>
+        </li>
+
+        <li>
+          <div
+            onClick={async () => {
+              try {
+                const meme = await fetchTestImageProtected(fetchWithAuth);
+                console.log(meme);
+              } catch (err) {
+                console.error("Failed to fetch test image protected:", err.message);
+              }
+            }}
+          >
+            get protected test image in console
           </div>
         </li>
       </ul>
