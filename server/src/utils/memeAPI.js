@@ -8,9 +8,20 @@ export async function getRandomMeme() {
     }
 
     const data = await response.json();
-    const {postlink, subreddit, title, url, nsfw, spoiler, author, ups, preview} = data;
-
-    return {postlink, subreddit, title, url, nsfw, spoiler, author, ups, preview};
+    const {postLink, subreddit, title, url, nsfw, spoiler, author, ups, preview} = data;
+    const payload = {
+                        status: "success",
+                        postLink: postLink,
+                        subreddit: subreddit,
+                        title: title,
+                        url: url,
+                        nsfw: nsfw,
+                        spoiler: spoiler,
+                        author: author,
+                        ups: ups,
+                        preview: preview,
+                    }
+    return payload;
 
     } catch (err) {
         console.error("meme failed:", err.message);
