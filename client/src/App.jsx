@@ -6,9 +6,13 @@ import { useClerkAuthFetch } from "./hooks/useClerkAuthFetch";
 //UTILS
 import { fetchStatus } from "./utils/airtableAPI.js";
 
+//Modals
+import { ModalProvider } from "./contexts/ModalContext.jsx";
+import LoginModal from "./components/modals/LoginModal.jsx";
+import SignupModal from "./components/modals/SignupModal.jsx";
 //SHARED COMPONENTS
-import Header from "./components/Header/Header.jsx";
-import Body from "./components/Body/Body.jsx";
+import Header from "./components/header/Header.jsx";
+import Content from "./components/content/Content.jsx";
 //PAGES
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
@@ -28,9 +32,9 @@ function App() {
       try {
         const data = await fetchStatus(fetchWithAuth);
         if (data.status === "success") {
-          setStatus(`Success: ${data.message}`);
+          setStatus("Success: ${data.message}");
         } else {
-          setStatus(`Error: ${data.message}`);
+          setStatus("Error: ${data.message}");
         }
       } catch {
         setStatus("Cannot contact proxy server.");
@@ -39,35 +43,25 @@ function App() {
     getStatus();
   }, []);
 
-  // //GET AND SET CLERK TOKEN
-  // const { getToken, isSignedIn, isLoaded } = useAuth();
-  // useEffect(() => {
-  //   const updateToken = async () => {
-  //     if (isLoaded && isSignedIn) {
-  //       const token = await getToken();
-  //       setClerkToken(token);
-  //     } else {
-  //       setClerkToken(null);
-  //     }
-  //   };
-  //   updateToken();
-  // }, [isSignedIn, isLoaded]);
-
-
   return (
-    <>    
-    <Header/>
+    <ModalProvider>    
+      
+      <Header />
 
-    <Body>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/more" element={<More />} />
-        
-      </Routes>
-    </Body>
+      <Content>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/more" element={<More />} />    
+        </Routes>
+      </Content>
+
       <p>{status}</p>
-    </>
+
+      <LoginModal />
+      <SignupModal />
+
+    </ModalProvider>
   );
 }
 
