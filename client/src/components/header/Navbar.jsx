@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { fetchTestImage, fetchTestImageProtected } from "../../utils/airtableAPI";
 import { fetchRandomMeme } from "../../utils/memeAPI";
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
+import styles from "./_Navbar.module.css"
+import { style } from "framer-motion/client";
 
 function Navbar() {
   
@@ -9,7 +11,7 @@ function Navbar() {
 
   return (
     <nav>
-      <ul>
+      <ul className={styles.ul}>
         <li>
           <Link to="/">Home</Link>
         </li>

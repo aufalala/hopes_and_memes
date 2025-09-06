@@ -4,8 +4,7 @@ const ModalContext = createContext();
 
 export const ModalProvider = ({ children }) => {
   const [modals, setModals] = useState({
-    LoginModal: false,
-    SignupModal: false,
+    LoginSignupModal_Vis: false,
   });
 
   const openModal = (modalName) => {

@@ -1,14 +1,14 @@
+import { style } from "framer-motion/client"
 import Navbar from "./Navbar"
-import { useModal } from "../../contexts/ModalContext.jsx";
+import UserLoginSignup from "./UserLoginSignup"
+import styles from "./_Header.module.css"
 
 function Header() {
-const {openModal} = useModal(); 
 
   return (
-    <header>
-      <Navbar/>
-      <button onClick={() => openModal("LoginModal")}>Login</button>
-      <button onClick={() => openModal("SignupModal")}>Sign Up</button>
+    <header className={styles.header}>
+      <div className={styles.div}><Navbar/></div>
+      <div className={styles.div}><UserLoginSignup/></div>
     </header>
   )
 }

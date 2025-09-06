@@ -10,9 +10,8 @@ export function useClerkAuthFetch() {
   useEffect(() => {
     async function updateToken() {
       if (isLoaded && isSignedIn) {
-      const t = await getToken();
-      console.log("Clerk token:", t);
-        setToken(t);
+      const pulledToken = await getToken();
+        setToken(pulledToken);
       } else {
         setToken(null);
       }

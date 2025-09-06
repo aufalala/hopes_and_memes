@@ -8,8 +8,7 @@ import { fetchStatus } from "./utils/airtableAPI.js";
 
 //Modals
 import { ModalProvider } from "./contexts/ModalContext.jsx";
-import LoginModal from "./components/modals/LoginModal.jsx";
-import SignupModal from "./components/modals/SignupModal.jsx";
+import LoginSignupModal from "./components/modals/LoginSignupModal.jsx";
 //SHARED COMPONENTS
 import Header from "./components/header/Header.jsx";
 import Content from "./components/content/Content.jsx";
@@ -32,9 +31,9 @@ function App() {
       try {
         const data = await fetchStatus(fetchWithAuth);
         if (data.status === "success") {
-          setStatus("Success: ${data.message}");
+          setStatus(`Success: ${data.message}`);
         } else {
-          setStatus("Error: ${data.message}");
+          setStatus(`Error: ${data.message}`);
         }
       } catch {
         setStatus("Cannot contact proxy server.");
@@ -58,8 +57,7 @@ function App() {
 
       <p>{status}</p>
 
-      <LoginModal />
-      <SignupModal />
+      <LoginSignupModal />
 
     </ModalProvider>
   );
