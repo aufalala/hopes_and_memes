@@ -1,5 +1,5 @@
 
-function Body({ children }) {
+function Content({ children }) {
   return (
     <div className="main-content">
       {children}
@@ -7,4 +7,4 @@ function Body({ children }) {
   );
 }
 
-export default Body;
+export default Content;

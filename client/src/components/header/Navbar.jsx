@@ -3,26 +3,39 @@ import { fetchTestImage, fetchTestImageProtected } from "../../utils/airtableAPI
 import { fetchRandomMeme } from "../../utils/memeAPI";
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 import styles from "./_Navbar.module.css"
-import { style } from "framer-motion/client";
 
 function Navbar() {
   
   const { fetchWithAuth } = useClerkAuthFetch();
+  const links = [
+    {
+      path: "/",
+      text: "Home",
+      dropdown: false,
+    },
+    {
+      path: "/about",
+      text: "About",
+      dropdown: false,
+    },
+    {
+      path: "/more",
+      text: "More",
+      dropdown: false,
+    },  
+  ]
 
   return (
     <nav>
       <ul className={styles.ul}>
-        <li>
-          <Link to="/">Home</Link>
-        </li>
 
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-
-        <li>
-          <Link to="/more">More</Link>
-        </li>
+        {links.map((link, index) => {
+          return (
+            <li key={index}>
+              <Link to={link.path}>{link.text}</Link>
+            </li>
+          )
+        })}
 
         <li>
           <div
