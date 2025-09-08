@@ -1,22 +1,41 @@
 import { AIRTABLE_URL, AIRTABLE_TOKEN } from "../config.js";
 
 //111/////////////////////////////// --- PING 
-export async function pingAirtable(table = "testTable") {
+async function delay(ms) {
+  return new Promise((res) => setTimeout(res, ms));
+}
 
-  try {
-    const response = await fetch(`${AIRTABLE_URL}/${table}`, {
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
-    });
+//////////////////// force IPv4 /////////////////
+import https from 'https';
+import fetch from 'node-fetch';
+const agent = new https.Agent({ family: 4 });
+////////////////////////////////////////////////
 
-    if (!response.ok) {
-      throw new Error(`Airtable API error: ${response.status}`);
+
+export async function pingAirtable(table = "testTable", retries = 3) {
+  for (let i = 0; i <= retries; i++) {
+    try {
+
+      const response = await fetch(`${AIRTABLE_URL}/${table}`, {
+        headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+        agent,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Airtable API error: ${response.status}`);
+      }
+
+      return { status: "success", message: "Proxy connected to Airtable" };
+    
+    } catch (err) {
+
+      console.error(`Airtable ping failed (attempt ${i + 1}):`, err.message);
+      if (i === 3) {console.log(err)}
+      if (i < retries) await delay(1000); // wait 1 second before retry
     }
-
-    return { status: "success", message: "Proxy connected to Airtable" };
-  } catch (err) {
-    console.error("Airtable ping failed:", err.message);
-    return { status: "failed", message: err.message };
   }
+
+  return { status: "failed", message: "Airtable unreachable after retries" };
 }
 
 //111/////////////////////////////// --- TEST
@@ -28,6 +47,7 @@ export async function getTestImage(username = "aufalala", table = "imageTest") {
     
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+      agent,
     });
 
     if (!response.ok) {
@@ -51,7 +71,9 @@ export async function getTestImage(username = "aufalala", table = "imageTest") {
       imageUrl,
       message: `Image found for user ${username}`,
     };
+
   } catch (err) {
+    
     console.error("Airtable fetch failed:", err.message);
   }
 }

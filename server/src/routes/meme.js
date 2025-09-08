@@ -4,11 +4,14 @@ import { getRandomMeme } from "../utils/memeAPI.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const result = await getRandomMeme();
-  if (result.status === "success") {
-    res.json(result);
-  } else {
-    res.status(500).json(result);
+  try {
+    const result = await getRandomMeme();
+    if (result.status === "success") {
+      res.json(result);
+    }
+  } catch (err) {
+
+    console.error(`Failed to get meme`)
   }
 });
 

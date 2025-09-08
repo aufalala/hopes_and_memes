@@ -19,7 +19,6 @@ app.use(express.json());
 
 app.use(clerkMiddleware());
 
-
 // Routes
 app.use("/test", test);
 app.use("/meme", meme);
@@ -35,7 +34,7 @@ app.listen(PORT, async () => {
   console.log(`Listening on port ${PORT}...`);
 
   const ok = await pingAirtable();
-  if (ok  && ok.message) {
+  if (ok  && ok.message) {  
     console.log(ok.message);
   } else {
     console.log("pingAirtable() failed or returned no message.");
