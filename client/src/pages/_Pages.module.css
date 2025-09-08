@@ -1,0 +1,8 @@
+.homeContainer {
+    height: 100vh;
+    overflow: visible;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    /* padding: 0 10%; */
+}

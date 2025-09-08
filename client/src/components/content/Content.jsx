@@ -1,7 +1,8 @@
+import styles from "./_Content.module.css"
 
 function Content({ children }) {
   return (
-    <div className="main-content">
+    <div className={styles.MainContent}>
       {children}
     </div>
   );

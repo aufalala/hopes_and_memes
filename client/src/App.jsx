@@ -9,6 +9,9 @@ import { fetchStatus } from "./utils/airtableAPI.js";
 //Modals
 import { ModalProvider } from "./contexts/ModalContext.jsx";
 import LoginSignupModal from "./components/modals/LoginSignupModal.jsx";
+//SCROLL FOR HEADER AND SIDEBARS
+import { ScrollContext } from "./contexts/ScrollContext";
+import useScrollDirection from "./hooks/useScrollDirection";
 //SHARED COMPONENTS
 import Header from "./components/header/Header.jsx";
 import Content from "./components/content/Content.jsx";
@@ -25,8 +28,11 @@ function App() {
 
   const { fetchWithAuth } = useClerkAuthFetch();
 
+  const scrollDirection = useScrollDirection();
+
   //CHECK SERVER-AIRTABLE STATUS
   const [status, setStatus] = useState("Checking connection...");
+
   useEffect(() => {
     async function getStatus() {
       try {
@@ -46,21 +52,23 @@ function App() {
   return (
     <ModalProvider>    
       
-      <Header />
+      <ScrollContext.Provider value={scrollDirection}>
+        <Header />
 
-      <Content>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/more" element={<More />} />  
-          <Route path="/profile" element={<Profile />} />    
-        </Routes>
-      </Content>
+        <Content>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/more" element={<More />} />  
+            <Route path="/profile" element={<Profile />} />    
+          </Routes>
+        </Content>
 
-      <p>{status}</p>
+        <p>{status}</p>
 
-      <LoginSignupModal />
-
+        <LoginSignupModal />
+      
+      </ScrollContext.Provider>
     </ModalProvider>
   );
 }

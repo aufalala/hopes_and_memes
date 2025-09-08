@@ -1,0 +1,15 @@
+.HomeSidebar {
+    width: 20%;
+    /* height: 80%; */
+    background-color: blue;
+}
+
+/* SCROLL AWARENESS */
+.HomeSidebar {
+  position: fixed;
+  align-self: flex-start;
+  top: 60px; /* default when header is visible */
+  height: calc(100vh - 60px);
+  
+  transition: top 0.3s ease-in-out;
+}

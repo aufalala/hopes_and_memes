@@ -10,6 +10,26 @@
     padding-right: 5%;
 }
 
+/* SCROLL AWARENESS */
+.header {
+  position: sticky;
+  top: 0;
+  height: 60px;
+  background: #333;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* SCROLL AWARENESS */
+.hide {
+  transform: translateY(-100%);
+}
+
+
 .div {
     height: 100%;
     align-content: center;
