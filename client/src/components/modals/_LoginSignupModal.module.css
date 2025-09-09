@@ -15,6 +15,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   background: white;
   color: black;
   padding: 2rem;
@@ -22,6 +23,8 @@
   min-width: 300px;
   max-width: 90%;
   text-align: center;
+  width: 320px;
+  height: 235px;
 }
 
 .form {
@@ -29,13 +32,15 @@
   flex-direction: column;
 }
 
+.error {
+  color: red;
+}
+
 .closeButton {
   cursor: pointer;
   position: absolute;
   top: 0;
   right: 1%;
-  /* left: 100%;
-  transform: translateY(-85%); */
   width: 10%;
   aspect-ratio: 1/1;
 
@@ -45,4 +50,21 @@
 
   font-weight: 700;
   font-size: 2em;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.submitButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.backTextButton {
+  cursor: pointer;
+  position: absolute;
+  bottom: 10%;
 }

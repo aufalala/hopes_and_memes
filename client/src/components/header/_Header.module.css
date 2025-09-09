@@ -31,6 +31,8 @@
 
 
 .div {
+    width: auto;
+    max-width: 50%;
     height: 100%;
     align-content: center;
 }
