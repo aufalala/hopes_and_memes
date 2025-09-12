@@ -20,9 +20,9 @@ app.use(express.json());
 app.use(clerkMiddleware());
 
 // Routes
-app.use("/test", test);
-app.use("/meme", meme);
-app.use("/users", users)
+app.use("/api/test", test);
+app.use("/api/meme", meme);
+app.use("/api/users", users)
 
 // Root
 app.get("/", (req, res) => {
