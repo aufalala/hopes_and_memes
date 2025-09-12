@@ -15,7 +15,7 @@ router.get("/profile", requireAuth(), async (req, res) => {
 
     res.json({
       userId: userId,
-      createdAt: new Date(createdAt),
+      createdAt: createdAt,
     });
 
   } catch (error) {
