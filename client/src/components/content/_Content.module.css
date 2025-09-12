@@ -1,6 +1,7 @@
 .MainContent {
     height: 100vh;
-    width: 100%;
+    width: 78%;
+    margin: 0 11%;
     /* display: flex; */
     /* flex-direction: row; */
     

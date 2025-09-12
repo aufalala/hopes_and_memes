@@ -6,7 +6,17 @@ function Navbar() {
   const links = [
     {
       path: "/",
-      text: "Home",
+      text: "HOME",
+      dropdown: false,
+    },
+    {
+      path: "/unseen",
+      text: "UNSEEN",
+      dropdown: false,
+    },
+    {
+      path: "/leaderboard",
+      text: "LEADERBOARDS",
       dropdown: false,
     },
     {
@@ -18,7 +28,7 @@ function Navbar() {
       path: "/more",
       text: "More",
       dropdown: false,
-    },  
+    },
   ]
 
   return (

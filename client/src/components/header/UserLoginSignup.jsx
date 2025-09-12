@@ -19,17 +19,6 @@ function UserLoginSignup() {
   return isSignedIn ? (
     <div className={styles.profileDiv}>
       <Link to="/profile" className={styles.username}>{user.username.toUpperCase()}</Link>
-      {/* <img
-        src={user.imageUrl}
-        alt="User profile"
-        style={{
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          objectFit: "cover",
-        }}
-      /> */}
-      {/* <UserButton userProfileMode="modal"/> */}
       
     <div style={{ position: "relative" }}>
       <img
@@ -39,13 +28,15 @@ function UserLoginSignup() {
         onClick={() => setMenuOpen(!menuOpen)}
       />
       {menuOpen && (
-        <div className={styles.menu}>
-          <Link to="/profile" className={styles.menuButton}>
-          VIEW PROFILE
-          </Link>
-          <button onClick={() => signOut()} className={styles.menuButton}>
-            SIGN OUT
-          </button>
+        <div className={styles.menuOverlay} onClick={() => setMenuOpen(!menuOpen)}>
+            <div className={styles.menu} >
+            <Link to="/profile" className={styles.menuButton}>
+            VIEW PROFILE
+            </Link>
+            <button onClick={() => signOut()} className={styles.menuButton}>
+              SIGN OUT
+            </button>
+          </div>
         </div>
       )}
     </div>

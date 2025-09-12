@@ -17,9 +17,13 @@ import Header from "./components/header/Header.jsx";
 import Content from "./components/content/Content.jsx";
 //PAGES
 import Home from "./pages/Home.jsx";
+import LeaderBoard from "./pages/LeaderBoard.jsx";
+import Unseen from "./pages/Unseen.jsx";
+import Profile from "./pages/Profile.jsx";
+
+//PAGES FOR TEST
 import About from "./pages/About.jsx";
 import More from "./pages/More.jsx";
-import Profile from "./pages/Profile.jsx";
 
 // CSS
 import "./App.css";
@@ -58,8 +62,13 @@ function App() {
         <Content>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/unseen" element={<Unseen />} />
+            <Route path="/leaderboard" element={<LeaderBoard />} />
+
             <Route path="/about" element={<About />} />
-            <Route path="/more" element={<More />} />  
+            <Route path="/more" element={<More />} />
+
+
             <Route path="/profile" element={<Profile />} />    
           </Routes>
         </Content>
