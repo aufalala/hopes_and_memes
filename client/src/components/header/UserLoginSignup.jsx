@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useClerk, useUser, UserButton } from "@clerk/clerk-react";
+import { useClerk, useUser, } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
 
 import { useModal } from "../../contexts/ModalContext.jsx";

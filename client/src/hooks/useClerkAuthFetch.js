@@ -35,10 +35,6 @@ export function useClerkAuthFetch() {
         },
       };
 
-      if (withAuth && token) {
-        finalOptions.headers["Authorization"] = `Bearer ${token}`;
-      }
-
       try {
         const res = await fetch(`${localServerURL}${path}`, finalOptions);
         if (!res.ok) throw new Error("Local server response not ok");
