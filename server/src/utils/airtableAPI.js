@@ -81,6 +81,77 @@ export async function getTestImage(username = "aufalala", table = "imageTest") {
 //111/////////////////////////////// --- ALL USERS
 
 
+export async function getUserVerify(userId, table = "allUsers") {
+
+  try {
+    const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
+    const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
+    
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+      agent,  
+    });
+
+    if (!response.ok) {
+      throw new Error(`Airtable API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    let exist = true;
+
+    if (!data.records.length) {
+      exist = false;
+    }
+    
+    return {
+      status: "success",
+      exist,
+    };
+
+  } catch (err) { 
+    console.error("Airtable fetch failed:", err.message);
+  }
+}
+
+export async function postUser(userId, username, createdAt, table = "allUsers") {
+  const payload = {
+    records: [
+      {
+        fields: {
+          clerk_user_id: userId,
+          username,
+          created_at: createdAt,
+          num_memes_rated: 0,
+          points: 0,
+        },
+      },
+    ],
+  };
+
+  const response = await fetch(`${AIRTABLE_URL}/${table}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+    agent,
+    body: JSON.stringify(payload),
+  });
+  
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(`Failed to add user: ${response.status}: ${data}`);
+  }
+
+  return {
+    status: "success",
+    record: data.records[0],
+  };
+}
+
+
+
 
 //111/////////////////////////////// --- ALL MEMES
 

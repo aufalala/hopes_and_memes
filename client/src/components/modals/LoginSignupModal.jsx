@@ -1,99 +1,9 @@
-// import { useState } from "react";
-// import { useSignIn } from "@clerk/clerk-react";
-// import { motion, AnimatePresence } from "framer-motion";
-// import { useModal } from "../../contexts/ModalContext";
-// import styles from "./_LoginSignupModal.module.css";
-
-// function LoginSignupModal() {
-//   const { modals, closeModal } = useModal();
-//   const isOpen = modals.LoginSignupModal_Vis;
-
-//   const { signIn, setActive, isLoaded } = useSignIn();
-//   const [username, setUsername] = useState("");
-//   const [password, setPassword] = useState("");
-//   const [error, setError] = useState("");
-
-//   const handleSubmit = async (event) => {
-//     event.preventDefault();
-//     setError("");
-
-//     if (!isLoaded) return;
-
-//     try {
-//       const signInAttempt = await signIn.create({
-//         identifier: username,
-//         password,
-//       });
-
-//       if (signInAttempt.status === "complete") {
-//         await setActive({ session: signInAttempt.createdSessionId });
-//         closeModal("LoginSignupModal_Vis");
-//       } else {
-//         console.log("Further steps required", signInAttempt);
-//       }
-//     } catch (err) {
-//       setError(err.errors?.[0]?.longMessage || "Login failed");
-//     }
-//   };
-
-//   return (
-//     <AnimatePresence>
-//       {isOpen && (
-//         <motion.div
-//           className={styles.modalOverlay}
-//           initial={{ opacity: 0 }}
-//           animate={{ opacity: 1 }}
-//           exit={{ opacity: 0 }}
-//           transition={{ duration: 0.3 }}
-//           onClick={() => closeModal("LoginSignupModal_Vis")}
-//         >
-//           <motion.div
-//             className={styles.modalContent}
-//             initial={{ scale: 0.95, opacity: 0 }}
-//             animate={{ scale: 1, opacity: 1 }}
-//             exit={{ scale: 0.95, opacity: 0 }}
-//             transition={{ duration: 0.3 }}
-//             onClick={(event) => event.stopPropagation()} 
-//           >
-//             {/* ----------------------------------------------------------------------- */}
-//             <button className={styles.closeButton} onClick={() => closeModal("LoginSignupModal_Vis")}>×</button>
-//             <h3>CLOCK IN</h3>
-
-//             <form  onSubmit={handleSubmit}>
-//               <div className={styles.form}>
-//                 <input
-//                   type="text"
-//                   value={username}
-//                   onChange={(e) => setUsername(e.target.value)}
-//                   placeholder="Username"
-//                   required
-//                 />
-//                 <input
-//                   type="password"
-//                   value={password}
-//                   onChange={(e) => setPassword(e.target.value)}
-//                   placeholder="Password"
-//                   required
-//                 />
-//                 <button type="submitButton">Log In</button>
-//                 {error && <p className={styles.error}>{error}</p>}
-//               </div>
-//             </form>
-//             {/* ----------------------------------------------------------------------- */}
-
-//           </motion.div>
-//         </motion.div>
-//       )}
-//     </AnimatePresence>
-//   );
-// }
-
-// export default LoginSignupModal;
-
-
 import { useEffect, useState } from "react";
 import { useSignIn, useSignUp } from "@clerk/clerk-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+import { apiGetUserVerify, apiPostUser } from "../../utils/airtableAPI";
+import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 
 import { useModal } from "../../contexts/ModalContext";
 import Spinner from "../__reuseables/Spinner";
@@ -107,22 +17,27 @@ function LoginSignupModal() {
   const { signIn, setActive, isLoaded: signInLoaded } = useSignIn();
   const { signUp, isLoaded: signUpLoaded } = useSignUp();
 
+  // flag for steps for "username" | "login" | "signup" in modal
+  const [step, setStep] = useState("username");
+
+  // flag for verify airtable
+  const [doVerify, setDoVerify] = useState(false);
+
+  // flag disable submits and set spinner
+  const [loading, setLoading] = useState(false);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
-  // steps for "username" | "login" | "signup" in modal
-  const [step, setStep] = useState("username");
-  // disable submits and set spinner
-  const [loading, setLoading] = useState(false);
+  const { fetchWithAuth, token } = useClerkAuthFetch();
 
-
-  useEffect((e) => {
+  useEffect(() => {
     handleResetAndBack();
   }, [isOpen]);
 
-  const handleResetAndBack = async (e) => {
+  const handleResetAndBack = async () => {
     setUsername("");
     setPassword("");
     setConfirmPassword("");
@@ -131,6 +46,29 @@ function LoginSignupModal() {
     setLoading(false);
   }
 
+  useEffect(() => {
+    if (doVerify && token) {
+      handleVerifyUser();
+    }
+  }, [doVerify, token, fetchWithAuth]);
+
+  const handleVerifyUser = async () => {
+    try {
+      const verify = await apiGetUserVerify(fetchWithAuth);
+      if ((verify.status === "success") && (verify.exist === true)) {
+        return console.log("You Exist")
+      } else if ((verify.status === "success") && (verify.exist === false)) {
+        const postUser = await apiPostUser(fetchWithAuth);
+        if ((postUser.status === "success")) {
+          return console.log("Welcome newbie")
+        }
+      }
+    } catch (e) {
+        console.error("Verification failed:", e);
+    } finally {
+      setDoVerify(false);
+    }
+  };
 
   const handleUsernameSubmit = async (e) => {
     e.preventDefault();
@@ -157,13 +95,13 @@ function LoginSignupModal() {
       } else {
         throw new Error("Unexpected response from Clerk");
       }
-    } catch (err) {
+    } catch (e) {
       // If error is "identifier not found", treat as signup
-      const msg = err.errors?.[0]?.code;
+      const msg = e.errors?.[0]?.code;
       if (msg === "form_identifier_not_found") {
         setStep("signup");
       } else {
-        setError(err.errors?.[0]?.longMessage || "Something went wrong");
+        setError(e.errors?.[0]?.longMessage || "Something went wrong");
       }
     } finally {
       setLoading(false);
@@ -184,11 +122,12 @@ function LoginSignupModal() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         closeModal("LoginSignupModal_Vis");
+        setDoVerify(true);
       } else {
         setError("Unexpected step during login");
       }
-    } catch (err) {
-      setError(err.errors?.[0]?.longMessage || "Login failed");
+    } catch (e) {
+      setError(e.errors?.[0]?.longMessage || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -222,11 +161,12 @@ function LoginSignupModal() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         closeModal("LoginSignupModal_Vis");
+        setDoVerify(true);
       } else {
         setError("Unexpected step during signup");
       }
-    } catch (err) {
-      setError(err.errors?.[0]?.longMessage || "Signup failed");
+    } catch (e) {
+      setError(e.errors?.[0]?.longMessage || "Signup failed");
     } finally {
       setLoading(false);
     }
