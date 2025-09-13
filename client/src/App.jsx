@@ -10,8 +10,7 @@ import { fetchStatus } from "./utils/airtableAPI.js";
 import { ModalProvider } from "./contexts/ModalContext.jsx";
 import LoginSignupModal from "./components/modals/LoginSignupModal.jsx";
 //SCROLL FOR HEADER AND SIDEBARS
-import { ScrollContext } from "./contexts/ScrollContext";
-import useScrollDirection from "./hooks/useScrollDirection";
+import { ScrollContextProvider } from "./contexts/ScrollContext.jsx";
 //SHARED COMPONENTS
 import Header from "./components/header/Header.jsx";
 import Content from "./components/content/Content.jsx";
@@ -32,7 +31,6 @@ function App() {
 
   const { fetchWithAuth } = useClerkAuthFetch();
 
-  const scrollDirection = useScrollDirection();
 
   //CHECK SERVER-AIRTABLE STATUS
   const [status, setStatus] = useState("Checking connection...");
@@ -56,7 +54,7 @@ function App() {
   return (
     <ModalProvider>    
       
-      <ScrollContext.Provider value={scrollDirection}>
+      <ScrollContextProvider>
         <Header />
 
         <Content>
@@ -73,11 +71,9 @@ function App() {
           </Routes>
         </Content>
 
-        <p>{status}</p>
-
         <LoginSignupModal />
       
-      </ScrollContext.Provider>
+      </ScrollContextProvider>
     </ModalProvider>
   );
 }
