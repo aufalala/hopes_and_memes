@@ -20,6 +20,6 @@ export async function fetchRandomMeme() {
 }
 
 export async function apiGetTenMemes(fetchWithAuth) {
-  return fetchWithAuth("/api/meme/ten-memes", {}, true);
+  return fetchWithAuth("/api/test/meme-count", {}, true);
 }
 
