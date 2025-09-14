@@ -57,21 +57,39 @@ router.get("/meme-count", async (req, res) => {
     if (result.status !== "success") {
       return res.status(500).json(result);
     }
-    
-    if (result.count <= 5) {
-      const existingJobs = await queues.getTenMemesQueue.getWaiting();
-      console.log(existingJobs);
-      const alreadyQueued = existingJobs.length > 0;
+    console.log(result.status)
 
-      if (!alreadyQueued) {
-        await queues.getTenMemesQueue.add({}, { removeOnComplete: true, removeOnFail: true });
-        console.log('getTenMemesQueue job added to queue');
-      } else {
-        console.log('getTenMemesQueue job already queued');
+    if (result.count <= 5) {
+      console.log("trying to get existing job count")
+      
+      try {
+        const existingJobs = await queues.getTenMemesQueue.getWaiting();
+        console.log(existingJobs);
+        const alreadyQueued = existingJobs.length > 0;
+
+        if (!alreadyQueued) {
+          
+          try {
+            await queues.getTenMemesQueue.add({}, { removeOnComplete: true, removeOnFail: true });
+            console.log('getTenMemesQueue job added to queue');
+          
+          } catch (e) {
+            console.error(e);
+            return res.status(500).json({ error: e.message });
+          }
+
+        } else {
+          console.log('getTenMemesQueue job already queued');
+        }
+
+      } catch (e) {
+        console.error(e);
+        return res.status(500).json({ error: e.message });
       }
-    }
+      
 
     res.json(result);
+    }
 
   } catch (e) {
     console.error(e);
