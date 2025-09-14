@@ -157,7 +157,7 @@ export async function postUser(userId, username, createdAt, table = "allUsers") 
 
 
 export async function getUnratedMemeCount(table = "unratedMemes") {
-
+  console.log("trying getUnratedMemeCount")
   try {
     const url = `${AIRTABLE_URL}/${table}`;
     

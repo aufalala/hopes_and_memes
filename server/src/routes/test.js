@@ -51,6 +51,7 @@ router.get("/testImage/protected", requireAuth(), async (req, res) => {
 
 
 router.get("/meme-count", async (req, res) => {
+  console.log("trying /meme-count")
   try {
     const result = await getUnratedMemeCount();
     if (result.status !== "success") {

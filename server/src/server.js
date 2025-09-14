@@ -39,4 +39,7 @@ app.listen(PORT, async () => {
   }
 });
 
+console.log('🔌 REDIS_URL:', process.env.REDIS_URL || 'Not set');
+
+
 import "./workers/worker.js";
