@@ -18,3 +18,8 @@ export async function fetchRandomMeme() {
     }
   }
 }
+
+export async function apiGetTenMemes(fetchWithAuth) {
+  return fetchWithAuth("/api/meme/ten-memes", {}, true);
+}
+

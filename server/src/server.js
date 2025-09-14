@@ -3,13 +3,11 @@ import cors from "cors";
 
 import { clerkMiddleware } from '@clerk/express';
 
-
 import test from "./routes/test.js";
 import meme from "./routes/meme.js";
 import users from "./routes/users.js";
 
 import { pingAirtable } from "./utils/airtableAPI.js";
-
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -41,3 +39,4 @@ app.listen(PORT, async () => {
   }
 });
 
+import "./workers/worker.js";

@@ -156,5 +156,33 @@ export async function postUser(userId, username, createdAt, table = "allUsers") 
 //111/////////////////////////////// --- ALL MEMES
 
 
+export async function getUnratedMemeCount(table = "unratedMemes") {
+
+  try {
+    const url = `${AIRTABLE_URL}/${table}`;
+    
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+      agent,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Airtable API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+
+    return {
+      status: "success",
+      count: data.records.length
+    };
+
+  } catch (err) {
+    console.error("Airtable fetch failed:", err.message);
+  }
+}
+
+
+
 
 //111/////////////////////////////// --- ALL RATINGS

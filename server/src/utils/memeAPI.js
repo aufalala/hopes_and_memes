@@ -28,3 +28,33 @@ export async function getRandomMeme() {
         return { status: "failed", message: err.message };
     }
 }
+
+export async function getTenMemes() {
+    try {
+    const response = await fetch(`${memeApiUrl}/10`)
+    if (!response.ok) {
+      throw new Error(`Meme API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const payload = {status: "success", memes: data.memes,};
+    return payload;
+    // const payload = {
+    //                     status: "success",
+    //                     postLink: postLink,
+    //                     subreddit: subreddit,
+    //                     title: title,
+    //                     url: url,
+    //                     nsfw: nsfw,
+    //                     spoiler: spoiler,
+    //                     author: author,
+    //                     ups: ups,
+    //                     preview: preview,
+    //                 }
+    // return payload;
+
+    } catch (err) {
+        console.error("meme retrieval failed:", err);
+        return { status: "failed", message: err.message };
+    }
+}

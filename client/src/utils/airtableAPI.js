@@ -1,21 +1,17 @@
 export async function fetchStatus(fetchWithAuth) {
   return fetchWithAuth("/api/test");
 }
-
 export async function fetchTestImage(fetchWithAuth) {
   return fetchWithAuth("/api/test/testImage");
 }
-
 export async function fetchTestImageProtected(fetchWithAuth) {
   return fetchWithAuth("/api/test/testImage/protected", {}, true);
 }
-
 ////////////////////////////////////////////////////////////////////////////
 
 export async function apiGetUserVerify(fetchWithAuth) {
   return fetchWithAuth("/api/users/verify", {}, true);
 }
-
 
 export async function apiPostUser(fetchWithAuth) {
   return fetchWithAuth("/api/users", {

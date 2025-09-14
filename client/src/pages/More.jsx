@@ -1,5 +1,5 @@
 import { fetchTestImage, fetchTestImageProtected } from "../utils/airtableAPI";
-import { fetchRandomMeme } from "../utils/memeAPI";
+import { fetchRandomMeme, apiGetTenMemes } from "../utils/memeAPI";
 
 import { useClerkAuthFetch } from "../hooks/useClerkAuthFetch";
 
@@ -38,6 +38,21 @@ function More() {
             get random meme in console
           </div>
         </li>
+
+        <li>
+          <div
+            onClick={async () => {
+              try {
+                const meme = await apiGetTenMemes(fetchWithAuth);
+                console.log(meme);
+              } catch (err) {
+                console.error("Failed to fetch meme:", err.message);
+              }
+            }}
+          >
+            get 10 memes in console
+          </div>
+        </li>        
 
         <li>
           <div

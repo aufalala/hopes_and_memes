@@ -1,7 +1,8 @@
 import express from "express";
 import { requireAuth } from "@clerk/express";
 
-import { pingAirtable, getTestImage } from "../utils/airtableAPI.js";
+import { pingAirtable, getTestImage, getUnratedMemeCount } from "../utils/airtableAPI.js";
+import { queues } from "../queues/queues.js";
 
 const router = express.Router();
 
@@ -10,13 +11,13 @@ router.get("/", async (req, res) => {
     const result = await pingAirtable();
 
     if (result.status === "success") {
-      res.json(result);
+      return res.json(result);
     } else {
       res.status(500).json(result);
     }
-  } catch (error) {
-    console.error("Error in / route:", error);
-    res.status(500).json({ status: "error", message: "Internal server error" });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json(e.message);
   }
 });
 
@@ -25,10 +26,12 @@ router.get("/testImage", async (req, res) => {
     const result = await getTestImage();
     if (result.status === "success") {
       res.json(result);
-    } 
-  } catch (err) {
-      console.error(err);
-      res.status(500).json(err.message);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (e) {
+      console.error(e);
+      res.status(500).json(e.message);
   }
 });
 
@@ -37,11 +40,50 @@ router.get("/testImage/protected", requireAuth(), async (req, res) => {
     const result = await getTestImage();
     if (result.status === "success") {
       res.json(result);
-    } 
-  } catch (err) {
-      console.error(err);
-      res.status(500).json(err.message);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (e) {
+      console.error(e);
+      res.status(500).json(e.message);
   }
 });
+
+
+router.get("/meme-count", async (req, res) => {
+  try {
+    const result = await getUnratedMemeCount();
+    if (result.status === "success") {
+      res.json(result);
+      if (result.count <= 5) {
+        const existingJobs = await queues.getTenMemesQueue.getWaiting();
+        console.log(existingJobs);
+        const alreadyQueued = existingJobs.length > 0;
+
+        if (!alreadyQueued) {
+          await queues.getTenMemesQueue.add({}, { removeOnComplete: true, removeOnFail: true });
+          console.log('getTenMemesQueue job added to queue');
+        } else {
+          console.log('getTenMemesQueue job already queued');
+        }
+      }
+
+    } else {
+      return res.status(500).json(result);
+    }
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json(e.message);
+  }
+});
+
+
+
+
+
+
+
+
+
 
 export default router;

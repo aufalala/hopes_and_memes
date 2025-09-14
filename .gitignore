@@ -8,3 +8,5 @@ server/node_modules/
 
 # Vite build output
 client/dist/
+
+/server/dump.rdb
