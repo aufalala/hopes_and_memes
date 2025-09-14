@@ -179,6 +179,7 @@ export async function getUnratedMemeCount(table = "unratedMemes") {
 
   } catch (err) {
     console.error("Airtable fetch failed:", err.message);
+    throw err;
   }
 }
 
