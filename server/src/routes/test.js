@@ -70,7 +70,11 @@ router.get("/meme-count", async (req, res) => {
         if (!alreadyQueued) {
           
           try {
-            await queues.getTenMemesQueue.add({}, { removeOnComplete: true, removeOnFail: true });
+            await queues.getTenMemesQueue.add(
+            'get-ten-memes-job',   // optional name
+            { foo: 'bar' },        // job data must be JSON-serializable
+            { removeOnComplete: true, removeOnFail: true }
+          );
             console.log('getTenMemesQueue job added to queue');
           
           } catch (e) {

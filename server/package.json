@@ -17,6 +17,7 @@
     "@clerk/clerk-sdk-node": "^4.13.23",
     "@clerk/express": "^1.7.29",
     "bull": "^4.16.5",
+    "bullmq": "^5.58.5",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",

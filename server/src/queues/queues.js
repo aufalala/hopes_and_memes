@@ -1,4 +1,5 @@
-import { Queue } from 'bullmq';
+import pkg from 'bullmq';
+const { Queue } = pkg;
 import IORedis from 'ioredis';
 
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
