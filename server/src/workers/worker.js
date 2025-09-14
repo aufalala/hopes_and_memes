@@ -27,6 +27,8 @@ queues.getTenMemesQueue.process(async (job) => {
       console.log(`Job ${job.id} completed. result ${result.status}, result2 ${result2.status}` );
     });
       return data2;
+    } else {
+      throw new Error("Invalid meme data: status not success or memes.length != 10");
     }
 
   } catch (e) {
