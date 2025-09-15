@@ -1,75 +1,93 @@
-// import { queues } from '../queues/queues.js';
-// import { postCloudinary } from '../utils/cloudinaryAPI.js';
-// import { getTenMemes } from '../utils/memeAPI.js';
+import { Worker } from "bullmq";
+import IORedis from "ioredis";
 
+import { getTenMemes } from "../utils/memeAPI.js";
+import { postCloudinary } from "../utils/cloudinaryAPI.js";
 
-// queues.getTenMemesQueue.on('completed', (job, result) => {
-//   console.log(`Job ${job.id} completed. Result:`, result);
-// });
-// queues.getTenMemesQueue.on('failed', (job, err) => {
-//   console.error(`Job ${job.id} failed:`, err);
-// });
-// queues.getTenMemesQueue.on('stalled', (job) => {
-//   console.warn(`Job ${job.id} stalled!`);
-// });
-
-// queues.getTenMemesQueue.process(async (job) => {
-//   console.log("Starting job");
-//   try {
-//     const result = await getTenMemes();
-//     const data = result
-//     console.log(data)
-//     if ((data.status === "success") && (data.memes.length === 10)) {
-//       const result2 = await postCloudinary();
-//       const data2 = result2;
-//       console.log(data2)
-//       queues.getTenMemesQueue.on('completed', (job, result) => {
-//       console.log(`Job ${job.id} completed. result ${result.status}, result2 ${result2.status}` );
-//     });
-//       return data2;
-//     } else {
-//       throw new Error("Invalid meme data: status not success or memes.length != 10");
-//     }
-
-//   } catch (e) {
-//     console.error("Job failed with error:", e);
-//     throw (e)
-//   }
-// });
-
-import pkg from 'bullmq';
-const { Worker } = pkg;
-
-import IORedis from 'ioredis';
-import { getTenMemes } from '../utils/memeAPI.js';
-import { postCloudinary } from '../utils/cloudinaryAPI.js';
-
-const connection = new IORedis(process.env.REDIS_URL, {
+//111/////////////////////////////// --- CONNECTION
+const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379";
+const connection = new IORedis(redisUrl, {
   maxRetriesPerRequest: null,
   enableReadyCheck: false,
 });
 
+//111/////////////////////////////// --- WORKERS WORK
 const getTenMemesWorker = new Worker(
-  'get-ten-memes',
+  "get-ten-memes",
   async (job) => {
-    console.log("Starting job", job.id);
-    const result = await getTenMemes();
-    if (result.status === "success") {
-      const result2 = await postCloudinary();
-      return result2;
+    console.log("Starting job", job.name, job.id);
+    const { sourceData } = job.data;
+    try {
+      const result = await getTenMemes(sourceData);
+      if (result.status !== "success") {
+        throw new Error("getTenMemes failed: status not success");
+      } else {
+
+          try {
+            const result2 = await postCloudinary(sourceData);
+            if (result.status !== "success") {
+              throw new Error("postCloudinary failed: status not success");
+            }
+            return result2;
+
+          } catch (e) {
+            console.error("postCloudinary error:", e);
+            throw e;
+          }
+      }
+
+    } catch (e) {
+      console.error("getTenMemes or postCloudinary failed:", e);
+      throw e;
     }
-    throw new Error("Invalid meme data");
   },
   { connection }
 );
 
-// Worker event listeners
-getTenMemesWorker.on('completed', (job, result) =>
-  console.log(`Job ${job.id} completed. Result:`, result)
-);
-getTenMemesWorker.on('failed', (job, err) =>
-  console.error(`Job ${job.id} failed:`, err)
-);
-getTenMemesWorker.on('stalled', (job) =>
-  console.warn(`Job ${job.id} stalled!`)
-);
+//111/////////////////////////////// --- WORKERS EVENT LISTENERS
+//222// --- HANDLER
+const handleWorkerEvent = (workerName, event, ...args) => {
+  switch (event) {
+    case "completed":
+      const [job, result] = args;
+      console.log(`[${workerName}] Job ${job.id} completed. Result:`, result);
+      break;
+
+    case "failed":
+      const [jobFailed, err] = args;
+      console.error(`[${workerName}] Job ${jobFailed.id} failed:`, err);
+      break;
+
+    case "stalled":
+      const [jobStalled] = args;
+      console.warn(`[${workerName}] Job ${jobStalled.id} stalled!`);
+      break;
+
+    case "active": {
+      const [jobActive] = args;
+      console.log(`[${workerName}] Job ${jobActive.id} started.`);
+      break;
+    }
+
+    case "waiting": {
+      const [jobId] = args;
+      console.log(`[${workerName}] Job ${jobId} is waiting in queue.`);
+      break;
+    }      
+
+    default:
+      console.warn(`[${workerName}] Unhandled worker event: ${event}`);
+  }
+};
+
+//222// --- WORKER LIST
+const workers = {
+  getTenMemesWorker,
+};
+
+//222// --- WORKER FOR EACH
+Object.entries(workers).forEach(([name, worker]) => {
+  ["completed", "failed", "stalled", "active", "waiting"].forEach((event) => {
+    worker.on(event, (...args) => handleWorkerEvent(name, event, ...args));
+  });
+});

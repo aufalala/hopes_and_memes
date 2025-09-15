@@ -1,18 +1,19 @@
 import { AIRTABLE_URL, AIRTABLE_TOKEN } from "../config.js";
 
-//111/////////////////////////////// --- PING 
+//111/////////////////////////////// --- FORCE IPV4
+import https from "https";
+// import fetch from "node-fetch";
+const agent = new https.Agent({ family: 4 });
+
+//111/////////////////////////////// --- FOR PING 
 async function delay(ms) {
   return new Promise((res) => setTimeout(res, ms));
 }
 
-//////////////////// force IPv4 /////////////////
-import https from 'https';
-import fetch from 'node-fetch';
-const agent = new https.Agent({ family: 4 });
-////////////////////////////////////////////////
+//111/////////////////////////////// --- PING
 
-
-export async function pingAirtable(table = "testTable", retries = 3) {
+export async function pingAirtable(sourceData, table = "testTable", retries = 3) {
+  console.log(`[${new Date().toISOString()}] TRYING: pingAirtable from ${sourceData}`);
   for (let i = 0; i <= retries; i++) {
     try {
 
@@ -39,8 +40,8 @@ export async function pingAirtable(table = "testTable", retries = 3) {
 }
 
 //111/////////////////////////////// --- TEST
-export async function getTestImage(username = "aufalala", table = "imageTest") {
-
+export async function getTestImage(sourceData, username = "aufalala", table = "imageTest") {
+  console.log(`[${new Date().toISOString()}] TRYING: getTestImage from ${sourceData}`);
   try {
     const filterFormula = encodeURIComponent(`{username} = "${username}"`);
     const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
@@ -72,17 +73,17 @@ export async function getTestImage(username = "aufalala", table = "imageTest") {
       message: `Image found for user ${username}`,
     };
 
-  } catch (err) {
-    
-    console.error("Airtable fetch failed:", err.message);
+  } catch (e) {
+    console.error("Airtable failed:", e.message);
+    throw e;
   }
 }
 
 //111/////////////////////////////// --- ALL USERS
 
 
-export async function getUserVerify(userId, table = "allUsers") {
-
+export async function getUserVerify(sourceData, userId, table = "allUsers") {
+  console.log(`[${new Date().toISOString()}] TRYING: getUserVerify ${sourceData}`);
   try {
     const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
     const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
@@ -108,46 +109,53 @@ export async function getUserVerify(userId, table = "allUsers") {
       exist,
     };
 
-  } catch (err) { 
-    console.error("Airtable fetch failed:", err.message);
+  } catch (e) {
+    console.error("Airtable failed:", e.message);
+    throw e;
   }
 }
 
-export async function postUser(userId, username, createdAt, table = "allUsers") {
-  const payload = {
-    records: [
-      {
-        fields: {
-          clerk_user_id: userId,
-          username,
-          created_at: createdAt,
-          num_memes_rated: 0,
-          points: 0,
+export async function postUser(sourceData, userId, username, createdAt, table = "allUsers") {
+  console.log(`[${new Date().toISOString()}] TRYING: postUser from ${sourceData}`);
+  try {
+    const payload = {
+      records: [
+        {
+          fields: {
+            clerk_user_id: userId,
+            username,
+            created_at: createdAt,
+            num_memes_rated: 0,
+            points: 0,
+          },
         },
+      ],
+    };
+
+    const response = await fetch(`${AIRTABLE_URL}/${table}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        "Content-Type": "application/json",
       },
-    ],
-  };
+      agent,
+      body: JSON.stringify(payload),
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(`Failed to add user: ${response.status}: ${data}`);
+    }
 
-  const response = await fetch(`${AIRTABLE_URL}/${table}`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-    agent,
-    body: JSON.stringify(payload),
-  });
-  
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(`Failed to add user: ${response.status}: ${data}`);
+    return {
+      status: "success",
+      record: data.records[0],
+    };
+  } catch (e) {
+    console.error("Airtable failed:", e.message);
+    throw e;
   }
-
-  return {
-    status: "success",
-    record: data.records[0],
-  };
 }
 
 
@@ -156,8 +164,8 @@ export async function postUser(userId, username, createdAt, table = "allUsers") 
 //111/////////////////////////////// --- ALL MEMES
 
 
-export async function getUnratedMemeCount(table = "unratedMemes") {
-  console.log("trying getUnratedMemeCount")
+export async function getUnratedMemeCount(sourceData, table = "unratedMemes") {
+  console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemeCount from ${sourceData}`);
   try {
     const url = `${AIRTABLE_URL}/${table}`;
     
@@ -177,9 +185,9 @@ export async function getUnratedMemeCount(table = "unratedMemes") {
       count: data.records.length
     };
 
-  } catch (err) {
-    console.error("Airtable fetch failed:", err.message);
-    throw err;
+  } catch (e) {
+    console.error("Airtable failed:", e.message);
+    throw e;
   }
 }
 

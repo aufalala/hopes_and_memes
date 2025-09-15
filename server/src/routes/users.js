@@ -6,6 +6,8 @@ import { getUserVerify, postUser } from "../utils/airtableAPI.js";
 const router = express.Router();
 
 router.get("/profile", requireAuth(), async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {
     const {userId} = getAuth(req);
 
@@ -27,8 +29,9 @@ router.get("/profile", requireAuth(), async (req, res) => {
   }
 });
 
-
 router.get("/verify", requireAuth(), async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {
     const {userId} = getAuth(req);
 
@@ -36,7 +39,7 @@ router.get("/verify", requireAuth(), async (req, res) => {
       return res.status(401).json({ error: "Not authenticated" });
     }
 
-    const result = await getUserVerify(userId);
+    const result = await getUserVerify(sourceData, userId);
     if (result.status === "success") {
       return res.json(result);
     } else {
@@ -50,6 +53,8 @@ router.get("/verify", requireAuth(), async (req, res) => {
 });
 
 router.post("/", requireAuth(), async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {  
     const {userId} = getAuth(req);
     const {createdAt, username} = (await clerkClient.users.getUser(userId));
@@ -58,7 +63,7 @@ router.post("/", requireAuth(), async (req, res) => {
       return res.status(401).json({ error: "Not authenticated" });
     }
     
-    const result = await postUser(userId, username, createdAt)
+    const result = await postUser(sourceData, userId, username, createdAt)
     if (result.status === "success") {
       return res.json(result);
     } else {

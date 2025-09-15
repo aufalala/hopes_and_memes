@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 
-import { clerkMiddleware } from '@clerk/express';
+import { clerkMiddleware } from "@clerk/express";
 
 import test from "./routes/test.js";
 import meme from "./routes/meme.js";
@@ -17,17 +17,17 @@ app.use(express.json());
 
 app.use(clerkMiddleware());
 
-// Routes
+//111/////////////////////////////// --- ROUTES
 app.use("/api/test", test);
 app.use("/api/meme", meme);
 app.use("/api/users", users)
 
-// Root
+//111/////////////////////////////// --- ROOT
 app.get("/", (req, res) => {
   res.send("🚀 Server is running!");
 });
 
-// Start server
+//111/////////////////////////////// --- SERVER START
 app.listen(PORT, async () => {
   console.log(`Listening on port ${PORT}...`);
 
@@ -38,8 +38,5 @@ app.listen(PORT, async () => {
     console.log("pingAirtable() failed or returned no message.");
   }
 });
-
-console.log('🔌 REDIS_URL:', process.env.REDIS_URL || 'Not set');
-
 
 import "./workers/worker.js";

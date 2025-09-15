@@ -7,8 +7,10 @@ import { queues } from "../queues/queues.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {
-    const result = await pingAirtable();
+    const result = await pingAirtable(sourceData);
 
     if (result.status === "success") {
       return res.json(result);
@@ -22,8 +24,10 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/testImage", async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {
-    const result = await getTestImage();
+    const result = await getTestImage(sourceData);
     if (result.status === "success") {
       res.json(result);
     } else {
@@ -36,8 +40,10 @@ router.get("/testImage", async (req, res) => {
 });
 
 router.get("/testImage/protected", requireAuth(), async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {
-    const result = await getTestImage();
+    const result = await getTestImage(sourceData);
     if (result.status === "success") {
       res.json(result);
     } else {
@@ -49,15 +55,16 @@ router.get("/testImage/protected", requireAuth(), async (req, res) => {
   }
 });
 
-
 router.get("/meme-count", async (req, res) => {
-  console.log("trying /meme-count")
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
   try {
-    const result = await getUnratedMemeCount();
+    const result = await getUnratedMemeCount(sourceData);
     if (result.status !== "success") {
       return res.status(500).json(result);
     }
     console.log(result.status)
+    res.json(result);
 
     if (result.count <= 5) {
       console.log("trying to get existing job count")
@@ -71,11 +78,11 @@ router.get("/meme-count", async (req, res) => {
           
           try {
             await queues.getTenMemesQueue.add(
-            'get-ten-memes-job',   // optional name
-            { foo: 'bar' },        // job data must be JSON-serializable
-            { removeOnComplete: true, removeOnFail: true }
+            "get-ten-memes-job",
+            {sourceData},  
+            {   attempts: 5, removeOnComplete: true, removeOnFail: true }
           );
-            console.log('getTenMemesQueue job added to queue');
+            console.log("getTenMemesQueue job added to queue");
           
           } catch (e) {
             console.error(e);
@@ -83,16 +90,13 @@ router.get("/meme-count", async (req, res) => {
           }
 
         } else {
-          console.log('getTenMemesQueue job already queued');
+          console.log("getTenMemesQueue job already queued");
         }
 
       } catch (e) {
         console.error(e);
         return res.status(500).json({ error: e.message });
       }
-      
-
-    res.json(result);
     }
 
   } catch (e) {
@@ -102,14 +106,5 @@ router.get("/meme-count", async (req, res) => {
     }
   }
 });
-
-
-
-
-
-
-
-
-
 
 export default router;

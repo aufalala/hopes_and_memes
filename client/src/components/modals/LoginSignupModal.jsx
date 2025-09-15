@@ -213,8 +213,8 @@ function LoginSignupModal() {
 
                   {error && (
                     <div className={styles.error}>
-                      {error.split('\n').map((line, idx) => (
-                        <p key={idx}>{line}</p>
+                      {error.split('\n').map((line, index) => (
+                        <p key={index}>{line}</p>
                       ))}
                     </div>
                   )}
@@ -245,8 +245,8 @@ function LoginSignupModal() {
                   
                   {error && (
                     <div className={styles.error}>
-                      {error.split('\n').map((line, idx) => (
-                        <p key={idx}>{line}</p>
+                      {error.split('\n').map((line, index) => (
+                        <p key={index}>{line}</p>
                       ))}
                     </div>
                   )}
@@ -288,8 +288,8 @@ function LoginSignupModal() {
 
                   {error && (
                     <div className={styles.error}>
-                      {error.split('\n').map((line, idx) => (
-                        <p key={idx}>{line}</p>
+                      {error.split('\n').map((line, index) => (
+                        <p key={index}>{line}</p>
                       ))}
                     </div>
                   )}
