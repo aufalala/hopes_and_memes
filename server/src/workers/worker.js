@@ -2,7 +2,7 @@ import { Worker } from "bullmq";
 import IORedis from "ioredis";
 
 import { getTenMemes } from "../utils/memeAPI.js";
-import { postCloudinary } from "../utils/cloudinaryAPI.js";
+import { uploadMemesToCloudinary } from "../utils/cloudinaryAPI.js";
 
 //111/////////////////////////////// --- CONNECTION
 const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379";
@@ -24,14 +24,14 @@ const getTenMemesWorker = new Worker(
       } else {
 
           try {
-            const result2 = await postCloudinary(sourceData);
+            const result2 = await uploadMemesToCloudinary(sourceData, result.memes);
             if (result.status !== "success") {
               throw new Error("postCloudinary failed: status not success");
             }
             return result2;
 
           } catch (e) {
-            console.error("postCloudinary error:", e);
+            console.error("uploadMemesToCloudinary error:", e);
             throw e;
           }
       }

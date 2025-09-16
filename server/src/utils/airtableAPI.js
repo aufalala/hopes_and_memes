@@ -2,7 +2,7 @@ import { AIRTABLE_URL, AIRTABLE_TOKEN } from "../config.js";
 
 //111/////////////////////////////// --- FORCE IPV4
 import https from "https";
-// import fetch from "node-fetch";
+import fetch from "node-fetch";
 const agent = new https.Agent({ family: 4 });
 
 //111/////////////////////////////// --- FOR PING 
