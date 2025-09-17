@@ -1,15 +1,7 @@
 import { Worker } from "bullmq";
-import IORedis from "ioredis";
-
-import { getTenMemes } from "../utils/memeAPI.js";
-import { uploadMemesToCloudinary } from "../utils/cloudinaryAPI.js";
-
-//111/////////////////////////////// --- CONNECTION
-const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379";
-const connection = new IORedis(redisUrl, {
-  maxRetriesPerRequest: null,
-  enableReadyCheck: false,
-});
+import { getTenMemes } from "../../utils/memeAPI.js";
+import { uploadMemesToCloudinary } from "../../utils/cloudinaryAPI.js";
+import connection from "../connection.js";
 
 //111/////////////////////////////// --- WORKERS WORK
 const getTenMemesWorker = new Worker(
@@ -17,29 +9,37 @@ const getTenMemesWorker = new Worker(
   async (job) => {
     console.log("Starting job", job.name, job.id);
     const { sourceData } = job.data;
+
+    let getTenMemesResult;
+
     try {
       const result = await getTenMemes(sourceData);
       if (result.status !== "success") {
         throw new Error("getTenMemes failed: status not success");
-      } else {
-
-          try {
-            const result2 = await uploadMemesToCloudinary(sourceData, result.memes);
-            if (result.status !== "success") {
-              throw new Error("postCloudinary failed: status not success");
-            }
-            return result2;
-
-          } catch (e) {
-            console.error("uploadMemesToCloudinary error:", e);
-            throw e;
-          }
       }
-
+      getTenMemesResult = result
     } catch (e) {
       console.error("getTenMemes or postCloudinary failed:", e);
       throw e;
     }
+
+    /////////////////////////////////////// INSERT UPLOAD TO AIRTABLE AND CACHE HERE
+
+
+    try {
+      const result = await uploadMemesToCloudinary(sourceData, getTenMemesResult.memes);
+      if (result.status !== "success") {
+        throw new Error("postCloudinary failed: status not success");
+      }
+      return result;
+
+    } catch (e) {
+      console.error("uploadMemesToCloudinary error:", e);
+      throw e;
+    }
+      
+
+    
   },
   { connection }
 );

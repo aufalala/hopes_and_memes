@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import "./redis/workers/worker.js";
 
 import { clerkMiddleware } from "@clerk/express";
 
@@ -14,7 +15,6 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-
 app.use(clerkMiddleware());
 
 //111/////////////////////////////// --- ROUTES
@@ -38,5 +38,3 @@ app.listen(PORT, async () => {
     console.log("pingAirtable() failed or returned no message.");
   }
 });
-
-import "./workers/worker.js";

@@ -1,3 +1,5 @@
+decide if ten memes go into airtable first
+
 NSFW filter and research if true
 
 server pulls and stores memes into airtable (when unrated <10, add 5 new memes, to be checked and performed when

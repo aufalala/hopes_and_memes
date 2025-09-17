@@ -1,23 +1,17 @@
 
-export async function postCloudinary(sourceData) {
-  console.log(`[${new Date().toISOString()}] TRYING: postCloudinary from ${sourceData}`);
-  try {
-    return {
-      status: "success"
-    }
-  } catch (e) {
-    console.error("Airtable failed:", e.message);
-    throw e;
-  }
-}
+// export async function postCloudinary(sourceData) {
+//   console.log(`[${new Date().toISOString()}] TRYING: postCloudinary from ${sourceData}`);
+//   try {
+//     return {
+//       status: "success"
+//     }
+//   } catch (e) {
+//     console.error("Airtable failed:", e.message);
+//     throw e;
+//   }
+// }
 
-
-
-
-
-
-
-import { v2 as cloudinary } from 'cloudinary';
+import { cloudinary } from '../config.js';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
@@ -31,8 +25,8 @@ cloudinary.config({
 });
 
 // Download image from URL using https
-async function downloadImageToFile(sourceData, url) {
-  console.log(`[${new Date().toISOString()}] TRYING: downloadImageToFile from ${sourceData}`);
+async function downloadImageToFile(sourceData, url, index) {
+  console.log(`[${new Date().toISOString()}] TRYING: downloadImageToFile from ${sourceData}, [${index}]`);
 
   // Create a temporary file path in the OS's temp directory
   const tempPath = path.join(os.tmpdir(), path.basename(url.split('?')[0]));
@@ -41,28 +35,28 @@ async function downloadImageToFile(sourceData, url) {
 
   try {
     await new Promise((resolve, reject) => {
-      console.log(`[${new Date().toISOString()}] downloadImageToFile: DOWNLOADING: ${url}`)
+      console.log(`[${new Date().toISOString()}] downloadImageToFile: DOWNLOADING: [${index}] ${url}`)
       // Start downloading the image using HTTPS
       https.get(url, (response) => {
         if (response.statusCode !== 200) {
-          return reject(new Error(`[${new Date().toISOString()}] downloadImageToFile: DOWNLOAD FAILED: ${response.statusCode} for ${url}`));
+          return reject(new Error(`[${new Date().toISOString()}] downloadImageToFile: DOWNLOAD FAILED: [${index}] ${response.statusCode} for ${url}`));
         }
 
         
-        console.log(`[${new Date().toISOString()}] downloadImageToFile: SAVING: ${url}`);
+        console.log(`[${new Date().toISOString()}] downloadImageToFile: SAVING: [${index}] ${url}`);
         // Downloaded img goes into stream path
         response.pipe(file);
         file.on('finish', () => {
           // Resolve when file stream is closed
           file.close(resolve); 
-          console.log(`[${new Date().toISOString()}] downloadImageToFile: SAVE SUCCESS: ${url}`);
+          console.log(`[${new Date().toISOString()}] downloadImageToFile: SAVE SUCCESS: [${index}] ${url}`);
         });
       }).on('error', (err) => {
         console.log(err)
         // Delete temp file on error
-        console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETING: ${tempPath}`);
+        console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETING: [${index}] ${tempPath}`);
         fs.unlink(tempPath, () => reject(err)); 
-        console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETED: ${tempPath}`);
+        console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETED: [${index}] ${tempPath}`);
       });
     });
 
@@ -70,27 +64,27 @@ async function downloadImageToFile(sourceData, url) {
   } catch (err) {
     // Clean up written file if an error occurred
     
-    console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETING PARTIAL WRITE: ${tempPath}`);
+    console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETING PARTIAL WRITE: [${index}] ${tempPath}`);
     if (fs.existsSync(tempPath)) {
       fs.unlinkSync(tempPath);
-      console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETED PARTIAL WRITE: ${tempPath}`);
+      console.log(`[${new Date().toISOString()}] downloadImageToFile: DELETED PARTIAL WRITE: [${index}] ${tempPath}`);
     }
     throw err;
   }
 }
 
 // Upload single meme
-async function processMemeUpload(sourceData, meme) {
+async function processMemeUpload(sourceData, meme, index) {
   
-  console.log(`[${new Date().toISOString()}] TRYING: processMemeUpload from ${sourceData}`);
+  console.log(`[${new Date().toISOString()}] TRYING: processMemeUpload from ${sourceData}, [${index}]`);
   let localImagePath;
 
   try {
     // downloadImageToFile returns img file path
-    localImagePath = await downloadImageToFile(sourceData, meme.url);
+    localImagePath = await downloadImageToFile(sourceData, meme.url, index);
 
     // upload to cloudinary
-    console.log(`[${new Date().toISOString()}] processMemeUpload: UPLOADING ${localImagePath}`)
+    console.log(`[${new Date().toISOString()}] processMemeUpload: UPLOADING: [${index}] ${localImagePath}`)
     const uploadResult = await cloudinary.uploader.upload(localImagePath, {
       folder: 'reddit_memes/',
       context: `postLink=${meme.postLink}`,
@@ -99,7 +93,7 @@ async function processMemeUpload(sourceData, meme) {
       resource_type: 'image'
     });
 
-    console.log(`[${new Date().toISOString()}] processMemeUpload: UPLOADED: ${localImagePath}`)
+    console.log(`[${new Date().toISOString()}] processMemeUpload: UPLOADED: [${index}] ${localImagePath}`)
     return {
       success: true,
       originalPostLink: meme.postLink,
@@ -107,7 +101,7 @@ async function processMemeUpload(sourceData, meme) {
     };
 
   } catch (error) {
-    console.log(`[${new Date().toISOString()}] processMemeUpload: FAILED: ${localImagePath} ${error.message}`)
+    console.log(`[${new Date().toISOString()}] processMemeUpload: FAILED: [${index}] ${localImagePath} ${error.message}`)
     return {
       success: false,
       originalPostLink: meme.postLink,
@@ -117,9 +111,9 @@ async function processMemeUpload(sourceData, meme) {
     // Delete temp file
     if (localImagePath && fs.existsSync(localImagePath)) {
       
-      console.log(`[${new Date().toISOString()}] processMemeUpload: CLEARING: ${localImagePath}`);
+      console.log(`[${new Date().toISOString()}] processMemeUpload: CLEARING: [${index}] ${localImagePath}`);
       fs.unlinkSync(localImagePath);
-      console.log(`[${new Date().toISOString()}] processMemeUpload: CLEARED: ${localImagePath}`);
+      console.log(`[${new Date().toISOString()}] processMemeUpload: CLEARED: [${index}] ${localImagePath}`);
     }
   }
 }
@@ -132,10 +126,11 @@ export async function uploadMemesToCloudinary(sourceData, memeArray, maxRetries 
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     if (memesToUpload.length === 0) break;
-
+    console.log("##################################################################################################");
     console.log(`[${new Date().toISOString()}] uploadMemesToCloudinary: Attempt ${attempt + 1} of ${maxRetries + 1}`);
+    console.log("##################################################################################################");
 
-    const results = await Promise.all(memesToUpload.map(meme => processMemeUpload(sourceData, meme)));
+    const results = await Promise.all(memesToUpload.map((meme, index) => processMemeUpload(sourceData, meme, index+1)));
 
     const newSuccesses = results.filter(r => r.success);
     const successfulLinks = newSuccesses.map(r => r.originalPostLink);
