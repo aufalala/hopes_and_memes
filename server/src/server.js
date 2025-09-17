@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, async () => {
   console.log(`Listening on port ${PORT}...`);
 
-  const ok = await pingAirtable();
+  const ok = await pingAirtable("Server");
   if (ok  && ok.message) {  
     console.log(ok.message);
   } else {

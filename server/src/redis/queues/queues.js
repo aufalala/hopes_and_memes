@@ -1,8 +1,8 @@
 import { Queue }from "bullmq";
-import connection from "../connection.js";
+import redisConnection from "../connection.js";
 
 //111/////////////////////////////// --- QUEUES
 export const queues = {
-  getTenMemesQueue: new Queue("get-ten-memes", { connection }),
-  postCloudinaryQueue: new Queue("post-cloudinary", { connection }),
+  getTenMemesQueue: new Queue("get-ten-memes", { redisConnection }),
+  // postCloudinaryQueue: new Queue("post-cloudinary", { redisConnection }),
 };

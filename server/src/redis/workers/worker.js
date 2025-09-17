@@ -1,7 +1,10 @@
 import { Worker } from "bullmq";
+import redisConnection from "../connection.js";
+
 import { getTenMemes } from "../../utils/memeAPI.js";
 import { uploadMemesToCloudinary } from "../../utils/cloudinaryAPI.js";
-import connection from "../connection.js";
+import { uploadUnratedMemesToCache } from "../../utils/redisAPI.js";
+import { uploadUnratedMemesToAirtable } from "../../utils/airtableAPI.js";
 
 //111/////////////////////////////// --- WORKERS WORK
 const getTenMemesWorker = new Worker(
@@ -10,38 +13,78 @@ const getTenMemesWorker = new Worker(
     console.log("Starting job", job.name, job.id);
     const { sourceData } = job.data;
 
-    let getTenMemesResult;
+    let tenMemes;
 
+    //222// RETRIEVE 10 MEMES
     try {
       const result = await getTenMemes(sourceData);
       if (result.status !== "success") {
         throw new Error("getTenMemes failed: status not success");
       }
-      getTenMemesResult = result
+      tenMemes = result.memes
     } catch (e) {
-      console.error("getTenMemes or postCloudinary failed:", e);
+      console.error("getTenMemes:", e);
       throw e;
     }
 
-    /////////////////////////////////////// INSERT UPLOAD TO AIRTABLE AND CACHE HERE
-
+    let flagCacheAndAirtableSuccess = false;
 
     try {
-      const result = await uploadMemesToCloudinary(sourceData, getTenMemesResult.memes);
-      if (result.status !== "success") {
-        throw new Error("postCloudinary failed: status not success");
-      }
-      return result;
-
+      await Promise.all([
+        (async () => {
+          //222// UPLOAD TO CACHE
+          try {
+            const result = await uploadUnratedMemesToCache(sourceData, tenMemes);
+            if (result.status !== "success") {
+              throw new Error("uploadUnratedMemesToCache FAILED: status not success");
+            }
+          } catch (e) {
+            console.error("uploadUnratedMemesToCache FAILED:", e);
+            throw "uploadUnratedMemesToCache FAILED";
+          }
+        })(),
+        (async () => {
+          //222// UPLOAD TO AIRTABLE
+          try {
+            const result = await uploadUnratedMemesToAirtable(sourceData, tenMemes);
+            if (result.status !== "success") {
+              throw new Error("uploadUnratedMemesToAirtable FAILED: status not success");
+            }
+          } catch (e) {
+            console.error("uploadUnratedMemesToAirtable FAILED:", e);
+            throw "uploadUnratedMemesToAirtable FAILED";
+          }
+        })(),
+      ]);
+      flagCacheAndAirtableSuccess = true;
     } catch (e) {
-      console.error("uploadMemesToCloudinary error:", e);
-      throw e;
+      console.error(e);
+    }
+        
+    if (!flagCacheAndAirtableSuccess) {
+      const cacheOrAirtableFailed = "Cache or Airtable upload failed, terminating job.";
+      console.error(cacheOrAirtableFailed);
+      throw new Error(cacheOrAirtableFailed);
+    } 
+    {
+      //222// CLOUDINARY
+      try {
+        const result = await uploadMemesToCloudinary(sourceData, tenMemes);
+        if (result.status !== "success") {
+          throw new Error("postCloudinary failed: status not success");
+        }
+        return result;
+
+      } catch (e) {
+        console.error("uploadMemesToCloudinary error:", e);
+        throw e;
+      }
     }
       
 
     
   },
-  { connection }
+  { connection: redisConnection }
 );
 
 //111/////////////////////////////// --- WORKERS EVENT LISTENERS

@@ -63,7 +63,7 @@ router.get("/meme-count", async (req, res) => {
     if (result.status !== "success") {
       return res.status(500).json(result);
     }
-    console.log(result.status)
+    console.log(result.status, result.count)
     res.json(result);
 
     if (result.count <= 5) {

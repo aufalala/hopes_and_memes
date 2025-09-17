@@ -161,7 +161,7 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
 
 
 
-//111/////////////////////////////// --- ALL MEMES
+//111/////////////////////////////// --- UNRATED MEMES
 
 
 export async function getUnratedMemeCount(sourceData, table = "unratedMemes") {
@@ -191,7 +191,53 @@ export async function getUnratedMemeCount(sourceData, table = "unratedMemes") {
   }
 }
 
+export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table = "unratedMemes") {
+  console.log(`[${new Date().toISOString()}] TRYING: uploadUnratedMemesToAirtable from ${sourceData}`);
+  try {
+    const url = `${AIRTABLE_URL}/${table}`;
 
+    // Transform memeArray into Airtable format
+    const records = memeArray.map(meme => ({
+      fields: {
+        postLink: meme.postLink,
+        subreddit: meme.subreddit,
+        title: meme.title,
+        url: meme.url,
+        nsfw: JSON.stringify(meme.nsfw),
+        spoiler: JSON.stringify(meme.spoiler),
+        author: meme.author,
+        ups: JSON.stringify(meme.ups),
+        preview: JSON.stringify(meme.preview),
+        created_at: JSON.stringify(Date.now())
+      }
+    }));
+
+    console.log(`[${new Date().toISOString()}] uploadUnratedMemesToAirtable: UPLOADING:`)
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ records }),
+      agent,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Airtable API error: ${response.status} - ${errorText}`);
+    }
+
+    console.log(`[${new Date().toISOString()}] uploadUnratedMemesToAirtable: UPLOADED:`)
+    return {
+      status: "success",
+    };
+
+  } catch (e) {
+    console.error("Airtable failed:", e.message);
+    throw e;
+  }
+}
 
 
 //111/////////////////////////////// --- ALL RATINGS
