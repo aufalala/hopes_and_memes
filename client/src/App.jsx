@@ -24,9 +24,6 @@ import Profile from "./pages/Profile.jsx";
 import About from "./pages/About.jsx";
 import More from "./pages/More.jsx";
 
-// CSS
-import "./App.css";
-
 function App() {
 
   const { fetchWithAuth } = useClerkAuthFetch();

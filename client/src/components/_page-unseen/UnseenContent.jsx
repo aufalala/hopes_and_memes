@@ -20,6 +20,12 @@ function UnseenContent() {
       }
     })();
 
+    unratedMemes.forEach((meme) => {
+      const img = new Image();
+      img.src = meme.postLink;
+    });
+
+
   }, [])
 
   return (
