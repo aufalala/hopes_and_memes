@@ -1,4 +1,13 @@
-decide if ten memes go into airtable first
+remove file from cloudinary retry upload if file too large
+
+implement - get unrated memes from airtable (THEN) fill cache
+
+implement - get unrated memes worker
+
+implement - all cache context
+
+
+
 
 NSFW filter and research if true
 
@@ -32,7 +41,6 @@ home = all rated memes
 
 
 unseen = new memes
--- -- sidebar for search through predefined subreddit search
 -- -- unseen page to only load a max amount
 
 
@@ -96,3 +104,5 @@ SAVE USER INFO INTO AIRTABLE (when new user is created, after signup complete, f
 split RESTFUL routing for syncing user info
 
 standardize modal providers context
+
+decide if ten memes go into airtable first
