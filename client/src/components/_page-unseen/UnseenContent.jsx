@@ -2,6 +2,9 @@ import { useEffect, useState } from "react"
 import { getUnratedMemes } from "../../utils/redisAPI.js"
 
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
+import MemeCards from "../__reuseables/MemeCards.jsx";
+
+import styles from "./_UnseenContent.module.css"
 
 
 function UnseenContent() {
@@ -29,12 +32,9 @@ function UnseenContent() {
   }, [])
 
   return (
-    <div>
-      asdas
+    <div className={styles.cardsContainer}>
       {unratedMemes.map((meme, index) => (
-        <div key={index}>
-          <img src={meme.url}  ></img>
-        </div>
+          <MemeCards key={index} meme={meme}/>
       ))}
     </div>
   )

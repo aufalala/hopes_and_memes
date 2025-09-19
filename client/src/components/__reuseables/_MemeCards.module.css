@@ -1,0 +1,41 @@
+.card {
+    width: 100%;
+    max-width: 800px;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 1rem;
+}
+
+.title {
+    width: 100%;
+    max-width: inherit;
+
+    margin: 1rem 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+}
+
+.imageContainer {
+    width: 100%;
+    max-width: inherit;
+}
+
+.img {
+    width: 100%;
+    max-width: inherit;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttonsContainer {
+    width: 100%;
+    max-width: inherit;
+
+}

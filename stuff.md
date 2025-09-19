@@ -1,3 +1,11 @@
+CURRENTLY WORKING ON
+
+UNRATED MEME RATING
+
+PULLING MEMES FROM UNRATED CACHE
+
+---------------------------------------------------------------------
+
 remove file from cloudinary retry upload if file too large
 
 implement - get unrated memes from airtable (THEN) fill cache
@@ -5,6 +13,8 @@ implement - get unrated memes from airtable (THEN) fill cache
 implement - get unrated memes worker
 
 implement - all cache context
+
+implement - animation for pages
 
 
 
