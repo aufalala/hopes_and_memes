@@ -33,33 +33,33 @@ export async function getRandomMeme(sourceData) {
 export async function getTenMemes(sourceData) {
   console.log(`[${new Date().toISOString()}] TRYING: getTenMemes from ${sourceData}`);
     try {
-    const response = await fetch(`${memeApiUrl}/10`)
-    if (!response.ok) {
-      throw new Error(`[${new Date().toISOString()}] getTenMemes: Meme API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
-    // get more memes if API returned <10
-    while (data.memes.length <10) {
-      console.log(`[${new Date().toISOString()}] getTenMemes: Memes less than 10, count: data.memes.length`);
-      try {
-        const memeRetry = await fetch(`${memeApiUrl}/${10-data.memes.length}`)
-        if (!memeRetry.ok) {
-          throw new Error(`[${new Date().toISOString()}] getTenMemes: Meme API retry error: ${memeRetry.status}`);
-        }
-        const retryData = await memeRetry.json();
-        data.memes = [...data.memes, retryData.memes]
-      
-      } catch (e) {
-        console.error(`[${new Date().toISOString()}] getTenMemes: Meme retrieval failed:`, e);
-        throw e;
+      const response = await fetch(`${memeApiUrl}/10`)
+      if (!response.ok) {
+        throw new Error(`[${new Date().toISOString()}] getTenMemes: Meme API error: ${response.status}`);
       }
 
-    }
-    const payload = {status: "success", memes: data.memes,};
-    console.log(`[${new Date().toISOString()}] getTenMemes: Meme count: ${payload.memes.length}`)
-    return payload;
+      const data = await response.json();
+      
+      // get more memes if API returned <10
+      while (data.memes.length <10) {
+        console.log(`[${new Date().toISOString()}] getTenMemes: Memes less than 10, count: data.memes.length`);
+        try {
+          const memeRetry = await fetch(`${memeApiUrl}/${10-data.memes.length}`)
+          if (!memeRetry.ok) {
+            throw new Error(`[${new Date().toISOString()}] getTenMemes: Meme API retry error: ${memeRetry.status}`);
+          }
+          const retryData = await memeRetry.json();
+          data.memes = [...data.memes, retryData.memes]
+        
+        } catch (e) {
+          console.error(`[${new Date().toISOString()}] getTenMemes: Meme retrieval failed:`, e);
+          throw e;
+        } 
+
+      }
+      const payload = {status: "success", memes: data.memes,};
+      console.log(`[${new Date().toISOString()}] getTenMemes: Meme count: ${payload.memes.length}`)
+      return payload;
 
     } catch (e) {
       console.error(`[${new Date().toISOString()}] getTenMemes: Meme retrieval failed:`, e);

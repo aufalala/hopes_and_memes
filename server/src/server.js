@@ -7,6 +7,7 @@ import { clerkMiddleware } from "@clerk/express";
 import test from "./routes/test.js";
 import meme from "./routes/meme.js";
 import users from "./routes/users.js";
+import redis from "./routes/redis.js"
 
 import { pingAirtable } from "./utils/airtableAPI.js";
 
@@ -20,7 +21,8 @@ app.use(clerkMiddleware());
 //111/////////////////////////////// --- ROUTES
 app.use("/api/test", test);
 app.use("/api/meme", meme);
-app.use("/api/users", users)
+app.use("/api/users", users);
+app.use("/api/redis", redis)
 
 //111/////////////////////////////// --- ROOT
 app.get("/", (req, res) => {
