@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getUnratedMemes } from "../../utils/redisAPI.js"
+import { getUnratedMemes } from "../../services/redisAPI.js"
 
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 import MemeCards from "../__reuseables/MemeCards.jsx";

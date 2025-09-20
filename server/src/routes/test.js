@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "@clerk/express";
 
-import { pingAirtable, getTestImage, getUnratedMemeCount } from "../utils/airtableAPI.js";
+import { pingAirtable, getTestImage, getUnratedMemeCount } from "../services/airtableAPI.js";
 import { queues } from "../redis/queues/queues.js";
 
 const router = express.Router();

@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getUnratedMemesFromCache } from "../utils/redisAPI.js";
+import { getUnratedMemesFromCache } from "../services/redisAPI.js";
 
 const router = express.Router();
 

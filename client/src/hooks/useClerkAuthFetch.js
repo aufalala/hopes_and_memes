@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { localServerURL, serverURL } from "../utils/serverURL";
+import { localServerURL, serverURL } from "../services/serverURL";
 
 export function useClerkAuthFetch() {
   const { getToken, isSignedIn, isLoaded } = useAuth();

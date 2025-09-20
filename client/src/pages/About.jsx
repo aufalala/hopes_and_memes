@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { fetchTestImage } from '../utils/airtableAPI';
+import { fetchTestImage } from '../services/airtableAPI';
 import { useClerkAuthFetch } from "../hooks/useClerkAuthFetch";
 
 function About() {

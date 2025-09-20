@@ -7,8 +7,9 @@
 //222// 
 
 
+---------------------------------------------------------------------------------------
 
-
+server router endpoints
 
 router.get("/PATH/PATH/PATH", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
@@ -28,6 +29,9 @@ router.get("/PATH/PATH/PATH", async (req, res) => {
 });
 
 
+---------------------------------------------------------------------------------------
+
+API utils
 
 export async function ##FUNCTION##(sourceData) {
   console.log(`[${new Date().toISOString()}] TRYING: ##FUNCTION## from ${sourceData}`);
@@ -42,6 +46,9 @@ export async function ##FUNCTION##(sourceData) {
 }
 
 
+---------------------------------------------------------------------------------------
+
+WORKER
 
 const ##WORKER## = new Worker(
   "##JOB NAME##",
@@ -74,3 +81,6 @@ const ##WORKER## = new Worker(
   },
   { connection }
 );
+
+
+---------------------------------------------------------------------------------------

@@ -1,10 +1,10 @@
 import { Worker } from "bullmq";
 import redisConnection from "../connection.js";
 
-import { getTenMemes } from "../../utils/memeAPI.js";
-import { uploadMemesToCloudinary } from "../../utils/cloudinaryAPI.js";
-import { uploadUnratedMemesToCache } from "../../utils/redisAPI.js";
-import { uploadUnratedMemesToAirtable } from "../../utils/airtableAPI.js";
+import { getTenMemes } from "../../services/memeAPI.js";
+import { uploadMemesToCloudinary } from "../../services/cloudinaryAPI.js";
+import { uploadUnratedMemesToCache } from "../../services/redisAPI.js";
+import { uploadUnratedMemesToAirtable } from "../../services/airtableAPI.js";
 import { workerEventListeners } from "./workerEventListener.js";
 
 //111/////////////////////////////// --- WORKERS WORK

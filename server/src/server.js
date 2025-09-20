@@ -10,7 +10,7 @@ import meme from "./routes/meme.js";
 import users from "./routes/users.js";
 import redis from "./routes/redis.js"
 
-import { pingAirtable } from "./utils/airtableAPI.js";
+import { pingAirtable } from "./services/airtableAPI.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;

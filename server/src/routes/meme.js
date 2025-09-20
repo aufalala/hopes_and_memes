@@ -1,7 +1,7 @@
 import express from "express";
 import { requireAuth } from "@clerk/express";
 
-import { getRandomMeme, getTenMemes} from "../utils/memeAPI.js";
+import { getRandomMeme, getTenMemes} from "../services/memeAPI.js";
 
 const router = express.Router();
 

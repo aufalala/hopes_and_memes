@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSignIn, useSignUp } from "@clerk/clerk-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { apiGetUserVerify, apiPostUser } from "../../utils/airtableAPI";
+import { apiGetUserVerify, apiPostUser } from "../../services/airtableAPI";
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 
 import { useModal } from "../../contexts/ModalContext";

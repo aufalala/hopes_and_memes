@@ -1,5 +1,5 @@
-import { fetchTestImage, fetchTestImageProtected } from "../utils/airtableAPI";
-import { fetchRandomMeme, apiGetTenMemes } from "../utils/memeAPI";
+import { fetchTestImage, fetchTestImageProtected } from "../services/airtableAPI";
+import { fetchRandomMeme, apiGetTenMemes } from "../services/memeAPI";
 
 import { useClerkAuthFetch } from "../hooks/useClerkAuthFetch";
 

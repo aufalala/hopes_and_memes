@@ -3,8 +3,8 @@ import { useState, useEffect} from "react";
 import { Routes, Route } from "react-router-dom";
 //CLERK
 import { useClerkAuthFetch } from "./hooks/useClerkAuthFetch";
-//UTILS
-import { fetchStatus } from "./utils/airtableAPI.js";
+//SERVICES
+import { fetchStatus } from "./services/airtableAPI.js";
 
 //Modals
 import { ModalProvider } from "./contexts/ModalContext.jsx";
