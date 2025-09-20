@@ -1,4 +1,18 @@
+.mainButtonsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .rateButtonsContainer {
+    display: flex;
+    flex-direction: row;
+
+    gap: 1.5rem;
+}
+
+
+.actionButtonsContainer {
     display: flex;
     flex-direction: row;
 

@@ -1,8 +1,9 @@
 CURRENTLY WORKING ON
 
+PULLING MEMES FROM UNRATED CACHE and AT, if AT, to set to cache. [ALL THIS TO BE DONE BY WORKER]
+
 UNRATED MEME RATING
 
-PULLING MEMES FROM UNRATED CACHE
 
 ---------------------------------------------------------------------
 
