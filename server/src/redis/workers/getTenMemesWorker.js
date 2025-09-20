@@ -5,6 +5,7 @@ import { getTenMemes } from "../../utils/memeAPI.js";
 import { uploadMemesToCloudinary } from "../../utils/cloudinaryAPI.js";
 import { uploadUnratedMemesToCache } from "../../utils/redisAPI.js";
 import { uploadUnratedMemesToAirtable } from "../../utils/airtableAPI.js";
+import { workerEventListeners } from "./workerEventListener.js";
 
 //111/////////////////////////////// --- WORKERS WORK
 const getTenMemesWorker = new Worker(
@@ -15,7 +16,7 @@ const getTenMemesWorker = new Worker(
 
     let tenMemes;
 
-    //222// RETRIEVE 10 MEMES
+    //222// RETRIEVE 10 NEW MEMES FOR "UNRATED"
     try {
       const result = await getTenMemes(sourceData);
       if (result.status !== "success") {
@@ -29,10 +30,11 @@ const getTenMemesWorker = new Worker(
 
     let flagCacheAndAirtableSuccess = false;
 
+    //222// UPLOAD MEME DATA TO CACHE AND AIRTABLE
     try {
       await Promise.all([
         (async () => {
-          //222// UPLOAD TO CACHE
+          //222// UPLOAD MEME DATA TO CACHE
           try {
             const result = await uploadUnratedMemesToCache(sourceData, tenMemes);
             if (result.status !== "success") {
@@ -44,7 +46,7 @@ const getTenMemesWorker = new Worker(
           }
         })(),
         (async () => {
-          //222// UPLOAD TO AIRTABLE
+          //222// UPLOAD MEME DATA TO AIRTABLE
           try {
             const result = await uploadUnratedMemesToAirtable(sourceData, tenMemes);
             if (result.status !== "success") {
@@ -57,6 +59,7 @@ const getTenMemesWorker = new Worker(
         })(),
       ]);
       flagCacheAndAirtableSuccess = true;
+
     } catch (e) {
       console.error(e);
     }
@@ -66,72 +69,25 @@ const getTenMemesWorker = new Worker(
       console.error(cacheOrAirtableFailed);
       throw new Error(cacheOrAirtableFailed);
     } 
-    {
-      //222// CLOUDINARY
-      try {
-        const result = await uploadMemesToCloudinary(sourceData, tenMemes);
-        if (result.status !== "success") {
-          throw new Error("postCloudinary failed: status not success");
-        }
-        return result;
-
-      } catch (e) {
-        console.error("uploadMemesToCloudinary error:", e);
-        throw e;
+    
+    //222// UPLOAD IMAGE TO CLOUDINARY
+    try {
+      const result = await uploadMemesToCloudinary(sourceData, tenMemes);
+      if (result.status !== "success") {
+        throw new Error("postCloudinary failed: status not success");
       }
-    }
-      
+      return result;
 
+    } catch (e) {
+      console.error("uploadMemesToCloudinary error:", e);
+      throw e;
+    }
     
   },
   { connection: redisConnection }
 );
 
-//111/////////////////////////////// --- WORKERS EVENT LISTENERS
-//222// --- HANDLER
-const handleWorkerEvent = (workerName, event, ...args) => {
-  switch (event) {
-    case "completed":
-      const [job, result] = args;
-      console.log(`[${workerName}] Job ${job.id} completed. Result:`, result);
-      break;
+//222// WORKER EVENT LISTENER
+workerEventListeners("getTenMemesWorker", getTenMemesWorker);
 
-    case "failed":
-      const [jobFailed, err] = args;
-      console.error(`[${workerName}] Job ${jobFailed.id} failed:`, err);
-      break;
-
-    case "stalled":
-      const [jobStalled] = args;
-      console.warn(`[${workerName}] Job ${jobStalled.id} stalled!`);
-      break;
-
-    case "active": {
-      const [jobActive] = args;
-      console.log(`[${workerName}] Job ${jobActive.id} started.`);
-      break;
-    }
-
-    case "waiting": {
-      const [jobId] = args;
-      console.log(`[${workerName}] Job ${jobId} is waiting in queue.`);
-      break;
-    }      
-
-    default:
-      console.warn(`[${workerName}] Unhandled worker event: ${event}`);
-  }
-};
-
-//222// --- WORKER LIST
-const workers = {
-  getTenMemesWorker,
-  // replenishUnratedMemesCount,
-};
-
-//222// --- WORKER FOR EACH
-Object.entries(workers).forEach(([name, worker]) => {
-  ["completed", "failed", "stalled", "active", "waiting"].forEach((event) => {
-    worker.on(event, (...args) => handleWorkerEvent(name, event, ...args));
-  });
-});
+export default getTenMemesWorker;

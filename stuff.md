@@ -7,6 +7,8 @@ UNRATED MEME RATING
 
 ---------------------------------------------------------------------
 
+write cloudinary link to airtable and cache
+
 remove file from cloudinary retry upload if file too large
 
 implement - get unrated memes from airtable (THEN) fill cache

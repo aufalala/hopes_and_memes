@@ -1,0 +1,2 @@
+
+import "./getTenMemesWorker.js";

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import "./redis/connection.js";
+
+import "./redis/workers/workerStartAll.js";
 
 import { clerkMiddleware } from "@clerk/express";
 
@@ -26,7 +27,7 @@ app.use("/api/redis", redis)
 
 //111/////////////////////////////// --- ROOT
 app.get("/", (req, res) => {
-  res.send("🚀 Server is running!");
+  res.send("Server is running!");
 });
 
 //111/////////////////////////////// --- SERVER START
