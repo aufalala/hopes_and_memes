@@ -10,7 +10,7 @@ import { uploadUnratedMemesToAirtable } from "../../utils/airtableAPI.js";
 const getTenMemesWorker = new Worker(
   "get-ten-memes",
   async (job) => {
-    console.log("Starting job", job.name, job.id);
+    console.log(`[${new Date().toISOString()}] Starting job, ${job.name}, ${job.id}`);
     const { sourceData } = job.data;
 
     let tenMemes;
@@ -126,6 +126,7 @@ const handleWorkerEvent = (workerName, event, ...args) => {
 //222// --- WORKER LIST
 const workers = {
   getTenMemesWorker,
+  // replenishUnratedMemesCount,
 };
 
 //222// --- WORKER FOR EACH

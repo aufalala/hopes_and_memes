@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import "./redis/workers/worker.js";
+import "./redis/connection.js";
 
 import { clerkMiddleware } from "@clerk/express";
 
