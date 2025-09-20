@@ -239,5 +239,51 @@ export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table 
   }
 }
 
+export async function getUnratedMemesFromAirtable(sourceData, table = "unratedMemes") {
+  console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemesFromAirtable from ${sourceData}`);
+  try {
+    const flagForSafetyReloop = false;
+    
+    let data;
+    for (let i=0; i < 2; i++) {
+      const url = `${AIRTABLE_URL}/${table}`;
+      
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+        agent,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Airtable API error: ${response.status}`);
+      }
+      
+      data = await response.json();
+
+      if (data.records.length === 0 && flagForSafetyReloop) {
+        throw new Error(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
+      }
+      
+      if (data.records.length === 0) {
+        console.warn(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
+        //INSERT GET TEN MEMES WORKER TRIGGER
+        flagForSafetyReloop = true;
+      } else {
+        break
+      }
+    }
+    
+    console.log(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: get SUCCESS`);
+    return {
+      status: "success",
+      memes: data.records.map((record) => record.fields)
+    };
+
+  } catch (e) {
+    console.error("Airtable failed:", e.message);
+    throw e;
+  }
+}
+
+
 
 //111/////////////////////////////// --- ALL RATINGS
