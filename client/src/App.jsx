@@ -49,29 +49,25 @@ function App() {
   }, []);
 
   return (
-    <ModalProvider>    
-      
-      <ScrollContextProvider>
-        <Header />
+    <>
+      <Header />
 
-        <Content>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/unseen" element={<Unseen />} />
-            <Route path="/leaderboard" element={<LeaderBoard />} />
+      <Content>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/unseen" element={<Unseen />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
 
-            <Route path="/about" element={<About />} />
-            <Route path="/more" element={<More />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/more" element={<More />} />
 
 
-            <Route path="/profile" element={<Profile />} />    
-          </Routes>
-        </Content>
+          <Route path="/profile" element={<Profile />} />    
+        </Routes>
+      </Content>
 
-        <LoginSignupModal />
-      
-      </ScrollContextProvider>
-    </ModalProvider>
+      <LoginSignupModal />
+    </>
   );
 }
 

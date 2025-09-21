@@ -1,9 +1,17 @@
 import React, { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import { ClerkProvider } from "@clerk/clerk-react";
+
 import { HashRouter } from "react-router-dom";
-import "./index.css"
+
+import { ClerkProvider } from "@clerk/clerk-react";
+
+import { ModalProvider } from "./contexts/ModalContext.jsx";
+import { ScrollContextProvider } from "./contexts/ScrollContext.jsx";
+import { UserDataProvider } from "./contexts/UserDataContext.jsx";
+
 import App from "./App.jsx"
+
+import "./index.css"
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
@@ -12,11 +20,23 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById("root")).render(
-  <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-    <StrictMode>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </StrictMode>
-  </ClerkProvider>
+  
+  <StrictMode>
+    <HashRouter>
+        
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+            <UserDataProvider>
+        <ModalProvider>
+          <ScrollContextProvider>
+        
+                  <App />
+            
+          </ScrollContextProvider>
+        </ModalProvider>
+        
+            </UserDataProvider>
+      </ClerkProvider>
+  
+    </HashRouter>
+  </StrictMode>
 )
