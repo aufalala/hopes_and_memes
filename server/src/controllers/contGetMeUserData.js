@@ -3,7 +3,7 @@ import { AIRTABLE_T_ALL_USERS } from "../config.js";
 import { getRecordsFromAirtable } from "../services/airtableAPI.js";
 
 export async function contGetMeUserData({sourceData, req, res}) {
-  console.log(`[${new Date().toISOString()}] TRYING: contRateUnratedMemes from ${sourceData}`);
+  console.log(`[${new Date().toISOString()}] TRYING: contGetMeUserData from ${sourceData}`);
   const {userId} = getAuth(req);
 
   if (!userId) {
@@ -11,7 +11,7 @@ export async function contGetMeUserData({sourceData, req, res}) {
   }
 
   const result = await getRecordsFromAirtable({sourceData, table: AIRTABLE_T_ALL_USERS, filterParams: {clerk_user_id: userId}});
-  if (result.status === "success") {
+  if (result.status === "success" && result.records.length > 0) {
     return (result);
   } else {
     res.status(500).json(result);

@@ -2,7 +2,7 @@ import express from "express";
 import { requireAuth, getAuth, clerkClient} from "@clerk/express";
 
 import { getUserVerify, postUser } from "../services/airtableAPI.js";
-import { contGetMeUserData } from "../controller/contGetMeUserData.js";
+import { contGetMeUserData } from "../controllers/contGetMeUserData.js";
 
 const router = express.Router();
 
