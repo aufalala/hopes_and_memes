@@ -19,6 +19,18 @@ app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
 
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.path}`);
+  next();
+});
+
+app.get("/", (req, res) => {
+  console.log("Hit root / route");
+  console.log("User-Agent:", req.headers["user-agent"]);
+  console.log("Referer:", req.headers["referer"]);
+  res.send("Server is running!");
+});
+
 //111/////////////////////////////// --- ROUTES
 app.use("/api/test", test);
 app.use("/api/meme", meme);

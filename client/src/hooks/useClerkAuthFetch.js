@@ -30,21 +30,41 @@ export function useClerkAuthFetch() {
       const finalOptions = {
         ...options,
         headers: {
+          'Content-Type': 'application/json',
           ...options.headers,
           ...(withAuth && token && { Authorization: `Bearer ${token}` }),
         },
       };
 
       try {
+        console.log(localServerURL)
+        console.log(path);
+        console.log(finalOptions)
         const res = await fetch(`${localServerURL}${path}`, finalOptions);
         if (!res.ok) throw new Error("Local server response not ok");
-        return await res.json();
+          const contentType = res.headers.get("Content-Type");
+
+        if (contentType && contentType.includes("application/json")) {
+          return await res.json();
+        } else {
+          const text = await res.text();
+          console.warn(`Non-JSON response from ${localServerURL}:`, text);
+          throw new Error("Expected JSON, but got non-JSON response");
+        }
       } catch (error) {
         console.warn("Local server failed, trying remote server:", error.message);
         try {
           const res = await fetch(`${serverURL}${path}`, finalOptions);
           if (!res.ok) throw new Error("Remote server response not ok");
+            const contentType = res.headers.get("Content-Type");
+
+        if (contentType && contentType.includes("application/json")) {
           return await res.json();
+        } else {
+          const text = await res.text();
+          console.warn(`Non-JSON response from ${serverURL}:`, text);
+          throw new Error("Expected JSON, but got non-JSON response");
+        }
         } catch (err) {
           throw err;
         }
