@@ -1,16 +1,34 @@
-import styles from "./_MemeCards.module.css"
+import { useState } from "react"
+
+import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch.js";
+import { useUserData } from "../../contexts/UserDataContext";
+
 import MemeCardsButton from "./MemeCardsButton"
 
+import { apiPostUnratedRating } from "../../services/airtableAPI"
+
+import styles from "./_MemeCards.module.css"
+
+
 function MemeCards( { meme } ) {
+
+  const { fetchWithAuth } = useClerkAuthFetch();
+  const {userData} = useUserData(); 
+
+  const [enlarge, setEnlarge] = useState(false)
 
   function rateMeme(rating) {
     // insert payload builder here
 
-    // insert call post function
+    try {
+      const result = apiPostUnratedRating({fetchWithAuth, payload})
+    } catch (e) {
+
+    }
   }
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onMouseEnter={() => setEnlarge(true)} onMouseLeave={() => setEnlarge(false)}>
       
       
       
@@ -23,7 +41,7 @@ function MemeCards( { meme } ) {
       </div>
 
       <div>
-        <MemeCardsButton rateMeme={rateMeme}/>
+        <MemeCardsButton rateMeme={rateMeme} enlarge={enlarge}/>
       </div>
       <hr></hr>
 

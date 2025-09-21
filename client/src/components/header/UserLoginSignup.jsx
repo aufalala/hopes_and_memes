@@ -3,20 +3,28 @@ import { useClerk, useUser, } from "@clerk/clerk-react";
 import { Link } from "react-router-dom";
 
 import { useModal } from "../../contexts/ModalContext.jsx";
-import styles from "./_UserLoginSignup.module.css"
+// USING FAST USER DATA FROM CLERK
+// import { useUserData } from "../../contexts/UserDataContext.jsx";
 import Spinner from "../__reuseables/Spinner.jsx";
+
+import styles from "./_UserLoginSignup.module.css"
 function UserLoginSignup() {  
   
   const {openModal} = useModal();
   const { user, isLoaded, isSignedIn } = useUser();
+
+  // USING FAST USER DATA FROM CLERK
+  // const { userData } = useUserData();
+
   const { signOut } = useClerk();
   const [menuOpen, setMenuOpen] = useState(false);
 
   if (!isLoaded) {
     return <div className={styles.spinner}><Spinner/></div>;
   }
+
   
-  return isSignedIn ? (
+  return isSignedIn? (
     <div className={styles.profileDiv}>
       <Link to="/profile" className={styles.username}>{user.username.toUpperCase()}</Link>
       
