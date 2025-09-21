@@ -322,13 +322,13 @@ export async function getRecordsFromAirtable({
   table,
   sourceData,
   filterParams = {},
-} = {}) {
-  console.log(`[${new Date().toISOString()}] TRYING: getRecordsFromAirtable from table: ${table}, from ${sourceData}`);
-
+  } = {}) {
+  
+  console.log(`[${new Date().toISOString()}] TRYING: getRecordsFromAirtable from ${sourceData}`);
   try {
     const url = new URL(`${AIRTABLE_URL}/${table}`);
 
-    // Build Airtable filterByFormula from filterParams
+    //222// BUILD FILTER FORMULA
     if (filterParams && typeof filterParams === "object" && Object.keys(filterParams).length > 0) {
       const filterParts = Object.entries(filterParams).map(([key, value]) => {
         const formattedValue =
@@ -346,13 +346,16 @@ export async function getRecordsFromAirtable({
       }
     }
 
+    //222// FETCH FROM AIRTABLE
     const response = await fetch(url.toString(), {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
       agent,
     });
 
     if (!response.ok) {
-      throw new Error(`Airtable API error: ${response.status}`);
+      const errorData = await response.json();
+      console.error("Airtable error:", errorData.error?.message || "Unknown error");
+      throw new Error(`Airtable API error: ${errorData.error?.message}`);
     }
 
     const data = await response.json();
@@ -370,20 +373,45 @@ export async function getRecordsFromAirtable({
   }
 }
 
+export async function postToAirtable({
+  table,
+  sourceData,
+  postParams = {},
+  } = {}) {
 
+  console.log(`[${new Date().toISOString()}] TRYING: postToAirtable from ${sourceData}`);
+  try {
 
-//111/////////////////////////////// --- ALL RATINGS
+    const url = new URL(`${AIRTABLE_URL}/${table}`);
 
-// export async function uploadUnratedRating(sourceData) {
-//   console.log(`[${new Date().toISOString()}] TRYING: uploadUnratedRating from ${sourceData}`);
-//   try {
-//     const url = `${AIRTABLE_URL}/${table}`;
+    const response = await fetch(url.toString(), {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        records: [
+          {
+            fields: postParams,
+          },
+        ],
+      }),
+      agent,
+    });
 
-//     return {
-//       status: "success"
-//     }
-//   } catch (e) {
-//     console.error("##API failed:##", e.message);
-//     throw e;
-//   }
-// }
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Airtable error:", errorData.error?.message || "Unknown error");
+      throw new Error(`Airtable API error: ${errorData.error?.message}`);
+    }
+
+    const data = await response.json();
+    console.log(`[${new Date().toISOString()}] postToAirtable: SUCCESS`);
+    return {status: "success", data};
+    
+  } catch (e) {
+    console.error("postToAirtable FAILED:", e);
+    throw e;
+  }
+}

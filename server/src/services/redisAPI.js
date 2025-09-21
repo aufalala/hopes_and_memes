@@ -78,3 +78,56 @@ export async function getUnratedMemesFromCache(sourceData) {
 
     
 }
+
+
+
+/////////////////////////////////
+
+export async function getRecordsFromCache({sourceData, keyParam}) {
+  console.log(`[${new Date().toISOString()}] TRYING: getRecordsFromCache from ${sourceData}`);
+  try {
+    const keys = await redisConnection.keys(`${UNRATED_MEMES_CACHE_KEY}:${keyParam}`);
+
+    if (Array.isArray(keys) && keys.length > 0) {
+
+      const values = await Promise.all(keys.map((key) => redisConnection.get(key)));
+
+      const records = values.map((val) => JSON.parse(val));
+
+      const payload = {status: "success", records};
+      console.log(`[${new Date().toISOString()}] getRecordsFromCache: get SUCCESS, retrieved ${records.length} record(s)`);
+      return payload;
+      
+    } else {
+      console.warn(`[${new Date().toISOString()}] getRecordsFromCache: No records found in cache`);
+      throw ("getRecordsFromCache: No records found in cache");
+    }
+
+  } catch (e) {
+    console.error(`[${new Date().toISOString()}] getRecordsFromCache: Cache records retrieval FAILED:`, e);
+    throw e;
+  }
+}
+
+export async function lockUnratedMeme({sourceData, keyParam}) {
+  console.log(`[${new Date().toISOString()}] TRYING: lockUnratedMeme from ${sourceData}`);
+  try {
+    const key = `${keyParam}:lock`;
+    console.log(key)
+    const lock = await redisConnection.set(key, "locked", 'NX', 'EX', 60);
+
+    if (lock) {
+      
+      console.log(`[${new Date().toISOString()}] lockUnratedMeme: First to rate!`);
+      return {status: "success", lock}
+    } else {
+      
+      console.log(`[${new Date().toISOString()}] lockUnratedMeme: Not first?`);
+      return {status: "success", lock}
+    }
+  } catch (e) {
+    console.error(`[${new Date().toISOString()}] lockUnratedMeme: FAILED:`, e);
+    throw e;
+  }
+
+}
