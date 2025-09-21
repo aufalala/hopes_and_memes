@@ -1,8 +1,12 @@
 CURRENTLY WORKING ON
 
+!!!!!! do now - userdata
+----- building get records from airtable module
+
+UNRATED MEME RATING!!!!!!!!!!!!!!!!
+
 PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS TO BE DONE BY WORKER]
 
-UNRATED MEME RATING
 
 
 ---------------------------------------------------------------------
@@ -14,6 +18,8 @@ remove file from cloudinary retry upload if file too large
 implement - get unrated memes from airtable (THEN) fill cache
 
 implement - get unrated memes worker
+
+
 
 implement - all cache context
 

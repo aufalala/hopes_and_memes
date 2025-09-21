@@ -158,6 +158,38 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
   }
 }
 
+// export async function getUserVerify(sourceData, userId, table = "allUsers") {
+//   console.log(`[${new Date().toISOString()}] TRYING: getUserVerify ${sourceData}`);
+//   try {
+//     const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
+//     const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
+    
+//     const response = await fetch(url, {
+//       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+//       agent,  
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Airtable API error: ${response.status}`);
+//     }
+    
+//     const data = await response.json();
+//     let exist = true;
+
+//     if (!data.records.length) {
+//       exist = false;
+//     }
+    
+//     return {
+//       status: "success",
+//       exist,
+//     };
+
+//   } catch (e) {
+//     console.error("Airtable failed:", e.message);
+//     throw e;
+//   }
+// }
 
 
 
@@ -265,7 +297,7 @@ export async function getUnratedMemesFromAirtable(sourceData, table = "unratedMe
       
       if (data.records.length === 0) {
         console.warn(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
-        //INSERT GET TEN MEMES WORKER TRIGGER
+        //INSERT GET TEN MEMES WORKER TRIGGER, !!!!!!!!! TO BE MOVED TO CONTROLLER
         flagForSafetyReloop = true;
       } else {
         break
@@ -284,6 +316,74 @@ export async function getUnratedMemesFromAirtable(sourceData, table = "unratedMe
   }
 }
 
+//asdalskdkalsdklasdlskahdkashlkasdkhaskhdsa
+
+export async function getRecordsFromAirtable({
+  table,
+  sourceData,
+  filterParams = {},
+} = {}) {
+  console.log(`[${new Date().toISOString()}] TRYING: getRecordsFromAirtable from table: ${table}, from ${sourceData}`);
+
+  try {
+    const url = new URL(`${AIRTABLE_URL}/${table}`);
+
+    // Build Airtable filterByFormula from filterParams
+    if (filterParams && typeof filterParams === "object" && Object.keys(filterParams).length > 0) {
+      const filterParts = Object.entries(filterParams).map(([key, value]) => {
+        const formattedValue =
+          typeof value === "string" ? `"${value}"` : value;
+        return `{${key}} = ${formattedValue}`;
+      });
+
+      const formula =
+        filterParts.length > 1
+          ? `AND(${filterParts.join(", ")})`
+          : filterParts[0];
+
+      if (formula) {
+        url.searchParams.append("filterByFormula", formula);
+      }
+    }
+
+    const response = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+      agent,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Airtable API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    console.log(`[${new Date().toISOString()}] getRecordsFromAirtable: SUCCESS, retrieved ${data.records.length} record(s)`);
+
+    return {
+      status: "success",
+      records: data.records.map((record) => record.fields),
+    };
+
+  } catch (e) {
+    console.error("getRecordsFromAirtable FAILED:", e.message);
+    throw e;
+  }
+}
+
 
 
 //111/////////////////////////////// --- ALL RATINGS
+
+// export async function uploadUnratedRating(sourceData) {
+//   console.log(`[${new Date().toISOString()}] TRYING: uploadUnratedRating from ${sourceData}`);
+//   try {
+//     const url = `${AIRTABLE_URL}/${table}`;
+
+//     return {
+//       status: "success"
+//     }
+//   } catch (e) {
+//     console.error("##API failed:##", e.message);
+//     throw e;
+//   }
+// }

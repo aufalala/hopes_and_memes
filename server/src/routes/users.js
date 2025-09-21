@@ -2,6 +2,7 @@ import express from "express";
 import { requireAuth, getAuth, clerkClient} from "@clerk/express";
 
 import { getUserVerify, postUser } from "../services/airtableAPI.js";
+import { contGetMeUserData } from "../controller/contGetMeUserData.js";
 
 const router = express.Router();
 
@@ -74,6 +75,22 @@ router.post("/", requireAuth(), async (req, res) => {
       console.error("Error posting user:", error.message);
       return res.status(500).json({ error: "Failed to post user" });
     }
+});
+
+router.get("/me", requireAuth(), async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  try {
+    const result = await contGetMeUserData({sourceData, req})
+    if (result.status === "success") {
+      return res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json(err.message);
+  }
 });
 
 export default router;
