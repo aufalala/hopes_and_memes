@@ -5,10 +5,11 @@ import styles from "./_MemeCardsButton.module.css"
 function MemeCardsButton( { rateMeme, enlarge } ) {
   
   const [hoveredRating, setHoveredRating] = useState(0);
-  const stars = [1, 2, 3, 4, 5];
+  const stars = ["1", "2", "3", "4", "5"];
 
   function handleRateMeme(rating) {
     rateMeme(rating);
+    console.log(rating)
   }
 
   return (

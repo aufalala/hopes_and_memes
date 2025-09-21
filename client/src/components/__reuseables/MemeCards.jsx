@@ -5,7 +5,7 @@ import { useUserData } from "../../contexts/UserDataContext";
 
 import MemeCardsButton from "./MemeCardsButton"
 
-import { apiPostUnratedRating } from "../../services/airtableAPI"
+import { apiPostUnratedRating } from "../../services/redisAPI"
 
 import styles from "./_MemeCards.module.css"
 
@@ -17,13 +17,16 @@ function MemeCards( { meme } ) {
 
   const [enlarge, setEnlarge] = useState(false)
 
-  function rateMeme(rating) {
-    // insert payload builder here
+  async function rateMeme(rating) {
+    const payload = { postLink: meme.postLink, rating };
 
     try {
-      const result = apiPostUnratedRating({fetchWithAuth, payload})
+      const result = await apiPostUnratedRating({ fetchWithAuth, payload });
+      // do something with result if needed
+      console.log(result)
     } catch (e) {
-
+      // handle error
+      console.error("Error rating meme:", e);
     }
   }
 

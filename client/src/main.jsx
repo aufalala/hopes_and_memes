@@ -25,16 +25,15 @@ createRoot(document.getElementById("root")).render(
     <HashRouter>
         
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-            <UserDataProvider>
-        <ModalProvider>
-          <ScrollContextProvider>
-        
-                  <App />
-            
-          </ScrollContextProvider>
-        </ModalProvider>
-        
-            </UserDataProvider>
+        <UserDataProvider>
+          <ModalProvider>
+            <ScrollContextProvider>
+          
+                    <App />
+              
+            </ScrollContextProvider>
+          </ModalProvider>
+        </UserDataProvider>
       </ClerkProvider>
   
     </HashRouter>

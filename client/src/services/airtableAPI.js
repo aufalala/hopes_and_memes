@@ -19,12 +19,6 @@ export async function apiPostUser(fetchWithAuth) {
   }, true);
 }
 
-export async function apiPostUnratedRating(fetchWithAuth) {
-  return fetchWithAuth("/api/airtable/unrated-meme-rating", {
-    method: "POST",
-  }, true);
-}
-
 export async function apiGetMeUserData(fetchWithAuth) {
   try {
     const res = await fetchWithAuth("/api/users/me", {}, true);

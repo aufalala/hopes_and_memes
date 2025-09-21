@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getUnratedMemes } from "../../services/redisAPI.js"
+import { apiGetUnratedMemes } from "../../services/redisAPI.js"
 
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 import MemeCards from "../__reuseables/MemeCards.jsx";
@@ -16,10 +16,10 @@ function UnseenContent() {
   useEffect(() => {
     (async function pageLoad() {
       try {
-        const result = await getUnratedMemes(fetchWithAuth);
+        const result = await apiGetUnratedMemes(fetchWithAuth);
         setUnratedMemes(result);
       } catch (e) {
-        console.error("getUnratedMemes FAILED:", e);
+        console.error("apiGetUnratedMemes FAILED:", e);
       }
     })();
 
