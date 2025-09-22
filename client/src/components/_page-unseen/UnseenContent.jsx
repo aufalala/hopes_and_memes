@@ -13,6 +13,8 @@ function UnseenContent() {
 
   const [unratedMemes, setUnratedMemes] = useState([]);
 
+
+  // MAYBE getUnratedMemes GOES INTO CONTEXT AND "STORED" AS CACHE AND CHECK FOR CHANGES WHEN THIS PAGE LOADS??? 
   useEffect(() => {
     (async function pageLoad() {
       try {
@@ -29,13 +31,16 @@ function UnseenContent() {
     });
 
 
-  }, [])
+  }, []) // MAYBE TRIGGER getUnratedMemes WHEN SCROLL THRESHOLD REACHED
 
   return (
     <div className={styles.cardsContainer}>
-      {unratedMemes.map((meme, index) => (
-          <MemeCards key={index} meme={meme}/>
-      ))}
+      {unratedMemes.length>0 ?
+      unratedMemes.map((meme) => (
+        <MemeCards key={meme.postLink} meme={meme}/>
+      )) :
+      <div>WOW NO MEMES?</div>
+      }
     </div>
   )
 }
