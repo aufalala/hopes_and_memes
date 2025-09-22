@@ -50,37 +50,42 @@ export async function ##FUNCTION##(sourceData) {
 
 WORKER
 
-const ##WORKER## = new Worker(
-  "##JOB NAME##",
-  async (job) => {
-    console.log("Starting job", job.name, job.id);
-    const { sourceData } = job.data;
-    try {
-      const result = await ##FUNCTION1#(sourceData);
-      if (result.status !== "success") {
-        throw new Error("##FUNCTION1## failed: status not success");
-      } else {
 
-          try {
-            const result2 = await ##FUNCTION2##(sourceData);
-            if (result.status !== "success") {
-              throw new Error("##FUNCTION2## failed: status not success");
+export function ##START WORKER##(redisConnection) {
+  const ##WORKER## = new Worker(
+    "##JOB NAME##",
+    async (job) => {
+      console.log("Starting job", job.name, job.id);
+      const { sourceData } = job.data;
+      try {
+        const result = await ##FUNCTION1#(sourceData);
+        if (result.status !== "success") {
+          throw new Error("##FUNCTION1## failed: status not success");
+        } else {
+
+            try {
+              const result2 = await ##FUNCTION2##(sourceData);
+              if (result.status !== "success") {
+                throw new Error("##FUNCTION2## failed: status not success");
+              }
+              return result2;
+
+            } catch (e) {
+              console.error("##FUNCTION2## error:", e);
+              throw e;
             }
-            return result2;
+        }
 
-          } catch (e) {
-            console.error("##FUNCTION2## error:", e);
-            throw e;
-          }
+      } catch (e) {
+        console.error("##FUNCTION1## or ##FUNCTION2## failed:", e);
+        throw e;
       }
+    },
+    { connection: redisConnection }
+  );
 
-    } catch (e) {
-      console.error("##FUNCTION1## or ##FUNCTION2## failed:", e);
-      throw e;
-    }
-  },
-  { connection }
-);
-
+  workerEventListeners(" ##WORKER## ", ##WORKER##);
+  console.log("##WORKER## started");
+}
 
 ---------------------------------------------------------------------------------------

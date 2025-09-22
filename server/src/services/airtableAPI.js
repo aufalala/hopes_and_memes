@@ -1,4 +1,13 @@
-import { AIRTABLE_URL, AIRTABLE_TOKEN } from "../config.js";
+import {
+  AIRTABLE_URL,
+  AIRTABLE_TOKEN,
+  AIRTABLE_T_UNRATED_MEMES,
+  AIRTABLE_T_RATED_MEMES,
+  AIRTABLE_T_ALL_USERS,
+  AIRTABLE_T_MEME_RATINGS,
+  AIRTABLE_T_TEST_TABLE,
+  AIRTABLE_T_IMAGE_TEST,
+} from "../config.js";
 
 //111/////////////////////////////// --- FORCE IPV4
 import https from "https";
@@ -12,7 +21,7 @@ async function delay(ms) {
 
 //111/////////////////////////////// --- PING
 
-export async function pingAirtable(sourceData, table = "testTable", retries = 3) {
+export async function pingAirtable(sourceData, table = AIRTABLE_T_TEST_TABLE, retries = 3) {
   console.log(`[${new Date().toISOString()}] TRYING: pingAirtable from ${sourceData}`);
   for (let i = 0; i <= retries; i++) {
     try {
@@ -40,7 +49,7 @@ export async function pingAirtable(sourceData, table = "testTable", retries = 3)
 }
 
 //111/////////////////////////////// --- TEST
-export async function getTestImage(sourceData, username = "aufalala", table = "imageTest") {
+export async function getTestImage(sourceData, username = "test", table = AIRTABLE_T_IMAGE_TEST) {
   console.log(`[${new Date().toISOString()}] TRYING: getTestImage from ${sourceData}`);
   try {
     const filterFormula = encodeURIComponent(`{username} = "${username}"`);
@@ -81,8 +90,8 @@ export async function getTestImage(sourceData, username = "aufalala", table = "i
 
 //111/////////////////////////////// --- ALL USERS
 
-
-export async function getUserVerify(sourceData, userId, table = "allUsers") {
+// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
+export async function getUserVerify(sourceData, userId, table = AIRTABLE_T_ALL_USERS) {
   console.log(`[${new Date().toISOString()}] TRYING: getUserVerify ${sourceData}`);
   try {
     const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
@@ -115,7 +124,8 @@ export async function getUserVerify(sourceData, userId, table = "allUsers") {
   }
 }
 
-export async function postUser(sourceData, userId, username, createdAt, table = "allUsers") {
+// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
+export async function postUser(sourceData, userId, username, createdAt, table = AIRTABLE_T_ALL_USERS) {
   console.log(`[${new Date().toISOString()}] TRYING: postUser from ${sourceData}`);
   try {
     const payload = {
@@ -158,45 +168,11 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
   }
 }
 
-// export async function getUserVerify(sourceData, userId, table = "allUsers") {
-//   console.log(`[${new Date().toISOString()}] TRYING: getUserVerify ${sourceData}`);
-//   try {
-//     const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
-//     const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
-    
-//     const response = await fetch(url, {
-//       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
-//       agent,  
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(`Airtable API error: ${response.status}`);
-//     }
-    
-//     const data = await response.json();
-//     let exist = true;
-
-//     if (!data.records.length) {
-//       exist = false;
-//     }
-    
-//     return {
-//       status: "success",
-//       exist,
-//     };
-
-//   } catch (e) {
-//     console.error("Airtable failed:", e.message);
-//     throw e;
-//   }
-// }
-
-
-
 //111/////////////////////////////// --- UNRATED MEMES
 
 
-export async function getUnratedMemeCount(sourceData, table = "unratedMemes") {
+// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
+export async function getUnratedMemeCount(sourceData, table = AIRTABLE_T_UNRATED_MEMES) {
   console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemeCount from ${sourceData}`);
   try {
     const url = `${AIRTABLE_URL}/${table}`;
@@ -223,7 +199,8 @@ export async function getUnratedMemeCount(sourceData, table = "unratedMemes") {
   }
 }
 
-export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table = "unratedMemes") {
+// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
+export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table = AIRTABLE_T_UNRATED_MEMES) {
   console.log(`[${new Date().toISOString()}] TRYING: uploadUnratedMemesToAirtable from ${sourceData}`);
   try {
     const url = `${AIRTABLE_URL}/${table}`;
@@ -271,7 +248,8 @@ export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table 
   }
 }
 
-export async function getUnratedMemesFromAirtable(sourceData, table = "unratedMemes") {
+// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
+export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T_UNRATED_MEMES) {
   console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemesFromAirtable from ${sourceData}`);
   try {
     const flagForSafetyReloop = false;
@@ -316,7 +294,7 @@ export async function getUnratedMemesFromAirtable(sourceData, table = "unratedMe
   }
 }
 
-//asdalskdkalsdklasdlskahdkashlkasdkhaskhdsa
+//111/////////////////////////////// --- MODULAR FUNCTIONS
 
 export async function getRecordsFromAirtable({
   table,
