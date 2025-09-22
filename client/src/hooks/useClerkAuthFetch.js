@@ -1,49 +1,46 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { localServerURL, serverURL } from "../services/serverURL";
 
 export function useClerkAuthFetch() {
   const { getToken, isSignedIn, isLoaded } = useAuth();
-  const [token, setToken] = useState(null);
 
-  // UPDATE TOKEN
-  useEffect(() => {
-    async function updateToken() {
-      if (isLoaded && isSignedIn) {
-      const pulledToken = await getToken();
-        setToken(pulledToken);
-      } else {
-        setToken(null);
-      }
-    }
-    updateToken();
-  }, [isSignedIn, isLoaded, getToken]);
-
-  // FETCH FUNCTION
   const fetchWithAuth = useCallback(
     async (path, options = {}, withAuth = false) => {
-      
-      if (withAuth && !token) {
-        throw new Error("Authentication required but no token available.");
+
+      let token = null;
+
+      if (withAuth) {
+        if (!isLoaded) {
+          throw new Error("Clerk is not loaded yet");
+        }
+        if (!isSignedIn) {
+          throw new Error("User is not signed in.");
+        }
+
+        const method = options.method?.toUpperCase() || "GET";
+        if (method !== "GET") {
+          token = await getToken({ skipCache: true });
+        } else {
+          token = await getToken();
+        }
       }
 
       const finalOptions = {
         ...options,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...options.headers,
           ...(withAuth && token && { Authorization: `Bearer ${token}` }),
         },
       };
 
       try {
-        console.log(localServerURL)
-        console.log(path);
-        console.log(finalOptions)
         const res = await fetch(`${localServerURL}${path}`, finalOptions);
         if (!res.ok) throw new Error("Local server response not ok");
-          const contentType = res.headers.get("Content-Type");
 
+        const contentType = res.headers.get("Content-Type");
+        
         if (contentType && contentType.includes("application/json")) {
           return await res.json();
         } else {
@@ -51,12 +48,15 @@ export function useClerkAuthFetch() {
           console.warn(`Non-JSON response from ${localServerURL}:`, text);
           throw new Error("Expected JSON, but got non-JSON response");
         }
-      } catch (error) {
-        console.warn("Local server failed, trying remote server:", error.message);
+
+      } catch (e) {
+        console.warn("Local server failed, trying remote server:", e.message);
+
         try {
           const res = await fetch(`${serverURL}${path}`, finalOptions);
           if (!res.ok) throw new Error("Remote server response not ok");
-            const contentType = res.headers.get("Content-Type");
+
+          const contentType = res.headers.get("Content-Type");
 
         if (contentType && contentType.includes("application/json")) {
           return await res.json();
@@ -65,13 +65,15 @@ export function useClerkAuthFetch() {
           console.warn(`Non-JSON response from ${serverURL}:`, text);
           throw new Error("Expected JSON, but got non-JSON response");
         }
-        } catch (err) {
-          throw err;
+
+        } catch (e2) {
+          console.warn("Remote server failed:", e2.message);
+          throw e2;
         }
       }
     },
-    [token]
+    [getToken, isSignedIn, isLoaded]
   );
 
-  return { fetchWithAuth, token };
+  return { fetchWithAuth };
 }
