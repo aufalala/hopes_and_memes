@@ -17,6 +17,6 @@ export async function apiPostUnratedRating({fetchWithAuth, payload}) {
       body: JSON.stringify(payload),
     }, true);
   } catch (e) {
-    console.error("apiGetUnratedMemes FAILED:", e);
+    console.error("apiPostUnratedRating FAILED:", e);
   }
 }
