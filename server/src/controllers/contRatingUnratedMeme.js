@@ -6,8 +6,10 @@ import { getRecordsFromCache, lockUnratedMeme } from "../services/redisAPI.js";
 import { orcRateRatedMeme } from "../orchestrators/orcRateRatedMeme.js";
 import { orcRateUnratedMeme } from "../orchestrators/orcRateUnratedMeme.js";
 
+import getTimestamp from "../utils/utTimestamp.js";
+
 export async function contRatingUnratedMemes(sourceData, req) {
-  console.log(`[${new Date().toISOString()}] TRYING: contRatingUnratedMemes from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: contRatingUnratedMemes from ${sourceData}`);
 
   const {postLink, rating} = req.body;
   const {userId} = getAuth(req);
@@ -27,7 +29,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
       unratedMemeExist = true;
     }
   } catch (e) {
-    console.error("getRecordsFromCache FAILED:", e);
+    console.error(`[${getTimestamp()}] getRecordsFromCache FAILED:`, e);
     throw e;
   }
 
@@ -42,7 +44,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
       }
 
     } catch (e) {
-      console.error("lockUnratedMeme FAILED:", e);
+      console.error(`[${getTimestamp()}] lockUnratedMeme FAILED:`, e);
       throw e;
     }
   }

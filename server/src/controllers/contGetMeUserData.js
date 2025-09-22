@@ -2,8 +2,10 @@ import { getAuth } from "@clerk/express";
 import { AIRTABLE_T_ALL_USERS } from "../config.js";
 import { getRecordsFromAirtable } from "../services/airtableAPI.js";
 
+import getTimestamp from "../utils/utTimestamp.js";
+
 export async function contGetMeUserData({sourceData, req, res}) {
-  console.log(`[${new Date().toISOString()}] TRYING: contGetMeUserData from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: contGetMeUserData from ${sourceData}`);
   const {userId} = getAuth(req);
 
   if (!userId) {

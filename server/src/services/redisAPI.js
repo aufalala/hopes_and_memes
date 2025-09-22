@@ -1,4 +1,5 @@
 import redisConnection from "../redis/connection.js";
+import getTimestamp from "../utils/utTimestamp.js";
 import { getUnratedMemesFromAirtable } from "./airtableAPI.js";
 
 const UNRATED_MEMES_CACHE_KEY = "memes:unrated";
@@ -16,7 +17,7 @@ export async function setRedisCache(key, data, ttl) {
 
 //111/////////////////////////////// --- UPLOAD UNRATED MEMES
 export async function uploadUnratedMemesToCache(sourceData, memeArray) {
-  console.log(`[${new Date().toISOString()}] TRYING: uploadUnratedMemesToCache from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: uploadUnratedMemesToCache from ${sourceData}`);
 
   try {
     await Promise.all(
@@ -25,9 +26,9 @@ export async function uploadUnratedMemesToCache(sourceData, memeArray) {
         return setRedisCache(key, meme);
       })
     );
-    console.log(`[${new Date().toISOString()}] All memes cached successfully`);
+    console.log(`[${getTimestamp()}] All memes cached successfully`);
   } catch (error) {
-    console.error(`[${new Date().toISOString()}] Error setting cache in Redis:`, error);
+    console.error(`[${getTimestamp()}] Error setting cache in Redis:`, error);
   }
   return {status: "success"};
 }
@@ -35,7 +36,7 @@ export async function uploadUnratedMemesToCache(sourceData, memeArray) {
 
 //111/////////////////////////////// --- GET UNRATED MEMES
 export async function getUnratedMemesFromCache(sourceData) {
-  console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemes from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getUnratedMemes from ${sourceData}`);
   
   let memes = [];
   try {
@@ -48,15 +49,15 @@ export async function getUnratedMemesFromCache(sourceData) {
       memes = values.map((val) => JSON.parse(val));
 
       const payload = {status: "success", memes};
-      console.log(`[${new Date().toISOString()}] getUnratedMemesFromCache: get SUCCESS`);
+      console.log(`[${getTimestamp()}] getUnratedMemesFromCache: get SUCCESS`);
       return payload;
       
     } else {
-      console.warn(`[${new Date().toISOString()}] getUnratedMemesFromCache: No memes found in cache`);
+      console.warn(`[${getTimestamp()}] getUnratedMemesFromCache: No memes found in cache`);
     }
 
   } catch (e) {
-    console.error(`[${new Date().toISOString()}] getUnratedMemesFromCache: Cache unrated memes retrieval FAILED:`, e);
+    console.error(`[${getTimestamp()}] getUnratedMemesFromCache: Cache unrated memes retrieval FAILED:`, e);
     throw e;
   }
 
@@ -67,12 +68,12 @@ export async function getUnratedMemesFromCache(sourceData) {
       return res.status(500).json(result);
     }
 
-    console.log(`[${new Date().toISOString()}] getUnratedMemesFromCache: Unrated memes retrieved from Airtable`);
+    console.log(`[${getTimestamp()}] getUnratedMemesFromCache: Unrated memes retrieved from Airtable`);
     const payload = {status: "success", memes: result.memes}
     return payload;
 
   } catch (e) {
-    console.error(`[${new Date().toISOString()}] getUnratedMemesFromCache: Airtable unrated memes retrieval FAILED`, e);
+    console.error(`[${getTimestamp()}] getUnratedMemesFromCache: Airtable unrated memes retrieval FAILED`, e);
     throw e;
   }
 
@@ -84,7 +85,7 @@ export async function getUnratedMemesFromCache(sourceData) {
 /////////////////////////////////
 
 export async function getRecordsFromCache({sourceData, keyParam}) {
-  console.log(`[${new Date().toISOString()}] TRYING: getRecordsFromCache from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getRecordsFromCache from ${sourceData}`);
   try {
     const keys = await redisConnection.keys(`${UNRATED_MEMES_CACHE_KEY}:${keyParam}`);
 
@@ -95,22 +96,22 @@ export async function getRecordsFromCache({sourceData, keyParam}) {
       const records = values.map((val) => JSON.parse(val));
 
       const payload = {status: "success", records};
-      console.log(`[${new Date().toISOString()}] getRecordsFromCache: get SUCCESS, retrieved ${records.length} record(s)`);
+      console.log(`[${getTimestamp()}] getRecordsFromCache: get SUCCESS, retrieved ${records.length} record(s)`);
       return payload;
       
     } else {
-      console.warn(`[${new Date().toISOString()}] getRecordsFromCache: No records found in cache`);
+      console.warn(`[${getTimestamp()}] getRecordsFromCache: No records found in cache`);
       throw ("getRecordsFromCache: No records found in cache");
     }
 
   } catch (e) {
-    console.error(`[${new Date().toISOString()}] getRecordsFromCache: Cache records retrieval FAILED:`, e);
+    console.error(`[${getTimestamp()}] getRecordsFromCache: Cache records retrieval FAILED:`, e);
     throw e;
   }
 }
 
 export async function lockUnratedMeme({sourceData, keyParam}) {
-  console.log(`[${new Date().toISOString()}] TRYING: lockUnratedMeme from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: lockUnratedMeme from ${sourceData}`);
   try {
     const key = `${keyParam}:lock`;
     console.log(key)
@@ -118,15 +119,15 @@ export async function lockUnratedMeme({sourceData, keyParam}) {
 
     if (lock) {
       
-      console.log(`[${new Date().toISOString()}] lockUnratedMeme: First to rate!`);
+      console.log(`[${getTimestamp()}] lockUnratedMeme: First to rate!`);
       return {status: "success", lock}
     } else {
       
-      console.log(`[${new Date().toISOString()}] lockUnratedMeme: Not first?`);
+      console.log(`[${getTimestamp()}] lockUnratedMeme: Not first?`);
       return {status: "success", lock}
     }
   } catch (e) {
-    console.error(`[${new Date().toISOString()}] lockUnratedMeme: FAILED:`, e);
+    console.error(`[${getTimestamp()}] lockUnratedMeme: FAILED:`, e);
     throw e;
   }
 

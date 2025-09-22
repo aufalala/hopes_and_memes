@@ -4,11 +4,13 @@ import { requireAuth, getAuth, clerkClient} from "@clerk/express";
 import { getUserVerify, postUser } from "../services/airtableAPI.js";
 import { contGetMeUserData } from "../controllers/contGetMeUserData.js";
 
+import getTimestamp from "../utils/utTimestamp.js";
+
 const router = express.Router();
 
 router.get("/profile", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const {userId} = getAuth(req);
 
@@ -32,7 +34,7 @@ router.get("/profile", requireAuth(), async (req, res) => {
 
 router.get("/verify", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const {userId} = getAuth(req);
 
@@ -55,7 +57,7 @@ router.get("/verify", requireAuth(), async (req, res) => {
 
 router.post("/", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {  
     const {userId} = getAuth(req);
     const {createdAt, username} = (await clerkClient.users.getUser(userId));
@@ -79,7 +81,7 @@ router.post("/", requireAuth(), async (req, res) => {
 
 router.get("/me", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const result = await contGetMeUserData({sourceData, req})
     if (result.status === "success") {

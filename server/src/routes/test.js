@@ -4,11 +4,13 @@ import { requireAuth } from "@clerk/express";
 import { pingAirtable, getTestImage, getUnratedMemeCount } from "../services/airtableAPI.js";
 import { queues } from "../redis/queues/queues.js";
 
+import getTimestamp from "../utils/utTimestamp.js";
+
 const router = express.Router();
 
 router.get("/", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const result = await pingAirtable(sourceData);
 
@@ -25,7 +27,7 @@ router.get("/", async (req, res) => {
 
 router.get("/testImage", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const result = await getTestImage(sourceData);
     if (result.status === "success") {
@@ -41,7 +43,7 @@ router.get("/testImage", async (req, res) => {
 
 router.get("/testImage/protected", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const result = await getTestImage(sourceData);
     if (result.status === "success") {
@@ -57,7 +59,7 @@ router.get("/testImage/protected", requireAuth(), async (req, res) => {
 
 router.get("/meme-count", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const result = await getUnratedMemeCount(sourceData);
     if (result.status !== "success") {

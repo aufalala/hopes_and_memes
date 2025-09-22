@@ -4,7 +4,7 @@ import { getTenMemes } from "../../services/memeAPI.js";
 import { uploadMemesToCloudinary } from "../../services/cloudinaryAPI.js";
 import { uploadUnratedMemesToCache } from "../../services/redisAPI.js";
 import { uploadUnratedMemesToAirtable } from "../../services/airtableAPI.js";
-import { workerEventListeners } from "./workerEventListener.js";
+import { workerEventListeners } from "../workerUtils/workerEventListener.js";
 
 export function startGetTenMemesWorker(redisConnection) {
   //111/////////////////////////////// --- WORKERS WORK

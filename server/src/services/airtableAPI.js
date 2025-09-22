@@ -9,6 +9,8 @@ import {
   AIRTABLE_T_IMAGE_TEST,
 } from "../config.js";
 
+import getTimestamp from "../utils/utTimestamp.js";
+
 //111/////////////////////////////// --- FORCE IPV4
 import https from "https";
 import fetch from "node-fetch";
@@ -22,7 +24,7 @@ async function delay(ms) {
 //111/////////////////////////////// --- PING
 
 export async function pingAirtable(sourceData, table = AIRTABLE_T_TEST_TABLE, retries = 3) {
-  console.log(`[${new Date().toISOString()}] TRYING: pingAirtable from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: pingAirtable from ${sourceData}`);
   for (let i = 0; i <= retries; i++) {
     try {
 
@@ -50,7 +52,7 @@ export async function pingAirtable(sourceData, table = AIRTABLE_T_TEST_TABLE, re
 
 //111/////////////////////////////// --- TEST
 export async function getTestImage(sourceData, username = "test", table = AIRTABLE_T_IMAGE_TEST) {
-  console.log(`[${new Date().toISOString()}] TRYING: getTestImage from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getTestImage from ${sourceData}`);
   try {
     const filterFormula = encodeURIComponent(`{username} = "${username}"`);
     const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
@@ -92,7 +94,7 @@ export async function getTestImage(sourceData, username = "test", table = AIRTAB
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 export async function getUserVerify(sourceData, userId, table = AIRTABLE_T_ALL_USERS) {
-  console.log(`[${new Date().toISOString()}] TRYING: getUserVerify ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getUserVerify ${sourceData}`);
   try {
     const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
     const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
@@ -126,7 +128,7 @@ export async function getUserVerify(sourceData, userId, table = AIRTABLE_T_ALL_U
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 export async function postUser(sourceData, userId, username, createdAt, table = AIRTABLE_T_ALL_USERS) {
-  console.log(`[${new Date().toISOString()}] TRYING: postUser from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: postUser from ${sourceData}`);
   try {
     const payload = {
       records: [
@@ -173,7 +175,7 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 export async function getUnratedMemeCount(sourceData, table = AIRTABLE_T_UNRATED_MEMES) {
-  console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemeCount from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getUnratedMemeCount from ${sourceData}`);
   try {
     const url = `${AIRTABLE_URL}/${table}`;
     
@@ -201,7 +203,7 @@ export async function getUnratedMemeCount(sourceData, table = AIRTABLE_T_UNRATED
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table = AIRTABLE_T_UNRATED_MEMES) {
-  console.log(`[${new Date().toISOString()}] TRYING: uploadUnratedMemesToAirtable from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: uploadUnratedMemesToAirtable from ${sourceData}`);
   try {
     const url = `${AIRTABLE_URL}/${table}`;
 
@@ -221,7 +223,7 @@ export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table 
       }
     }));
 
-    console.log(`[${new Date().toISOString()}] uploadUnratedMemesToAirtable: UPLOADING:`)
+    console.log(`[${getTimestamp()}] uploadUnratedMemesToAirtable: UPLOADING:`)
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -237,7 +239,7 @@ export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table 
       throw new Error(`Airtable API error: ${response.status} - ${errorText}`);
     }
 
-    console.log(`[${new Date().toISOString()}] uploadUnratedMemesToAirtable: UPLOADED:`)
+    console.log(`[${getTimestamp()}] uploadUnratedMemesToAirtable: UPLOADED:`)
     return {
       status: "success",
     };
@@ -250,7 +252,7 @@ export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table 
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T_UNRATED_MEMES) {
-  console.log(`[${new Date().toISOString()}] TRYING: getUnratedMemesFromAirtable from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getUnratedMemesFromAirtable from ${sourceData}`);
   try {
     const flagForSafetyReloop = false;
     
@@ -270,11 +272,11 @@ export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T
       data = await response.json();
 
       if (data.records.length === 0 && flagForSafetyReloop) {
-        throw new Error(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
+        throw new Error(`[${getTimestamp()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
       }
       
       if (data.records.length === 0) {
-        console.warn(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
+        console.warn(`[${getTimestamp()}] getUnratedMemesFromAirtable: No memes found in Airtable`);
         //INSERT GET TEN MEMES WORKER TRIGGER, !!!!!!!!! TO BE MOVED TO CONTROLLER
         flagForSafetyReloop = true;
       } else {
@@ -282,7 +284,7 @@ export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T
       }
     }
     
-    console.log(`[${new Date().toISOString()}] getUnratedMemesFromAirtable: get SUCCESS`);
+    console.log(`[${getTimestamp()}] getUnratedMemesFromAirtable: get SUCCESS`);
     return {
       status: "success",
       memes: data.records.map((record) => record.fields)
@@ -302,7 +304,7 @@ export async function getRecordsFromAirtable({
   filterParams = {},
   } = {}) {
   
-  console.log(`[${new Date().toISOString()}] TRYING: getRecordsFromAirtable from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: getRecordsFromAirtable from ${sourceData}`);
   try {
     const url = new URL(`${AIRTABLE_URL}/${table}`);
 
@@ -338,7 +340,7 @@ export async function getRecordsFromAirtable({
 
     const data = await response.json();
 
-    console.log(`[${new Date().toISOString()}] getRecordsFromAirtable: SUCCESS, retrieved ${data.records.length} record(s)`);
+    console.log(`[${getTimestamp()}] getRecordsFromAirtable: SUCCESS, retrieved ${data.records.length} record(s)`);
 
     return {
       status: "success",
@@ -357,7 +359,7 @@ export async function postToAirtable({
   postParams = {},
   } = {}) {
 
-  console.log(`[${new Date().toISOString()}] TRYING: postToAirtable from ${sourceData}`);
+  console.log(`[${getTimestamp()}] TRYING: postToAirtable from ${sourceData}`);
   try {
 
     const url = new URL(`${AIRTABLE_URL}/${table}`);
@@ -385,7 +387,7 @@ export async function postToAirtable({
     }
 
     const data = await response.json();
-    console.log(`[${new Date().toISOString()}] postToAirtable: SUCCESS`);
+    console.log(`[${getTimestamp()}] postToAirtable: SUCCESS`);
     return {status: "success", data};
     
   } catch (e) {

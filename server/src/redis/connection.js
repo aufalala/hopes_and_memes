@@ -1,4 +1,5 @@
 import IORedis from "ioredis";
+import getTimestamp from "../utils/utTimestamp.js";
 
 //111/////////////////////////////// --- redisConnection
 const redisUrl = process.env.REDIS_URL || "redis://127.0.0.1:6379";
@@ -11,10 +12,10 @@ const redisConnection = new IORedis(redisUrl, {
 });
 
 //111/////////////////////////////// --- redisConnection LISTENERS
-redisConnection.on("connect", () => console.log("Redis connecting..."));
-redisConnection.on("ready", () => console.log("Redis ready!"));
-redisConnection.on("error", (err) => console.error("Redis error:", err.message));
-redisConnection.on("close", () => console.log("Redis connection closed"));
+redisConnection.on("connect", () => console.log(`[${getTimestamp()}] Redis connecting...`));
+redisConnection.on("ready", () => console.log(`[${getTimestamp()}] Redis ready!`));
+redisConnection.on("error", (err) => console.error(`[${getTimestamp()}] Redis error:, err.message`));
+redisConnection.on("close", () => console.log(`[${getTimestamp()}] Redis connection closed`));
 
 //111/////////////////////////////// --- redisConnection CONNECT FUNCTION
 export async function connectRedis() {
@@ -27,7 +28,7 @@ export async function connectRedis() {
       }
     }
   }
-  
+
   return redisConnection;
 }
 

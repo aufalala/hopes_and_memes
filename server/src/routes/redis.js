@@ -2,14 +2,15 @@ import express from "express";
 import { requireAuth, getAuth } from "@clerk/express";
 
 import { contRatingUnratedMemes } from "../controllers/contRatingUnratedMeme.js";
-
 import { getUnratedMemesFromCache } from "../services/redisAPI.js";
+
+import getTimestamp from "../utils/utTimestamp.js";
 
 const router = express.Router();
 
 router.get("/unrated-memes", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   try {
     const result = await getUnratedMemesFromCache(sourceData);
     if (result.status === "success") {
@@ -25,7 +26,7 @@ router.get("/unrated-memes", async (req, res) => {
 
 router.post("/unrated-meme-rating", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
-  console.log(`[${new Date().toISOString()}] CLIENT REACHED: ${sourceData}`);
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
 
   const {userId} = getAuth(req);
   if (!userId) {
