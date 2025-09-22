@@ -8,13 +8,13 @@ const UserDataContext = createContext();
 
 
 export const UserDataProvider = ({ children }) => {
-  const { fetchWithAuth, token } = useClerkAuthFetch();
+  const { fetchWithAuth } = useClerkAuthFetch();
   const { user, isSignedIn, isLoaded } = useUser();
   const [userData, setUserData] = useState(null);
 
   useEffect(() => {
   const getMeUserData = async () => {
-    if (isLoaded && isSignedIn && user && token) {
+    if (isLoaded && isSignedIn && user) {
       try {
         const result = await apiGetMeUserData(fetchWithAuth);
         const userRecord = result[0] || {};
@@ -39,7 +39,7 @@ export const UserDataProvider = ({ children }) => {
   };
 
   getMeUserData();
-}, [isSignedIn, isLoaded, user, token]);
+}, [isSignedIn, isLoaded, user]);
 
 useEffect(() => {
   console.log("userData changed:", userData);
