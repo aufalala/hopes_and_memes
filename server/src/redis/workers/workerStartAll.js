@@ -1,2 +1,5 @@
+import { startGetTenMemesWorker } from "./getTenMemesWorker.js";
 
-import "./getTenMemesWorker.js";
+export function workerStartAll(redisConnection) {
+  startGetTenMemesWorker(redisConnection);
+}

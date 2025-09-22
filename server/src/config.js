@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
-import { v2 as cloudinary } from "cloudinary";
-
 dotenv.config();
+
+import { v2 as cloudinary } from "cloudinary";
 
 export const AIRTABLE_URL = process.env.AIRTABLE_URL;
 export const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
@@ -10,6 +10,8 @@ export const AIRTABLE_T_UNRATED_MEMES = process.env.AIRTABLE_T_UNRATED_MEMES;
 export const AIRTABLE_T_RATED_MEMES = process.env.AIRTABLE_T_RATED_MEMES;
 export const AIRTABLE_T_ALL_USERS = process.env.AIRTABLE_T_ALL_USERS;
 export const AIRTABLE_T_MEME_RATINGS = process.env.AIRTABLE_T_MEME_RATINGS;
+export const AIRTABLE_T_TEST_TABLE = process.env.AIRTABLE_T_TEST_TABLE;
+export const AIRTABLE_T_IMAGE_TEST = process.env.AIRTABLE_T_IMAGE_TEST;
 
 
 export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;

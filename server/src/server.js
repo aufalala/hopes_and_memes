@@ -1,55 +1,57 @@
+import "./config.js";
+
 import express from "express";
 import cors from "cors";
-
-import "./redis/workers/workerStartAll.js";
-
 import { clerkMiddleware } from "@clerk/express";
+
+import { connectRedis, default as redisConnection } from "./redis/connection.js";
+import { workerStartAll } from "./redis/workers/workerStartAll.js";
 
 import test from "./routes/test.js";
 import meme from "./routes/meme.js";
 import users from "./routes/users.js";
-import redis from "./routes/redis.js"
+import redisRoutes from "./routes/redis.js";
 
 import { pingAirtable } from "./services/airtableAPI.js";
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+async function startServer() {
+  const app = express();
+  const PORT = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(express.json());
-app.use(clerkMiddleware());
+  //111/////////////////////////////// --- MIDDLEWARE
+  app.use(cors());
+  app.use(express.json());
+  app.use(clerkMiddleware());
 
-app.use((req, res, next) => {
-  console.log(`Incoming request: ${req.method} ${req.path}`);
-  next();
-});
+  //111/////////////////////////////// --- ROUTES
+  app.use("/api/test", test);
+  app.use("/api/meme", meme);
+  app.use("/api/users", users);
+  app.use("/api/redis", redisRoutes)
 
-app.get("/", (req, res) => {
-  console.log("Hit root / route");
-  console.log("User-Agent:", req.headers["user-agent"]);
-  console.log("Referer:", req.headers["referer"]);
-  res.send("Server is running!");
-});
+  //111/////////////////////////////// --- ROOT
+  app.get("/", (req, res) => res.send("Server is running! BUT YOU SHOULD'NT BE HERE :("));
 
-//111/////////////////////////////// --- ROUTES
-app.use("/api/test", test);
-app.use("/api/meme", meme);
-app.use("/api/users", users);
-app.use("/api/redis", redis)
+  //111/////////////////////////////// --- SERVER START
+  const server = app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}...`);
+  });
 
-//111/////////////////////////////// --- ROOT
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
+  //111/////////////////////////////// --- REDIS CONNECT
+  try {
+    await connectRedis();
+    console.log("Redis connected successfully");
+    workerStartAll(redisConnection);
 
-//111/////////////////////////////// --- SERVER START
-app.listen(PORT, async () => {
-  console.log(`Listening on port ${PORT}...`);
-
-  const ok = await pingAirtable("Server");
-  if (ok  && ok.message) {  
-    console.log(ok.message);
-  } else {
-    console.log("pingAirtable() failed or returned no message.");
+  } catch (e) {
+    console.error("Redis failed to connect:", e);
   }
-});
+
+  //111/////////////////////////////// --- PING AIRTABLE CHECK
+  const ok = await pingAirtable("Server");
+  if (ok && ok.message) console.log(ok.message);
+  else console.log("pingAirtable FAILED.");
+  
+}
+
+startServer();

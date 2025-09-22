@@ -1,28 +1,8 @@
-
-// export async function postCloudinary(sourceData) {
-//   console.log(`[${new Date().toISOString()}] TRYING: postCloudinary from ${sourceData}`);
-//   try {
-//     return {
-//       status: "success"
-//     }
-//   } catch (e) {
-//     console.error("Airtable failed:", e.message);
-//     throw e;
-//   }
-// }
-
 import { cloudinary } from '../config.js';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
-
-// Cloudinary config
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
-});
 
 // Download image from URL using https
 async function downloadImageToFile(sourceData, url, index) {
