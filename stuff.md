@@ -1,9 +1,6 @@
 CURRENTLY WORKING ON
 
-!!!!!! do now - userdata
------ building get records from airtable module
-
-UNRATED MEME RATING!!!!!!!!!!!!!!!!
+UNRATED MEME RATING!!!!!!!!!!!!!!!! finish up if unrated not in cache
 
 PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS TO BE DONE BY WORKER]
 
@@ -14,8 +11,6 @@ PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS
 write cloudinary link to airtable and cache
 
 remove file from cloudinary retry upload if file too large
-
-implement - get unrated memes from airtable (THEN) fill cache
 
 implement - get unrated memes worker
 
@@ -33,19 +28,16 @@ NSFW filter and research if true
 server pulls and stores memes into airtable (when unrated <10, add 5 new memes, to be checked and performed when
                             [server starts // user rates a meme] )
 
-use table id in server env
-
-UserData context - for profile and comments?
 
 
-MEME API NOT RETURNING CORRECT NUMBER OF MEMES!
 
 
 --------------------------------------------------------------------
 
-redis to queue server to add 10 memes to airtable+cloudinary
 
-store 10 (post link, url as image) to cloudinary
+(DONE) redis to queue server to add 10 memes to airtable+cloudinary
+
+(DONE) store 10 (post link, url as image) to cloudinary
 
 get 10 cloudinary image link based on url
 
@@ -125,3 +117,14 @@ split RESTFUL routing for syncing user info
 standardize modal providers context
 
 decide if ten memes go into airtable first
+
+
+!!!!!! do now - userdata
+----- building get records from airtable module
+
+
+use table id in server env
+
+UserData context
+
+MEME API NOT RETURNING CORRECT NUMBER OF MEMES!
