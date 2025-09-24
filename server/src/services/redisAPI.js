@@ -142,17 +142,17 @@ export async function deleteRecordsFromCache({ keyPrefix, deleteParams = {}, sou
   }
 
   if (keysToDelete.length === 0) {
-    console.warn(`[${getTimestamp()}] No keys to delete for ${keyPrefix}`);
+    console.warn(`[${getTimestamp()}] deleteRecordsFromCache: No keys to delete for ${keyPrefix}`);
     return { status: "no_keys", deleted: [] };
   }
 
   try {
     const deletedCount = await redisConnection.del(...keysToDelete);
-    console.log(`[${getTimestamp()}] Deleted ${deletedCount} keys from cache for ${keyPrefix}:`,keysToDelete);
+    console.log(`[${getTimestamp()}] deleteRecordsFromCache: Deleted ${deletedCount} keys from cache for ${keyPrefix}:`,keysToDelete);
     return { status: "success", deletedKeys: keysToDelete };
 
   } catch (e) {
-    console.error(`[${getTimestamp()}] deleteRecordsFromCache FAILED:`, e.message);
+    console.error(`[${getTimestamp()}] deleteRecordsFromCache: deleteRecordsFromCache FAILED:`, e.message);
     throw e;
   }
 }
