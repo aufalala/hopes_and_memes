@@ -110,11 +110,9 @@ export async function getRecordsFromCache({sourceData, keyParam}) {
   }
 }
 
-export async function lockUnratedMeme({sourceData, keyParam}) {
+export async function lockUnratedMeme({sourceData, key}) {
   console.log(`[${getTimestamp()}] TRYING: lockUnratedMeme from ${sourceData}`);
   try {
-    const key = `${keyParam}:lock`;
-    console.log(key)
     const lock = await redisConnection.set(key, "locked", 'NX', 'EX', 60);
 
     if (lock) {
@@ -130,5 +128,31 @@ export async function lockUnratedMeme({sourceData, keyParam}) {
     console.error(`[${getTimestamp()}] lockUnratedMeme: FAILED:`, e);
     throw e;
   }
+}
 
+export async function deleteRecordsFromCache({ keyPrefix, deleteParams = {}, sourceData }) {
+  console.log(`[${getTimestamp()}] TRYING: deleteRecordsFromCache: ${keyPrefix} from ${sourceData}`);
+
+  const keysToDelete = [];
+
+  // BUILD KEYS
+  for (const [field, value] of Object.entries(deleteParams)) {
+    const key = `${keyPrefix}:${value}`;
+    keysToDelete.push(key);
+  }
+
+  if (keysToDelete.length === 0) {
+    console.warn(`[${getTimestamp()}] No keys to delete for ${keyPrefix}`);
+    return { status: "no_keys", deleted: [] };
+  }
+
+  try {
+    const deletedCount = await redisConnection.del(...keysToDelete);
+    console.log(`[${getTimestamp()}] Deleted ${deletedCount} keys from cache for ${keyPrefix}:`,keysToDelete);
+    return { status: "success", deletedKeys: keysToDelete };
+
+  } catch (e) {
+    console.error(`[${getTimestamp()}] deleteRecordsFromCache FAILED:`, e.message);
+    throw e;
+  }
 }

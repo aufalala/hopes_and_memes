@@ -35,7 +35,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
 
   if (unratedMemeExist) {
     try {
-      const result = await lockUnratedMeme({sourceData, keyParam: `memes:unrated:${postLink}`});
+      const result = await lockUnratedMeme({sourceData, key: `lock:memes:unrated:${postLink}`});
 
       if (result.status === "success" && result.lock) {
         memeLock = true;

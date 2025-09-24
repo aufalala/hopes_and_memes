@@ -4,9 +4,9 @@ UNRATED MEME RATING!!!!!!!!!!!!!!!! finish up if unrated not in cache
 
 PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS TO BE DONE BY WORKER]
 
-
-
 ---------------------------------------------------------------------
+pull users ratings for memes to load stars for already rated memes
+
 
 write cloudinary link to airtable and cache
 

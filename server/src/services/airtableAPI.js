@@ -391,7 +391,70 @@ export async function postToAirtable({
     return {status: "success", data};
     
   } catch (e) {
-    console.error("postToAirtable FAILED:", e);
+    console.error("postToAirtable FAILED:", e.message);
+    throw e;
+  }
+}
+
+export async function deleteRecordsFromAirtable({
+  table,
+  sourceData,
+  deleteParams = {},
+  } = {}) {
+  console.log(`[${getTimestamp()}] TRYING: deleteRecordsFromAirtable from ${sourceData}`);
+    
+  try {
+
+    const url = new URL(`${AIRTABLE_URL}/${table}`);
+    
+    //222// BUILD FILTER FORMULA
+    const filterParts = Object.entries(deleteParams).map(
+      ([key, value]) => `{${key}} = ${typeof value === "string" ? `"${value}"` : value}`
+    );
+    const formula = filterParts.length > 1 ? `AND(${filterParts.join(", ")})` : filterParts[0];
+
+    url.searchParams.append("filterByFormula", formula);
+
+    //222// FIND MATCHING RECORDS
+    const findResponse = await fetch(url.toString(), {
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+      agent,
+    });
+
+    if (!findResponse.ok) {
+      const errorData = await findResponse.json();
+      throw new Error(`Airtable API error (find): ${errorData.error?.message}`);
+    }
+
+    const findData = await findResponse.json();
+    const recordIds = findData.records.map((r) => r.id);
+
+    if (recordIds.length === 0) {
+      console.log(`[${getTimestamp()}] No records found for deletion`);
+      return { status: "no_match", deleted: [] };
+    }    
+
+    //222// DELETE FOUND RECORDS BY RECORD ID
+    const deleteUrl = new URL(`${AIRTABLE_URL}/${table}`);
+    recordIds.forEach((id) => deleteUrl.searchParams.append("records[]", id));
+
+    const deleteResponse = await fetch(deleteUrl.toString(), {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
+      agent,
+    });
+
+    if (!deleteResponse.ok) {
+      const errorData = await deleteResponse.json();
+      throw new Error(`Airtable API error (delete): ${errorData.error?.message}`);
+    }
+
+    const deleteData = await deleteResponse.json();
+    console.log(`[${getTimestamp()}] deleteRecordsFromAirtable: SUCCESS, deleted ${deleteData.records.length} record(s)`);
+    return { status: "success", deleted: deleteData.records.map((r) => r.id) };
+
+  } catch (e) {
+    console.error("deleteRecordsFromAirtable FAILED:", e.message);
     throw e;
   }
 }
