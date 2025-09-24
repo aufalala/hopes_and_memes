@@ -451,7 +451,8 @@ export async function deleteRecordsFromAirtable({
 
     const deleteData = await deleteResponse.json();
     console.log(`[${getTimestamp()}] deleteRecordsFromAirtable: SUCCESS, deleted ${deleteData.records.length} record(s)`);
-    return { status: "success", deleted: deleteData.records.map((r) => r.id) };
+    const deletedRecords = findData.records;
+    return { status: "success", deletedRecords};
 
   } catch (e) {
     console.error("deleteRecordsFromAirtable FAILED:", e.message);
