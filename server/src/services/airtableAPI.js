@@ -296,6 +296,43 @@ export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T
   }
 }
 
+export async function getRatedMemes(offset = null) {
+  try {
+    const url = new URL(`${AIRTABLE_URL}/${encodeURIComponent(AIRTABLE_T_RATED_MEMES)}`);
+    url.searchParams.append("pageSize", 5);
+    if (offset) url.searchParams.append("offset", offset);
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+      },
+      agent,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Airtable responded with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    return {
+      status: "success",
+      records: data.records.map((record) => record.fields),
+      offset: data.offset || null,
+    };
+  } catch (err) {
+    console.error("Error in getRatedMemes:", err);
+    return {
+      status: "error",
+      error: err.message,
+    };
+  }
+}
+
+
+
+
+
 //111/////////////////////////////// --- MODULAR FUNCTIONS
 
 export async function getRecordsFromAirtable({
