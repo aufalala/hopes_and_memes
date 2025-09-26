@@ -5,9 +5,10 @@ import { HashRouter } from "react-router-dom";
 
 import { ClerkProvider } from "@clerk/clerk-react";
 
+import { UserDataProvider } from "./contexts/UserDataContext.jsx";
+import { UserRatingsProvider } from "./contexts/UserRatingsContext.jsx";
 import { ModalProvider } from "./contexts/ModalContext.jsx";
 import { ScrollContextProvider } from "./contexts/ScrollContext.jsx";
-import { UserDataProvider } from "./contexts/UserDataContext.jsx";
 
 import App from "./App.jsx"
 
@@ -26,13 +27,15 @@ createRoot(document.getElementById("root")).render(
         
       <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
         <UserDataProvider>
-          <ModalProvider>
-            <ScrollContextProvider>
-          
-                    <App />
-              
-            </ScrollContextProvider>
-          </ModalProvider>
+          <UserRatingsProvider>
+            <ModalProvider>
+              <ScrollContextProvider>
+            
+                      <App />
+                
+              </ScrollContextProvider>
+            </ModalProvider>
+          </UserRatingsProvider>
         </UserDataProvider>
       </ClerkProvider>
   
