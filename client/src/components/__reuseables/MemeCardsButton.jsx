@@ -2,7 +2,7 @@ import { style } from "framer-motion/client";
 import { useState } from "react";
 import styles from "./_MemeCardsButton.module.css"
 
-function MemeCardsButton( { rateMeme, enlarge } ) {
+function MemeCardsButton( { rateMeme, enlarge, currentRating } ) {
   
   const [hoveredRating, setHoveredRating] = useState(0);
   const stars = ["1", "2", "3", "4", "5"];
@@ -24,7 +24,14 @@ function MemeCardsButton( { rateMeme, enlarge } ) {
           onMouseEnter={() => setHoveredRating(star)}
           onMouseLeave={() => setHoveredRating(0)}
         >
-          {star <= hoveredRating ? "★" : "☆"}
+          {hoveredRating ?
+          (star <= hoveredRating ? "★" : "☆") : 
+          (star <= currentRating ? "★" : "☆")} 
+
+          
+          {/* {hoveredRating ?
+          (star <= hoveredRating ? <div>★</div> : <div>☆</div>) : 
+          (star <= currentRating ? <div>★</div> : <div>☆</div>)}  */}
         </div>
       ))}
       </div>

@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch.js";
-import { useUserData } from "../../contexts/UserDataContext";
+import { useUserRatings } from "../../contexts/UserRatingsContext.jsx";
 
 import MemeCardsButton from "./MemeCardsButton"
 
@@ -10,31 +10,39 @@ import { apiPostUnratedRating } from "../../services/redisAPI"
 import styles from "./_MemeCards.module.css"
 
 
-function MemeCards( { meme } ) {
+function MemeCards({ meme, rateType }) {
 
   const { fetchWithAuth } = useClerkAuthFetch();
-  const {userData} = useUserData(); 
+  
+  const { ratings } = useUserRatings();
+  const memeRating = ratings.find(r => r.postLink === meme.postLink);
 
   const [enlarge, setEnlarge] = useState(false)
 
   async function rateMeme(rating) {
     const payload = { postLink: meme.postLink, rating };
 
-    try {
-      const result = await apiPostUnratedRating({ fetchWithAuth, payload });
-      // do something with result if needed
-      console.log(result)
-    } catch (e) {
-      // handle error
-      console.error("Error rating meme:", e);
+    if (rateType === "unrated") {
+      try {
+        const result = await apiPostUnratedRating({ fetchWithAuth, payload });
+        console.log(result)
+      } catch (e) {
+        console.error("Error rating meme:", e);
+      }
+    } else if (rateType === "rated") {
+      console.log("aweawe")
+      // try {
+      //   const result = await apiPostRatedRating({ fetchWithAuth, payload });
+      //   console.log(result)
+      // } catch (e) {
+      //   console.error("Error rating meme:", e);
+      // }
     }
   }
 
   return (
     <div className={styles.card} onMouseEnter={() => setEnlarge(true)} onMouseLeave={() => setEnlarge(false)}>
-      
-      
-      
+          
       <div className={styles.title}>
           <h2>{meme.title}</h2>
       </div>
@@ -44,10 +52,9 @@ function MemeCards( { meme } ) {
       </div>
 
       <div>
-        <MemeCardsButton rateMeme={rateMeme} enlarge={enlarge}/>
+        <MemeCardsButton rateMeme={rateMeme} enlarge={enlarge} currentRating={memeRating?.rating}/>
       </div>
       <hr></hr>
-
 
     </div>
   )

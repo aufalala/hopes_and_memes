@@ -9,10 +9,10 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 2.6rem;
+    /* gap: 1rem; */
 
     
-    transition: gap 0.1s ease;
+    /* transition: gap 0.1s ease; */
     /* transform: translateX(35px); */
 }
 
@@ -20,16 +20,24 @@
     cursor: pointer;
     font-size: 30px;
     user-select: none;
-    transition: font-size 0.1s ease;
+    transition: font-size 0.2s ease, padding 0.2s ease;
+    line-height: 120%;
+    place-content: center;
+    
+    /* padding: 0 1.25rem; */
 }
 
-.enlargeDiv {
-    /* transform: translateX(0px) */
-    gap: 1.5rem;
-}
+/* .enlargeDiv {
+    transform: translateX(0px);
+    gap: 0;
+    
+    color: blue;
+} */
 
 .starEnlarge {
-    font-size: 50px;;
+    font-size: 50px;
+    padding: 0 0.5rem;
+    /* transition: padding 0.1s ease; */
 }
 
 

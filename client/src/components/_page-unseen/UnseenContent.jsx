@@ -37,7 +37,7 @@ function UnseenContent() {
     <div className={styles.cardsContainer}>
       {unratedMemes.length>0 ?
       unratedMemes.map((meme) => (
-        <MemeCards key={meme.postLink} meme={meme}/>
+        <MemeCards key={meme.postLink} meme={meme} rateType={"unrated"}/>
       )) :
       <div>WOW NO MEMES?</div>
       }

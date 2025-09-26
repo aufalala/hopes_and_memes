@@ -14,24 +14,22 @@ function HomeContent() {
   const [offset, setOffset] = useState(null);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
+  const initialFetchDone = useRef(false);
 
   const fetchMemes = async () => {
     if (loading) return;
     setLoading(true);
     const { records, offset: newOffset } = await apiGetRatedMemes(fetchWithAuth, offset);
-    console.log(records)
     setRatedMemes(prev => [...prev, ...records]);
     setOffset(newOffset);
     setLoading(false);
   };
 
-const initialFetchDone = useRef(false);
 
 useEffect(() => {
   if (initialFetchDone.current) return;
   initialFetchDone.current = true;
-
-  fetchMemes(); // initial load
+  fetchMemes();
 }, []);
 
 
@@ -60,7 +58,7 @@ useEffect(() => {
     <div className={styles.HomeContent}>
       {ratedMemes.length>0 ?
       ratedMemes.map((meme, index) => (
-        <MemeCards key={meme.postLink} meme={meme}/>
+        <MemeCards key={meme.postLink} meme={meme} rateType={"rated"}/>
       )) :
       <div>WOW NO MEMES?</div>
       }
