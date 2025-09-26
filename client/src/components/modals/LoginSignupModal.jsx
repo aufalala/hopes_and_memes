@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSignIn, useSignUp } from "@clerk/clerk-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { apiGetUserVerify, apiPostUser } from "../../services/airtableAPI";
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch";
 
 import { useModal } from "../../contexts/ModalContext";
@@ -20,9 +19,6 @@ function LoginSignupModal() {
   // flag for steps for "username" | "login" | "signup" in modal
   const [step, setStep] = useState("username");
 
-  // flag for verify airtable
-  const [doVerify, setDoVerify] = useState(false);
-
   // flag disable submits and set spinner
   const [loading, setLoading] = useState(false);
 
@@ -30,8 +26,6 @@ function LoginSignupModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-
-  const { fetchWithAuth, token } = useClerkAuthFetch();
 
   useEffect(() => {
     handleResetAndBack();
@@ -45,30 +39,6 @@ function LoginSignupModal() {
     setStep("username");
     setLoading(false);
   }
-
-  useEffect(() => {
-    if (doVerify && token) {
-      handleVerifyUser();
-    }
-  }, [doVerify, token, fetchWithAuth]);
-
-  const handleVerifyUser = async () => {
-    try {
-      const verify = await apiGetUserVerify(fetchWithAuth);
-      if ((verify.status === "success") && (verify.exist === true)) {
-        return console.log("You Exist")
-      } else if ((verify.status === "success") && (verify.exist === false)) {
-        const postUser = await apiPostUser(fetchWithAuth);
-        if ((postUser.status === "success")) {
-          return console.log("Welcome newbie")
-        }
-      }
-    } catch (e) {
-        console.error("Verification failed:", e);
-    } finally {
-      setDoVerify(false);
-    }
-  };
 
   const handleUsernameSubmit = async (e) => {
     e.preventDefault();
@@ -122,7 +92,6 @@ function LoginSignupModal() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         closeModal("LoginSignupModal_Vis");
-        setDoVerify(true);
       } else {
         setError("Unexpected step during login");
       }
@@ -161,7 +130,6 @@ function LoginSignupModal() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         closeModal("LoginSignupModal_Vis");
-        setDoVerify(true);
       } else {
         setError("Unexpected step during signup");
       }
