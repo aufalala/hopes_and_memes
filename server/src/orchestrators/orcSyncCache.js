@@ -1,6 +1,9 @@
-import { AIRTABLE_T_ALL_USERS, AIRTABLE_T_UNRATED_MEMES } from "../config.js";
+import { AIRTABLE_T_ALL_USERS, AIRTABLE_T_MEME_RATINGS, AIRTABLE_T_UNRATED_MEMES } from "../config.js";
 import redisConnection from "../redis/connection.js";
+
 import { syncCache } from "../redis/syncCache.js";
+import { syncCacheHash } from "../redis/syncCacheHash.js";
+
 import getTimestamp from "../utils/utTimestamp.js";
 
 export async function orcSyncCache() {
@@ -15,6 +18,7 @@ export async function orcSyncCache() {
     // Hydrate cache data
     await syncCache({table: AIRTABLE_T_UNRATED_MEMES, keyPrefix: "memes:unrated", useKeySuffix: "postLink", sourceData, });
     await syncCache({table: AIRTABLE_T_ALL_USERS, keyPrefix: "users", useKeySuffix: "clerk_user_id", sourceData, });
+    await syncCacheHash({table: AIRTABLE_T_MEME_RATINGS, keyPrefix: "userRating", useKeySuffix: "clerk_user_id", useIdentifierHash: "postLink", sourceData, });
 
     console.log(`[${getTimestamp()}] orcSyncCache: cache hydrated successfully`);
 
