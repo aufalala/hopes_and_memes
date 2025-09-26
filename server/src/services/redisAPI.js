@@ -156,3 +156,26 @@ export async function deleteRecordsFromCache({ keyPrefix, deleteParams = {}, sou
     throw e;
   }
 }
+
+export async function getHashRecordsFromCache({ keyPrefix, keyParam }) {
+  console.log(`[${getTimestamp()}] TRYING: getHashRecordsFromCache for ${keyPrefix}:${keyParam}`);
+
+  try {
+    const hashKey = `${keyPrefix}:${keyParam}`;
+    const hashValues = await redisConnection.hgetall(hashKey);
+
+    if (hashValues && Object.keys(hashValues).length > 0) {
+      const records = Object.values(hashValues).map(val => JSON.parse(val));
+
+      console.log(`[${getTimestamp()}] getHashRecordsFromCache: SUCCESS, retrieved ${records.length} record(s)`);
+      return { status: "success", records };
+    } else {
+      console.warn(`[${getTimestamp()}] getHashRecordsFromCache: No records found in hash`);
+      return { status: "success"}
+    }
+
+  } catch (e) {
+    console.error(`[${getTimestamp()}] getHashRecordsFromCache: FAILED:`, e);
+    throw e;
+  }
+}
