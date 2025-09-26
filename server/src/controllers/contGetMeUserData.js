@@ -1,12 +1,13 @@
-import { getAuth } from "@clerk/express";
+import { getAuth, clerkClient} from "@clerk/express";
 import { AIRTABLE_T_ALL_USERS } from "../config.js";
-import { getRecordsFromAirtable } from "../services/airtableAPI.js";
+import { getRecordsFromAirtable, postUser } from "../services/airtableAPI.js";
 
 import getTimestamp from "../utils/utTimestamp.js";
 
 export async function contGetMeUserData({sourceData, req, res}) {
   console.log(`[${getTimestamp()}] TRYING: contGetMeUserData from ${sourceData}`);
   const {userId} = getAuth(req);
+  const {createdAt, username} = (await clerkClient.users.getUser(userId));
 
   if (!userId) {
     return res.status(401).json({ error: "Not authenticated" });
@@ -15,7 +16,24 @@ export async function contGetMeUserData({sourceData, req, res}) {
   const result = await getRecordsFromAirtable({sourceData, table: AIRTABLE_T_ALL_USERS, filterParams: {clerk_user_id: userId}});
   if (result.status === "success" && result.records.length > 0) {
     return (result);
-  } else {
+
+  } else if (result.status === "success" && result.records.length === 0) {
+      try {   
+        const result2 = await postUser(sourceData, userId, username, createdAt)
+        if (result2.status === "success") {
+          return (result2);
+        }
+        // else {
+        //   res.status(500).json(result2);
+        // }
+    
+      } catch (error) {
+          console.error("Error posting user:", error.message);
+          return res.status(500).json({ error: "Failed to post user" });
+        }
+  }
+
+    else {
     res.status(500).json(result);
   }
 }

@@ -9,16 +9,6 @@ export async function fetchTestImageProtected(fetchWithAuth) {
 }
 ////////////////////////////////////////////////////////////////////////////
 
-export async function apiGetUserVerify(fetchWithAuth) {
-  return fetchWithAuth("/api/users/verify", {}, true);
-}
-
-export async function apiPostUser(fetchWithAuth) {
-  return fetchWithAuth("/api/users", {
-    method: "POST",
-  }, true);
-}
-
 export async function apiGetMeUserData(fetchWithAuth) {
   try {
     const res = await fetchWithAuth("/api/users/me", {}, true);

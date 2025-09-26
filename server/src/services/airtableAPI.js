@@ -93,40 +93,6 @@ export async function getTestImage(sourceData, username = "test", table = AIRTAB
 //111/////////////////////////////// --- ALL USERS
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
-export async function getUserVerify(sourceData, userId, table = AIRTABLE_T_ALL_USERS) {
-  console.log(`[${getTimestamp()}] TRYING: getUserVerify ${sourceData}`);
-  try {
-    const filterFormula = encodeURIComponent(`{clerk_user_id} = "${userId}"`);
-    const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
-    
-    const response = await fetch(url, {
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
-      agent,  
-    });
-
-    if (!response.ok) {
-      throw new Error(`Airtable API error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    let exist = true;
-
-    if (!data.records.length) {
-      exist = false;
-    }
-    
-    return {
-      status: "success",
-      exist,
-    };
-
-  } catch (e) {
-    console.error("Airtable failed:", e.message);
-    throw e;
-  }
-}
-
-// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 export async function postUser(sourceData, userId, username, createdAt, table = AIRTABLE_T_ALL_USERS) {
   console.log(`[${getTimestamp()}] TRYING: postUser from ${sourceData}`);
   try {
@@ -136,9 +102,9 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
           fields: {
             clerk_user_id: userId,
             username,
-            created_at: createdAt,
-            num_memes_rated: 0,
-            points: 0,
+            created_at: String(createdAt),
+            num_memes_rated: "0",
+            points: "0",
           },
         },
       ],
@@ -157,12 +123,12 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
     const data = await response.json();
     
     if (!response.ok) {
-      throw new Error(`Failed to add user: ${response.status}: ${data}`);
+      throw new Error(`Failed to add user: ${response.status}: ${JSON.stringify(data)}`);
     }
 
     return {
       status: "success",
-      record: data.records[0],
+      records: data.records.map((record) => record.fields),
     };
   } catch (e) {
     console.error("Airtable failed:", e.message);
@@ -214,12 +180,12 @@ export async function uploadUnratedMemesToAirtable(sourceData, memeArray, table 
         subreddit: meme.subreddit,
         title: meme.title,
         url: meme.url,
-        nsfw: JSON.stringify(meme.nsfw),
-        spoiler: JSON.stringify(meme.spoiler),
+        nsfw: String(meme.nsfw),
+        spoiler: String(meme.spoiler),
         author: meme.author,
-        ups: JSON.stringify(meme.ups),
-        preview: JSON.stringify(meme.preview),
-        created_at: JSON.stringify(Date.now())
+        ups: String(meme.ups),
+        preview: String(meme.preview),
+        created_at: String(Date.now())
       }
     }));
 

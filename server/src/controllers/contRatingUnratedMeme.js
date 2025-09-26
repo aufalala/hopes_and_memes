@@ -17,7 +17,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
     clerk_user_id: userId,
     postLink,
     rating,
-    created_at: Date.now()
+    created_at: String(Date.now()),
   }
 
   let unratedMemeExist = false;
