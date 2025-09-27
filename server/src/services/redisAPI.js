@@ -179,3 +179,38 @@ export async function getHashRecordsFromCache({ keyPrefix, keyParam }) {
     throw e;
   }
 }
+
+
+export async function updateCacheHash({ 
+  keyPrefix, 
+  record, 
+  groupKeyField, 
+  identifierField 
+}) {
+  try {
+    const groupKey = record[groupKeyField];
+    if (!groupKey) throw new Error(`Missing group key: ${groupKeyField}`);
+
+    const redisKey = `${keyPrefix}:${groupKey}`;
+
+    if (identifierField) {
+      const fieldKey = record[identifierField];
+      if (!fieldKey) throw new Error(`Missing identifier: ${identifierField}`);
+
+      //222// UPDATE HASH
+      await redisConnection.hset(redisKey, fieldKey, JSON.stringify(record));
+      console.log(
+        `[${getTimestamp()}] updateCacheHash: Updated field "${fieldKey}" in ${redisKey}`
+      );
+    } else {
+      // If no identifier, overwrite whole value
+      await redisConnection.set(redisKey, JSON.stringify(record));
+      console.log(
+        `[${getTimestamp()}] updateCacheHash: Overwrote value in ${redisKey}`
+      );
+    }
+  } catch (e) {
+    console.error(`[${getTimestamp()}] updateCacheHash: FAILED:`, e);
+    throw e;
+  }
+}
