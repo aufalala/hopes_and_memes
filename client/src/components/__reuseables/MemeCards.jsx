@@ -5,7 +5,7 @@ import { useUserRatings } from "../../contexts/UserRatingsContext.jsx";
 
 import MemeCardsButton from "./MemeCardsButton"
 
-import { apiPostUnratedRating } from "../../services/redisAPI"
+import { apiPostRatedRating, apiPostUnratedRating } from "../../services/redisAPI"
 
 import styles from "./_MemeCards.module.css"
 
@@ -30,13 +30,12 @@ function MemeCards({ meme, rateType }) {
         console.error("Error rating meme:", e);
       }
     } else if (rateType === "rated") {
-      console.log("aweawe")
-      // try {
-      //   const result = await apiPostRatedRating({ fetchWithAuth, payload });
-      //   console.log(result)
-      // } catch (e) {
-      //   console.error("Error rating meme:", e);
-      // }
+      try {
+        const result = await apiPostRatedRating({ fetchWithAuth, payload });
+        console.log(result)
+      } catch (e) {
+        console.error("Error rating meme:", e);
+      }
     }
   }
 

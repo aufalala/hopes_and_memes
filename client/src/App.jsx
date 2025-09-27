@@ -26,11 +26,8 @@ import More from "./pages/More.jsx";
 
 function App() {
 
-  const { fetchWithAuth } = useClerkAuthFetch();
+  // const { fetchWithAuth } = useClerkAuthFetch();
 
-
-
-  
   // //CHECK SERVER-AIRTABLE STATUS
   // const [status, setStatus] = useState("Checking connection...");
 
