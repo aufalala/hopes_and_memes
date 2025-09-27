@@ -305,6 +305,7 @@ export async function getRecordsFromAirtable({
   table,
   sourceData,
   filterParams = {},
+  fullData = false,
   } = {}) {
   
   console.log(`[${getTimestamp()}] TRYING: getRecordsFromAirtable from ${sourceData}`);
@@ -347,7 +348,7 @@ export async function getRecordsFromAirtable({
 
     return {
       status: "success",
-      records: data.records.map((record) => record.fields),
+      records: fullData ? data.records : data.records.map((record) => record.fields),
     };
 
   } catch (e) {
@@ -459,6 +460,50 @@ export async function deleteRecordsFromAirtable({
 
   } catch (e) {
     console.error("deleteRecordsFromAirtable FAILED:", e.message);
+    throw e;
+  }
+}
+
+
+export async function updateAirtableRecord({ table, recordId, fields }) {
+  console.log(
+    `[${getTimestamp()}] updateAirtableRecord: Updating ${recordId} in ${table}...`
+  );
+
+  try {
+    const payload = {
+      records: [
+        {
+          id: recordId,
+          fields,
+        },
+      ],
+    };
+
+    const response = await fetch(`${AIRTABLE_URL}/${table}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      agent,
+      body: JSON.stringify(payload),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to update record: ${response.status} ${JSON.stringify(data)}`
+      );
+    }
+
+    console.log(
+      `[${getTimestamp()}] updateAirtableRecord: SUCCESS for ${recordId}`
+    );
+    return { status: "success", record: data.records[0] };
+  } catch (e) {
+    console.error(`[${getTimestamp()}] updateAirtableRecord: FAILED:`, e);
     throw e;
   }
 }
