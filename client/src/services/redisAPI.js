@@ -32,7 +32,7 @@ export async function apiPostUnratedRating({fetchWithAuth, payload}) {
   }
 }
 
-export async function apiPostRateddRating({fetchWithAuth, payload}) {
+export async function apiPostRatedRating({fetchWithAuth, payload}) {
   try {
     return await fetchWithAuth("/api/redis/rated-meme-rating", {
       method: "POST",
