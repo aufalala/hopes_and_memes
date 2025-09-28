@@ -2,6 +2,7 @@ import { useState } from "react"
 
 import { useClerkAuthFetch } from "../../hooks/useClerkAuthFetch.js";
 import { useUserRatings } from "../../contexts/UserRatingsContext.jsx";
+import { useUserData } from "../../contexts/UserDataContext.jsx";
 
 import MemeCardsButton from "./MemeCardsButton"
 
@@ -14,10 +15,11 @@ function MemeCards({ meme, rateType }) {
 
   const { fetchWithAuth } = useClerkAuthFetch();
   
-  const { ratings } = useUserRatings();
-  const memeRating = ratings.find(r => r.postLink === meme.postLink);
-
+  const { ratings, setRatingRefresher } = useUserRatings();
+  const { setUserDataRefresher } = useUserData();
   const [enlarge, setEnlarge] = useState(false)
+
+  const memeRating = ratings.find(r => r.postLink === meme.postLink);
 
   async function rateMeme(rating) {
     const payload = { postLink: meme.postLink, rating };
@@ -29,6 +31,7 @@ function MemeCards({ meme, rateType }) {
       } catch (e) {
         console.error("Error rating meme:", e);
       }
+
     } else if (rateType === "rated") {
       try {
         const result = await apiPostRatedRating({ fetchWithAuth, payload });
@@ -37,6 +40,10 @@ function MemeCards({ meme, rateType }) {
         console.error("Error rating meme:", e);
       }
     }
+    
+    setUserDataRefresher((prev) => prev + 1)
+    setRatingRefresher((prev) => prev + 1)
+
   }
 
   return (

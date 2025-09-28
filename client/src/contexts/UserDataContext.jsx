@@ -11,6 +11,7 @@ export const UserDataProvider = ({ children }) => {
   const { fetchWithAuth } = useClerkAuthFetch();
   const { user, isSignedIn, isLoaded } = useUser();
   const [userData, setUserData] = useState(null);
+  const [userDataRefresher, setUserDataRefresher] = useState(0);
 
   useEffect(() => {
   const getMeUserData = async () => {
@@ -39,14 +40,14 @@ export const UserDataProvider = ({ children }) => {
   };
 
   getMeUserData();
-}, [isSignedIn, isLoaded, user]);
+}, [isSignedIn, isLoaded, user, userDataRefresher]);
 
 useEffect(() => {
   console.log("userData changed:", userData);
 }, [userData]);
 
   return (
-    <UserDataContext.Provider value={{ userData, setUserData }}>
+    <UserDataContext.Provider value={{ userData, setUserData, setUserDataRefresher }}>
       {children}
     </UserDataContext.Provider>
   );

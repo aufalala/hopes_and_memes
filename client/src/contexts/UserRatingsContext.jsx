@@ -11,6 +11,7 @@ export const UserRatingsProvider = ({ children }) => {
   const { user, isSignedIn, isLoaded } = useUser();
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [ratingRefresher, setRatingRefresher] = useState(0);
 
   let test;
   // Fetch user's ratings on mount
@@ -30,14 +31,14 @@ export const UserRatingsProvider = ({ children }) => {
     };
 
     loadRatings();
-  }, [user, isLoaded, isSignedIn]);
+  }, [user, isLoaded, isSignedIn, ratingRefresher]);
 
   useEffect(() => {
     console.log(ratings)
   }, [ratings])
 
   return (
-    <UserRatingsContext.Provider value={{ ratings, setRatings, loading }}>
+    <UserRatingsContext.Provider value={{ ratings, setRatings, loading, setRatingRefresher }}>
       {children}
     </UserRatingsContext.Provider>
   );
