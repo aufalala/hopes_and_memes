@@ -97,7 +97,7 @@ export async function getRecordsFromCache({sourceData, keyParam}) {
       
     } else {
       console.warn(`[${getTimestamp()}] getRecordsFromCache: No records found in cache`);
-      throw ("getRecordsFromCache: No records found in cache");
+      return {status: "success"}
     }
 
   } catch (e) {
@@ -172,6 +172,22 @@ export async function getHashRecordsFromCache({ keyPrefix, keyParam }) {
 
   } catch (e) {
     console.error(`[${getTimestamp()}] getHashRecordsFromCache: FAILED:`, e);
+    throw e;
+  }
+}
+
+export async function getHashValuesFromCache({ keyPrefix, valueParam }) {
+  console.log(`[${getTimestamp()}] TRYING: getHashValuesFromCache for ${keyPrefix}, ${valueParam}`);
+
+  try {
+    const hashValues = await redisConnection.hget(keyPrefix, valueParam);
+
+    if (hashValues) {
+      return {status: "success", records: JSON.parse(hashValues)}
+    }
+
+  } catch (e) {
+    console.error(`[${getTimestamp()}] getHashValuesFromCache: FAILED:`, e);
     throw e;
   }
 }
