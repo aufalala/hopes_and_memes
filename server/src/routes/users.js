@@ -32,6 +32,7 @@ router.get("/profile", requireAuth(), async (req, res) => {
   }
 });
 
+//222// USED BY CLIENT TO PULL USERDATA / POST USERDATA TO AIRTABLE
 router.get("/me", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
@@ -48,7 +49,7 @@ router.get("/me", requireAuth(), async (req, res) => {
   }
 });
 
-
+//222// USED BY CLIENT FOR USER MEME RATING CACHE FOR MEME UI RATED
 router.get("/me/ratings", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);

@@ -13,7 +13,7 @@ export async function syncCacheHash({ table, keyPrefix, useKeySuffix, useIdentif
     return [];
   }
 
-  // Group records by the dynamic key (whatever is passed in useKeySuffix)
+  // Group records by (useKeySuffix)
   const groupedRecords = {};
 
   for (const record of records) {
@@ -33,9 +33,14 @@ export async function syncCacheHash({ table, keyPrefix, useKeySuffix, useIdentif
         const fieldKey = record[useIdentifierHash];
         batch[fieldKey] = JSON.stringify(record);
       }
+      
+      //222// 000000000000000000 CAN USE MODULAR FUNCTION IN REDIS API
       await redisConnection.hset(redisKey, batch);
+
     } else {
       // No identifier field → store entire array under the key
+      
+      //222// 000000000000000000 CAN USE MODULAR FUNCTION IN REDIS API
       await redisConnection.set(redisKey, JSON.stringify(groupRecords));
     }
   }

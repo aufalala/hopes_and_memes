@@ -57,6 +57,7 @@ router.get("/testImage/protected", requireAuth(), async (req, res) => {
   }
 });
 
+//222// CURRENTLY USED BY TEST PAGE, TO BE TRIGGERED BY USER RATE ATTEMPT AND SERVER START
 router.get("/meme-count", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);

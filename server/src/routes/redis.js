@@ -9,6 +9,7 @@ import getTimestamp from "../utils/utTimestamp.js";
 
 const router = express.Router();
 
+//222// TO PULL UNRATED MEMES
 router.get("/unrated-memes", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
@@ -19,12 +20,14 @@ router.get("/unrated-memes", async (req, res) => {
     } else {
       res.status(500).json(result);
     }
+
   } catch (e) {
     console.error(e);
     res.status(500).json(e.message);
   }
 });
 
+//222// USER ATTEMPTS TO RATE UNRATED MEME
 router.post("/unrated-meme-rating", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
@@ -36,18 +39,19 @@ router.post("/unrated-meme-rating", requireAuth(), async (req, res) => {
 
   try {
     const result = await contRatingUnratedMemes(sourceData, req)
-
     if (result.status === "success") {
       return res.json(result);
     } else {
       res.status(500).json(result);
     }
+
   } catch (e) {
     console.error(e);
     res.status(500).json(e.message);
   }
 });
 
+//222// USER ATTEMPTS TO RATE RATED MEME
 router.post("/rated-meme-rating", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
@@ -59,13 +63,12 @@ router.post("/rated-meme-rating", requireAuth(), async (req, res) => {
 
   try {
     const result = await orcRateRatedMeme({sourceData, req})
-    console.log("sadsadas")
-
     if (result.status === "success") {
       return res.json(result);
     } else {
       res.status(500).json(result);
     }
+
   } catch (e) {
     console.error(e);
     res.status(500).json(e.message);

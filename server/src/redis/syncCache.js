@@ -2,6 +2,7 @@ import redisConnection from "./connection.js";
 import { getRecordsFromAirtable } from "../services/airtableAPI.js";
 import getTimestamp from "../utils/utTimestamp.js";
 
+
 export async function syncCache({table, keyPrefix, useKeySuffix, sourceData}) {
   console.log(`[${getTimestamp()}] syncCache: Syncing cache for ${table}...`);
   const result = await getRecordsFromAirtable({sourceData, table});
@@ -12,6 +13,8 @@ export async function syncCache({table, keyPrefix, useKeySuffix, sourceData}) {
     return [];
   }
 
+  
+  //222// 000000000000000000 CAN USE MODULAR FUNCTION IN REDIS API
   for (const record of records) {
     const key = `${keyPrefix}:${record[useKeySuffix]}`;
     await redisConnection.set(key, JSON.stringify(record));

@@ -32,6 +32,7 @@ export async function getRandomMeme(sourceData) {
     }
 }
 
+//222// USED BY WORKER TO GET 10 MEMES FROM MEME API
 export async function getTenMemes(sourceData) {
   console.log(`[${getTimestamp()}] TRYING: getTenMemes from ${sourceData}`);
     try {

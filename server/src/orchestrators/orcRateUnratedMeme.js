@@ -67,11 +67,13 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
     }
   }
 
+  //222// POST MEME TO AIRTABLE (RATED)
   if (flagCacheLockDeleteSuccess) {
     try {
       const result = await postToAirtable({sourceData, table: AIRTABLE_T_RATED_MEMES, postParams: memeData});
       if (result.status === "success") {
         flagAirtableMemePostSuccess = true;
+        return {status: "success"}
       }
     } catch (e) {
       console.error("orcRateUnratedMeme: postToAirtable FAILED:", e);

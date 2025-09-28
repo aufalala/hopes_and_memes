@@ -1,3 +1,4 @@
+// ENV VARIABLES
 import "./config.js";
 
 // MIDDLEWARE
@@ -23,6 +24,7 @@ import { pingAirtable } from "./services/airtableAPI.js";
 // UTILS
 import getTimestamp from "./utils/utTimestamp.js";
 
+// LAUNCH SERVER
 async function startServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;

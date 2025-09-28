@@ -7,6 +7,7 @@ import getTimestamp from "../utils/utTimestamp.js";
 
 const router = express.Router();
 
+//222// FOR TEST, TO PULL 1 MEME
 router.get("/", async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
@@ -23,6 +24,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+//CURRENTLY UNUSED
 router.get("/ten-memes", requireAuth(), async (req, res) => {
   const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);

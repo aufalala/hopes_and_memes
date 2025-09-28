@@ -8,6 +8,7 @@ import { AIRTABLE_T_RATED_MEMES, AIRTABLE_TOKEN, AIRTABLE_URL } from "../config.
 
 const router = express.Router();
 
+//222// TO PULL RATED MEMES
 router.get("/rated-memes", async (req, res) => {
   try {
     const { offset } = req.query;

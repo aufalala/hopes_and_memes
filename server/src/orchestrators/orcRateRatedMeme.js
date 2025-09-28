@@ -82,6 +82,8 @@ export async function orcRateRatedMeme({sourceData, postParams = {}, req}) {
       throw e;
     }
 
+
+
     //ADD POINTS HERE
     //
     // 00000000000000000000000000000000 CAN BE ORC 
@@ -93,7 +95,7 @@ export async function orcRateRatedMeme({sourceData, postParams = {}, req}) {
     let userPoints;
 
     
-    //222// ADD POINTS TO AIRTABLE
+    //222// GET USER RECORD ID AND POINTS FROM AIRTABLE
     try {
       const result = await getRecordsFromAirtable({
         sourceData,
@@ -112,6 +114,7 @@ export async function orcRateRatedMeme({sourceData, postParams = {}, req}) {
 
     userPoints = (Number(userPoints) || 0) + pointsToAdd;
 
+    //222// UPDATE USER POINTS IN AIRTABLE
     try {
       await updateAirtableRecord({
         table: AIRTABLE_T_ALL_USERS,
@@ -137,6 +140,7 @@ export async function orcRateRatedMeme({sourceData, postParams = {}, req}) {
 
       console.log("User points updated to cache successfully:", userData.points);
       return {status: "success"}
+      
     } catch (e) {
       console.error("orcRateRatedMeme: addPointsToCache FAILED:", e);
       throw e;

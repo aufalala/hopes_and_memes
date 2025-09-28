@@ -5,7 +5,7 @@ import { getUnratedMemesFromAirtable } from "./airtableAPI.js";
 const UNRATED_MEMES_CACHE_KEY = "memes:unrated";
 
 
-//111/////////////////////////////// --- SET REDIS CACHE
+//111/////////////////////////////// --- SET REDIS CACHE (MODULAR)
 export async function setRedisCache(key, data, ttl) {
   if (ttl) {
     await redisConnection.set(key, JSON.stringify(data), 'EX', ttl);
@@ -34,6 +34,7 @@ export async function uploadUnratedMemesToCache(sourceData, memeArray) {
 }
 
 
+// 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
 //111/////////////////////////////// --- GET UNRATED MEMES
 export async function getUnratedMemesFromCache(sourceData) {
   console.log(`[${getTimestamp()}] TRYING: getUnratedMemes from ${sourceData}`);
@@ -45,7 +46,6 @@ export async function getUnratedMemesFromCache(sourceData) {
     if (Array.isArray(keys) && keys.length > 0) {
 
       const values = await Promise.all(keys.map((key) => redisConnection.get(key)));
-
       memes = values.map((val) => JSON.parse(val));
 
       const payload = {status: "success", memes};
@@ -65,7 +65,7 @@ export async function getUnratedMemesFromCache(sourceData) {
   try {
     const result = await getUnratedMemesFromAirtable(sourceData);
     if (result.status !== "success") {
-      return res.status(500).json(result);
+      // return res.status(500).json(result);
     }
 
     console.log(`[${getTimestamp()}] getUnratedMemesFromCache: Unrated memes retrieved from Airtable`);
@@ -75,14 +75,11 @@ export async function getUnratedMemesFromCache(sourceData) {
   } catch (e) {
     console.error(`[${getTimestamp()}] getUnratedMemesFromCache: Airtable unrated memes retrieval FAILED`, e);
     throw e;
-  }
-
-    
+  }    
 }
 
 
-
-/////////////////////////////////
+//111/////////////////////////////// --- MODULAR FUNCTIONS
 
 export async function getRecordsFromCache({sourceData, keyParam}) {
   console.log(`[${getTimestamp()}] TRYING: getRecordsFromCache from ${sourceData}`);
@@ -92,7 +89,6 @@ export async function getRecordsFromCache({sourceData, keyParam}) {
     if (Array.isArray(keys) && keys.length > 0) {
 
       const values = await Promise.all(keys.map((key) => redisConnection.get(key)));
-
       const records = values.map((val) => JSON.parse(val));
 
       const payload = {status: "success", records};
@@ -179,7 +175,6 @@ export async function getHashRecordsFromCache({ keyPrefix, keyParam }) {
     throw e;
   }
 }
-
 
 export async function updateCacheHash({ 
   keyPrefix, 

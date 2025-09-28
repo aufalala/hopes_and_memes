@@ -18,22 +18,19 @@ export async function contGetMeUserData({sourceData, req, res}) {
     return (result);
 
   } else if (result.status === "success" && result.records.length === 0) {
+
       try {   
         const result2 = await postUser(sourceData, userId, username, createdAt)
         if (result2.status === "success") {
           return (result2);
         }
-        // else {
-        //   res.status(500).json(result2);
-        // }
     
       } catch (error) {
           console.error("Error posting user:", error.message);
           return res.status(500).json({ error: "Failed to post user" });
         }
-  }
-
-    else {
+        
+  } else {
     res.status(500).json(result);
   }
 }

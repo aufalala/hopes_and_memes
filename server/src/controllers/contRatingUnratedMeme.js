@@ -23,6 +23,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
   let unratedMemeExist = false;
   let memeLock = false;
   
+  //222// CHECK IF UNRATED MEME EXIST IN CACHE
   try {
     const result = await getRecordsFromCache({sourceData, keyParam: postLink});
     if (result.status === "success") {
@@ -33,6 +34,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
     throw e;
   }
 
+  //222// LOCK MEME RECORD IN CACHE
   if (unratedMemeExist) {
     try {
       const result = await lockUnratedMeme({sourceData, key: `lock:memes:unrated:${postLink}`});
@@ -49,21 +51,26 @@ export async function contRatingUnratedMemes(sourceData, req) {
     }
   }
 
-  
+  //222// ATTEMPT ORC RATE UNRATED
   if (memeLock) {
     try {
       const result = await orcRateUnratedMeme({sourceData, postParams})
-
+      if (result.status === "success") {
+        return {status: "success"}
+      }
     } catch (e) {
       console.error("orcRateUnratedMeme FAILED:", e);
       throw e;
     }
   }
 
-
+  //222// DO ORC RATE RATED INSTEAD
   if (!memeLock && !unratedMemeExist) {
     try {
       const result = await orcRateRatedMeme({sourceData, postParams})
+      if (result.status === "success") {
+        return {status: "success"}
+      }
 
     } catch (e) {
       console.error("orcRateUnratedMeme FAILED:", e);
@@ -71,7 +78,6 @@ export async function contRatingUnratedMemes(sourceData, req) {
     }
   }
 
-  return {status: "success"}
   // const {postLink} = req.body
 
   // try {
