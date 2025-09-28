@@ -26,7 +26,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
   //222// CHECK IF UNRATED MEME EXIST IN CACHE
   try {
     const result = await getRecordsFromCache({sourceData, keyParam: postLink});
-    if (result.status === "success") {
+    if (result.status === "success" && result.records) {
       unratedMemeExist = true;
     }
   } catch (e) {
@@ -64,10 +64,10 @@ export async function contRatingUnratedMemes(sourceData, req) {
     }
   }
 
-  //222// DO ORC RATE RATED INSTEAD
+  //222// DO ORC RATE RATED INSTEAD IF NOT FIRST
   if (!memeLock && !unratedMemeExist) {
     try {
-      const result = await orcRateRatedMeme({sourceData, postParams})
+      const result = await orcRateRatedMeme({sourceData, postParams, req})
       if (result.status === "success") {
         return {status: "success"}
       }
