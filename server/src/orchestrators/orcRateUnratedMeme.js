@@ -1,8 +1,9 @@
 import { AIRTABLE_T_MEME_RATINGS, AIRTABLE_T_RATED_MEMES, AIRTABLE_T_UNRATED_MEMES } from "../config.js";
 import { deleteRecordsFromAirtable, postToAirtable } from "../services/airtableAPI.js";
-import { deleteRecordsFromCache } from "../services/redisAPI.js";
+import { deleteRecordsFromCache, updateCacheHash } from "../services/redisAPI.js";
 
 import getTimestamp from "../utils/utTimestamp.js";
+import { orcAddPoints } from "./orcAddPoints.js";
 
 export async function orcRateUnratedMeme({sourceData, postParams}) {
   console.log(`[${getTimestamp()}] TRYING: orcRateUnratedMeme from ${sourceData}`);
@@ -24,6 +25,21 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
       }
   } catch (e) {
     console.error("orcRateUnratedMeme: postToAirtable FAILED:", e);
+    throw e;
+  }
+  
+  //222// ADD RATING TO CACHE
+  try {
+    const result = await updateCacheHash({
+      keyPrefix: "userRating",
+      record: postParams,
+      groupKeyField: "clerk_user_id",
+      identifierField: "postLink",
+    });
+    console.log("Rating added to cache successfully");
+
+  } catch (e) {
+    console.error("orcRateUnratedMeme: updateCacheHash FAILED:", e);
     throw e;
   }
   
@@ -73,7 +89,6 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
       const result = await postToAirtable({sourceData, table: AIRTABLE_T_RATED_MEMES, postParams: memeData});
       if (result.status === "success") {
         flagAirtableMemePostSuccess = true;
-        return {status: "success"}
       }
     } catch (e) {
       console.error("orcRateUnratedMeme: postToAirtable FAILED:", e);
@@ -81,4 +96,18 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
     }
   }
 
+  //222// ORC ADD POINTS
+  try {
+    const result = await orcAddPoints({sourceData, postParams, pointsToAdd: 5})
+    if (result.status === "success") {
+      console.log("orcRateRatedMeme: SUCCESS");
+    }
+    
+  } catch (e) {
+    console.error("orcRateRatedMeme: updateCacheHash FAILED:", e);
+    throw e;
+  }
+
+  return {status: "success", message: "Rated an unrated meme"}
+    
 }
