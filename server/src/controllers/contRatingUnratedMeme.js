@@ -65,7 +65,8 @@ export async function contRatingUnratedMemes(sourceData, req) {
   }
 
   //222// DO ORC RATE RATED INSTEAD IF NOT FIRST
-  if (!memeLock && !unratedMemeExist) {
+  // if statement !unratedMemeExist and unratedMemeExist cancel each other out - refer to flowchart - 
+  if (!memeLock) {
     try {
       const result = await orcRateRatedMeme({sourceData, postParams, req})
       if (result.status === "success") {
@@ -77,12 +78,4 @@ export async function contRatingUnratedMemes(sourceData, req) {
       throw e;
     }
   }
-
-  // const {postLink} = req.body
-
-  // try {
-  //   getRecordsFromAirtable({sourceData, table: AIRTABLE_T_UNRATED_MEMES, filterParams: {postLink}})
-  // } catch (e) {
-
-  // }
 }
