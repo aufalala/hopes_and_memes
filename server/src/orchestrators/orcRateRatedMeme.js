@@ -155,7 +155,7 @@ export async function orcRateRatedMeme({sourceData, postParams = {}, req}) {
       console.log("orcRateRatedMeme: SUCCESS");
       
     } catch (e) {
-      console.error("orcRateRatedMeme: updateCacheHash FAILED:", e);
+      console.error("orcRateRatedMeme: orcAddPoints FAILED:", e);
       throw e;
     }
 

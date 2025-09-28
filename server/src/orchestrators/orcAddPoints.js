@@ -33,7 +33,7 @@ export async function orcAddPoints({sourceData, postParams, pointsToAdd}) {
 
   //222// UPDATE USER POINTS IN AIRTABLE
   try {
-    await updateAirtableRecord({
+    const result = await updateAirtableRecord({
       sourceData,
       table: AIRTABLE_T_ALL_USERS,
       recordId: userRecordId,
