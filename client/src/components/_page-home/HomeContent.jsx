@@ -11,20 +11,33 @@ function HomeContent() {
   const { fetchWithAuth } = useClerkAuthFetch();
 
   const [ratedMemes, setRatedMemes] = useState([]);
-  const [offset, setOffset] = useState(null);
+  const [cursor, setCursor] = useState(null);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
   const initialFetchDone = useRef(false);
 
   const fetchMemes = async () => {
-    if (loading) return;
-    setLoading(true);
-    const { records, offset: newOffset } = await apiGetRatedMemes(fetchWithAuth, offset);
-    setRatedMemes(prev => [...prev, ...records]);
-    setOffset(newOffset);
-    setLoading(false);
-  };
+  if (loading || (cursor === null && ratedMemes.length > 0)) return;
 
+  setLoading(true);
+  try {
+    const { records, cursor: newCursor } = await apiGetRatedMemes(fetchWithAuth, cursor);
+
+    if (records.length > 0) {
+      setRatedMemes(prev => [...prev, ...records]);
+    }
+
+    if (newCursor) {
+      setCursor(newCursor);
+    } else {
+      setCursor(null);
+    }
+  } catch (err) {
+    console.error("fetchMemes FAILED:", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
 useEffect(() => {
   if (initialFetchDone.current) return;
@@ -38,7 +51,7 @@ useEffect(() => {
     if (!loaderRef.current) return;
     const observer = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting && offset && !loading) {
+        if (entries[0].isIntersecting && cursor && !loading) {
           fetchMemes();
         }
       },
@@ -51,7 +64,7 @@ useEffect(() => {
 
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [offset, loading]);
+  }, [cursor, loading]);
 
 
   return (
@@ -63,7 +76,7 @@ useEffect(() => {
       <div>WOW NO MEMES?</div>
       }
         
-      {offset && <div ref={loaderRef}>Loading more...</div>}
+      {<div ref={loaderRef}>Loading more...</div>}
     </div>
   );
 }

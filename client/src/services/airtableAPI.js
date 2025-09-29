@@ -22,18 +22,23 @@ export async function apiGetMeUserData(fetchWithAuth) {
   }
 }
 
-export async function apiGetRatedMemes(fetchWithAuth, offset = null) {
+export async function apiGetRatedMemes(fetchWithAuth, cursor = null) {
   try {
     let url = "/api/airtable/rated-memes";
-    if (offset) url += `?offset=${offset}`;
+    
+    if (cursor) {
+      url += `?cursor=${encodeURIComponent(cursor)}`;
+    }
 
     const res = await fetchWithAuth(url, {}, false);
-    if (res.status !== "success") throw new Error("Server response not ok");
-
-    return {records: res.records, offset: res.offset};
+    if (res.status !== "success") {
+      throw new Error("Server response not ok");
+    }
+    return { records: res.records, cursor: res.cursor };
+    
   } catch (e) {
     console.error("apiGetRatedMemes FAILED:", e);
-    return { records: [], offset: null };
+    return { records: [], cursor: null };
   }
 }
 
