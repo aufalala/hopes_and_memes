@@ -262,12 +262,19 @@ export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T
   }
 }
 
-export async function getRatedMemes(offset = null) {
+export async function getRatedMemes({ cursor = null, pageSize = 5 }) {
   try {
+    
     const url = new URL(`${AIRTABLE_URL}/${encodeURIComponent(AIRTABLE_T_RATED_MEMES)}`);
-    url.searchParams.append("pageSize", 5);
-    if (offset) url.searchParams.append("offset", offset);
 
+    url.searchParams.append("pageSize", pageSize);
+    url.searchParams.append("sort[0][field]", "first_rated_at");
+    url.searchParams.append("sort[0][direction]", "desc");
+
+    if (cursor) {
+      url.searchParams.append("filterByFormula", `{first_rated_at} < "${cursor}"`);
+    }
+    
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${AIRTABLE_TOKEN}`,
@@ -281,11 +288,19 @@ export async function getRatedMemes(offset = null) {
 
     const data = await response.json();
 
+    // Prepare new cursor from the last record
+    const records = data.records.map((record) => ({
+      id: record.id, ...record.fields,
+    }));
+
+    const nextCursor = records.length > 0 ? String(records[records.length - 1].first_rated_at) : null;
+
     return {
       status: "success",
-      records: data.records.map((record) => record.fields),
-      offset: data.offset || null,
+      records,
+      cursor: nextCursor,
     };
+
   } catch (err) {
     console.error("Error in getRatedMemes:", err);
     return {
@@ -360,7 +375,7 @@ export async function getRecordsFromAirtable({
 export async function postToAirtable({
   table,
   sourceData,
-  postParams = {},
+  postParams,
   } = {}) {
 
   console.log(`[${getTimestamp()}] TRYING: postToAirtable from ${sourceData}`);

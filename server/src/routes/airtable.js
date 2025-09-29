@@ -1,18 +1,16 @@
 import express from "express";
 
+import { getRatedMemes, getRecordsFromAirtable } from "../services/airtableAPI.js";
 
 import getTimestamp from "../utils/utTimestamp.js";
-import { getRatedMemes, getRecordsFromAirtable } from "../services/airtableAPI.js";
-import { AIRTABLE_T_RATED_MEMES, AIRTABLE_TOKEN, AIRTABLE_URL } from "../config.js";
-
 
 const router = express.Router();
 
 //222// TO PULL RATED MEMES
 router.get("/rated-memes", async (req, res) => {
   try {
-    const { offset } = req.query;
-    const result = await getRatedMemes(offset);
+    const { cursor } = req.query;
+    const result = await getRatedMemes({ cursor }); // pass cursor instead of offset
 
     if (result.status === "success") {
       res.json(result);
