@@ -83,6 +83,9 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
     }
   }
 
+  //222// update memeData payload to include firstRatedAt time
+  memeData.first_rated_at = String(Date.now());
+
   //222// POST MEME TO AIRTABLE (RATED)
   if (flagCacheLockDeleteSuccess) {
     try {
