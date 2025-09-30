@@ -168,6 +168,7 @@ function LoginSignupModal() {
               <form onSubmit={handleUsernameSubmit}>
                 <div className={styles.form}>
                   <input
+                    className={styles.input}
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}

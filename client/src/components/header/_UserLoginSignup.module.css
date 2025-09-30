@@ -2,23 +2,18 @@
   margin-right: 5rem;
 }
 
-.username {
-  margin-right: 20px;
-  max-width: 500px;
-  justify-content: right;
-  text-align: right;
-
-  white-space: normal;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  text-align: left;  
-}
 
 .loginButton {
   height: 80%;
-  font-size: 2rem;
+  /* font-size: 1.5rem; */
   font-weight: 700;
-  padding: 0 50px;
+  padding: 0 25px;
+  background: rgb(184, 22, 73);
+  color: white;
+  box-shadow: 0 0 5px 3px white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
 }
 
 .profileDiv {
@@ -34,10 +29,32 @@
   overflow-wrap: break-word;
 }
 
+.userDataDiv {
+  display: flex;
+  flex-direction: column;
+  align-content: flex-end;
+  justify-items: right;
+}
+
+.userPoints {
+  color: rgb(255, 255, 174);
+}
+
+.username {
+  /* margin-right: 20px; */
+  max-width: 300px;
+  text-align: right;
+
+  /* white-space: normal; */
+  /* overflow-wrap: break-word; */
+  /* word-break: break-word;   */
+}
+
 .avatar {
   right: 0;
   height: 50px;
   min-width: 50px;
+  margin: 5px;
   /* min-height: 50px; */
   /* width: 100%; */
   /* margin-left: 40%; */
@@ -66,7 +83,7 @@
   right: 11%;
   margin-top: 60px;
   width: 12rem;
-  background-color: rgb(87, 87, 87);
+  background: rgba(58, 74, 77, 0.5);
   box-shadow: 1px 2px 5px 3px rgba(0, 0, 0, 0.5);
   /* border-radius: 0.5rem; */
   z-index: 50;
