@@ -42,3 +42,15 @@ export async function apiPostRatedRating({fetchWithAuth, payload}) {
     console.error("apiPostRatedRating FAILED:", e);
   }
 }
+
+export async function apiGetAllUsers(fetchWithAuth) {
+  try {
+    const res = await fetchWithAuth("/api/users/all", {}, false);
+    if (!res.status === "success") throw new Error("Server response not ok");
+    
+    const data = res.records;
+    return data;
+  } catch (e) {
+    console.error("apiGetUserRatings FAILED:", e);
+  }
+}
