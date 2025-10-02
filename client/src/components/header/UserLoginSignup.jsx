@@ -29,7 +29,7 @@ function UserLoginSignup() {
       
       <div className={styles.userDataDiv}>
       
-      { userData ? <div className={styles.userPoints}>{userData.points} 12312312 POINTS</div> : null}
+      { userData ? <div className={styles.userPoints}>{userData.points} POINTS</div> : null}
       
       <Link to="/profile" className={styles.username}>{user.username.toUpperCase()}</Link>
       </div>

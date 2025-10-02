@@ -1,17 +1,85 @@
-.HomeSidebar {
-    width: 15%;
-    height: 80%;
-    background-color: rgb(0, 0, 78);
+.homeSidebar {
+  width: 15%;
+  /* height: 80%; */
+  background: rgba(42, 52, 54, 0.5);
+  /* border: 2px solid rgba(255, 255, 255, 0.2); */
+  backdrop-filter: blur(10px);
+  box-shadow: inset -1px -1px 5px 0 rgba(255, 255, 255, 0.5);
+  color: inherit;
+
+  padding: 1rem 2rem 1rem 2rem;
+  border-radius: 20px;
 }
 
 /* SCROLL AWARENESS */
-.HomeSidebar {
+.homeSidebar {
   position: fixed;
   margin-top: 10px;
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
   /* align-self: flex-start; */
   /* top: 60px; default when header is visible */
   /* height: calc(100vh - 60px); */
   
   transition: top 0.2s ease-in-out;
 }
+
+.sidebarTitle {
+  text-align: center;
+  width: 100%;
+}
+
+.subredditList {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* .subredditItems {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+} */
+
+
+.subredditItems {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #48676f;
+  border-radius: 4px;
+  background-color: #505658;
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.checkbox:checked {
+  background-color: #60a0aa;
+  border-color: #48676f;
+}
+
+/* .checkbox:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 9px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+} */

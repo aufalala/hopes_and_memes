@@ -6,7 +6,7 @@ import MemeCards from "../__reuseables/MemeCards"
 
 import styles from "./_HomeContent.module.css"
 
-function HomeContent() {
+function HomeContent({ subredditFilter }) {
 
   const { fetchWithAuth } = useClerkAuthFetch();
 
@@ -14,36 +14,49 @@ function HomeContent() {
   const [cursor, setCursor] = useState(null);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
-  const initialFetchDone = useRef(false);
+  // const initialFetchDone = useRef(false);
 
-  const fetchMemes = async () => {
-  if (loading || (cursor === null && ratedMemes.length > 0)) return;
+  const fetchMemes = async (reset = false) => {
+    if (loading) return;
+    if (!reset && cursor === null && ratedMemes.length > 0) return;
 
-  setLoading(true);
-  try {
-    const { records, cursor: newCursor } = await apiGetRatedMemes(fetchWithAuth, cursor);
+    setLoading(true);
+    try {
+      const { records, cursor: newCursor } = await apiGetRatedMemes(fetchWithAuth, reset ? null : cursor, subredditFilter);
 
-    if (records.length > 0) {
-      setRatedMemes(prev => [...prev, ...records]);
+      if (records.length > 0) {
+        setRatedMemes(prev => reset ? records : [...prev, ...records]);
+      } else if (reset) {
+        setRatedMemes([]);
+      }
+
+      if (newCursor) {
+        setCursor(newCursor);
+      } else {
+        setCursor(null);
+      }
+    } catch (err) {
+      console.error("fetchMemes FAILED:", err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (newCursor) {
-      setCursor(newCursor);
-    } else {
-      setCursor(null);
-    }
-  } catch (err) {
-    console.error("fetchMemes FAILED:", err);
-  } finally {
-    setLoading(false);
-  }
-};
+  // useEffect(() => {
+  //   if (initialFetchDone.current) return;
+  //   initialFetchDone.current = true;
+  //   fetchMemes();
+  // }, []);
+  
+  // Fetch on first mount
+  useEffect(() => {
+    fetchMemes(true);
+  }, []);
 
-useEffect(() => {
-  if (initialFetchDone.current) return;
-  initialFetchDone.current = true;
-  fetchMemes();
-}, []);
+  // Refetch whenever subredditFilter changes
+  useEffect(() => {
+    fetchMemes(true); // reset mode
+  }, [subredditFilter]);
 
 
   // Infinite scroll

@@ -22,12 +22,18 @@ export async function apiGetMeUserData(fetchWithAuth) {
   }
 }
 
-export async function apiGetRatedMemes(fetchWithAuth, cursor = null) {
+export async function apiGetRatedMemes(fetchWithAuth, cursor = null, subredditFilter = []) {
   try {
     let url = "/api/airtable/rated-memes";
+    const params = new URLSearchParams();
+
+    if (cursor) params.append("cursor", cursor);
+    if (subredditFilter.length > 0) {
+      params.append("subreddits", JSON.stringify(subredditFilter));
+    }
     
-    if (cursor) {
-      url += `?cursor=${encodeURIComponent(cursor)}`;
+    if ([...params].length > 0) {
+      url += `?${params.toString()}`;
     }
 
     const res = await fetchWithAuth(url, {}, false);
