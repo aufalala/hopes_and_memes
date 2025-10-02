@@ -1,0 +1,33 @@
+.content {
+  max-width: 1000px;
+  min-width: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: rgba(42, 52, 54, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: inset -1px -1px 10px 0 rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  color: inherit;
+  padding: 1rem 2rem 3rem 2rem;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.userRecord {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20px;
+  margin-top: 10px;
+}
+
+.user {
+  color: rgb(184, 22, 73);
+}
+
+.topThree {
+  font-size: 40px;
+  font-weight: 700;
+}

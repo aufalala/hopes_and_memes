@@ -7,3 +7,10 @@
     gap: 20px;
     /* padding: 0 10%; */
 }
+
+.leaderboardContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
