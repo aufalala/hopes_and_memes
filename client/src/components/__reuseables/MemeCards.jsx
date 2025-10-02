@@ -54,7 +54,7 @@ function MemeCards({ meme, rateType }) {
       </div>
 
       <div className={styles.imageContainer}>
-        <img src={meme.url} className={styles.img}/>
+        <img src={meme.url} alt={meme.title} className={styles.img}/>
       </div>
 
       <div>
