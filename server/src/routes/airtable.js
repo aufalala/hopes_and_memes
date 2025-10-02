@@ -8,6 +8,9 @@ const router = express.Router();
 
 //222// TO PULL RATED MEMES
 router.get("/rated-memes", async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
+  
   try {
     const { cursor } = req.query;
     const result = await getRatedMemes({ cursor }); // pass cursor instead of offset
