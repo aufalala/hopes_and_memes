@@ -103,7 +103,7 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
   try {
     const result = await orcAddPoints({sourceData, postParams, pointsToAdd: 5})
     if (result.status === "success") {
-      console.log("orcRateRatedMeme: SUCCESS");
+      console.log("orcRateUnratedMeme: SUCCESS");
     }
     
   } catch (e) {

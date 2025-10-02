@@ -25,7 +25,7 @@ export async function contRatingUnratedMemes(sourceData, req) {
   
   //222// CHECK IF UNRATED MEME EXIST IN CACHE
   try {
-    const result = await getRecordsFromCache({sourceData, keyParam: postLink});
+    const result = await getRecordsFromCache({sourceData, keyPrefix:"memes:unrated", keyParam: postLink});
     if (result.status === "success" && result.records) {
       unratedMemeExist = true;
     }
