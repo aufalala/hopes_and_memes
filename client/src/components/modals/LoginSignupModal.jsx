@@ -159,117 +159,218 @@ function LoginSignupModal() {
             transition={{ duration: 0.3 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <button className={styles.closeButton} onClick={() => closeModal("LoginSignupModal_Vis")}>×</button>
+            <button className={styles.closeButton} onClick={() => closeModal("LoginSignupModal_Vis")}>
+              ×
+            </button>
 
             {/* --------------------------------- Username Step */}
             {step === "username" && (
               <>
-              <h3>IDENTIFY YOURSELF!</h3>
-              <form onSubmit={handleUsernameSubmit}>
-                <div className={styles.form}>
-                  <input
-                    className={styles.input}
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Username"
-                    required
-                  />
-                  {loading ? <div className={styles.spinner}><Spinner /></div> : 
-                  <button type="submit" className={styles.submitButton} disabled={loading}>
-                  CONTINUE
-                  </button>}
+                <br></br>
+                <h3>IDENTIFY YOURSELF!</h3>
 
-                  {error && (
-                    <div className={styles.error}>
-                      {error.split('\n').map((line, index) => (
-                        <p key={index}>{line}</p>
-                      ))}
-                    </div>
-                  )}
+                <form onSubmit={handleUsernameSubmit}>
+                  <div className={styles.form}>
 
-                </div>
-              </form>
+                    {loading ? (
+                      <div className={styles.spinner}>
+                        <Spinner />
+                      </div>
+                    ) : (
+                      <>
+                        <input
+                          className={styles.input}
+                          type="text"
+                          value={username}
+                          onChange={(e) => {
+                            setUsername(e.target.value)
+                            setError("");
+                          }}
+                          placeholder="Username"
+                          required
+                        />
+
+                        <AnimatePresence mode="wait">
+                          {(error || !username) ? (
+                            <div className={styles.error}>
+                              {error.split("\n").map((line, index) => (
+                                <p key={index}>{line}</p>
+                              ))}
+                            </div>
+
+                          ) : (
+                            <motion.div
+                              key="continue-button"
+                              initial={{ opacity: 0, translateY: -20 }}
+                              animate={{ opacity: 1, translateY: 0 }}
+                              exit={{ opacity: 0, translateY: -20 }}
+                              transition={{ duration: 0.1 }}
+                            >
+                              <button
+                                type="submit"
+                                className={styles.submitButton}
+                                disabled={loading}
+                              >
+                                CONTINUE
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                      </>
+                    )}
+
+                  </div>
+                </form>
               </>
             )}
 
             {/* --------------------------------- Login Step */}
             {step === "login" && (
               <>
-              <h3>WELCOME BACK {username.toUpperCase()}</h3>
-              
-              <form onSubmit={handleLoginSubmit}>
-                <div className={styles.form}>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    required
-                  />
-                  {loading ? <div className={styles.spinner}><Spinner /></div> : 
-                  <button type="submit" className={styles.submitButton} disabled={loading}>
-                  LOG IN
-                  </button>}
-                  
-                  {error && (
-                    <div className={styles.error}>
-                      {error.split('\n').map((line, index) => (
-                        <p key={index}>{line}</p>
-                      ))}
-                    </div>
-                  )}
+                <h3>WELCOME BACK</h3>
+                <h3>{username.toUpperCase()}</h3>
 
-                </div>
-              </form>
-              
-              <h4 onClick={handleResetAndBack} className={styles.backTextButton}>
-                &lt;&lt;&lt; Back
-              </h4>
+                <form onSubmit={handleLoginSubmit}>
+                  <div className={styles.form}>
+
+                    {loading ? (
+                      <div className={styles.spinner}>
+                        <Spinner />
+                      </div>
+                    ) : (
+                      <>
+                        <input
+                          className={styles.input}
+                          type="password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            setError("");
+                          }}
+                          placeholder="Password"
+                          required
+                        />
+
+                        <AnimatePresence>
+                          {(error || !password) ? (
+                            <div className={styles.error}>
+                              {error.split("\n").map((line, index) => (
+                                <p key={index}>{line}</p>
+                              ))}
+                            </div>
+
+                          ) : (
+                            <motion.div
+                              key="signin-button"
+                              initial={{ opacity: 0, translateY: -20 }}
+                              animate={{ opacity: 1, translateY: 0 }}
+                              exit={{ opacity: 0, translateY: -20 }}
+                              transition={{ duration: 0.1 }}
+                            >
+                              <button 
+                                type="submit"
+                                className={styles.submitButton}
+                                disabled={loading}
+                                >
+                                LOG IN
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                      </>
+                    )}
+
+                  </div>
+                </form>
+
+                <h4 onClick={handleResetAndBack} className={styles.backTextButton}>
+                  &lt; Back
+                </h4>
+                
               </>
             )}
 
             {/* --------------------------------- Signup Step */}
             {step === "signup" && (
               <>
-              <h3>CREATING A NEW ACCOUNT</h3>
-              <h3>{username.toUpperCase()}</h3>
-              <form onSubmit={handleSignupSubmit}>
-                <div className={styles.form}>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Create Password"
-                    required
-                  />
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm Password"
-                    required
-                  />
-                  {loading ? <div className={styles.spinner}><Spinner /></div> : 
-                  <button type="submit" className={styles.submitButton} disabled={loading}>
-                  CREATE ACCOUNT
-                  </button>}
+                <h3>HI {username.toUpperCase()}</h3>
+                <h3>CREATE A PASSWORD</h3>
 
-                  {error && (
-                    <div className={styles.error}>
-                      {error.split('\n').map((line, index) => (
-                        <p key={index}>{line}</p>
-                      ))}
-                    </div>
-                  )}
+                <form onSubmit={handleSignupSubmit}>
+                  <div className={styles.form}>
+                    
+                    {loading ? (
+                      <div className={styles.spinner}>
+                        <Spinner />
+                      </div>
+                    ) : (
+                      <>
+                        <input
+                          className={styles.input}
+                          type="password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                            setError("");
+                          }}
+                          placeholder="Create Password"
+                          required
+                        />
 
-                </div>
-              </form>
-              <h4 onClick={handleResetAndBack} className={styles.backTextButton}>
-                &lt;&lt;&lt; Back
-              </h4>
+                        <input
+                          className={styles.input}
+                          type="password"
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                            setError("");
+                          }}
+                          placeholder="Confirm Password"
+                          required
+                        />
+
+                        <AnimatePresence>
+                          {(error || !confirmPassword) ? (
+                            <div className={styles.error}>
+                              {error.split("\n").map((line, index) => (
+                                <p key={index}>{line}</p>
+                              ))}
+                            </div>
+
+                          ) : (
+                            <motion.div
+                              key="create-button"
+                              initial={{ opacity: 0, translateY: -20 }}
+                              animate={{ opacity: 1, translateY: 0 }}
+                              exit={{ opacity: 0, translateY: -20 }}
+                              transition={{ duration: 0.1 }}
+                            >
+                              <button
+                                type="submit"
+                                className={styles.submitButton}
+                                disabled={loading}
+                              >
+                                CREATE ACCOUNT
+                              </button>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+
+                      </>
+                    )}
+
+                  </div>
+                </form>
+
+                <h4 onClick={handleResetAndBack} className={styles.backTextButton}>
+                  &lt;&lt;&lt; Back
+                </h4>
+
               </>
             )}
+
           </motion.div>
         </motion.div>
       )}
