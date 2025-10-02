@@ -3,7 +3,7 @@ import styles from "./_HomeSidebar.module.css"
 
 function HomeSidebar() {
   const scrollDirection = useScrollContext();
-  const topOffset = scrollDirection === "down" ? 0 : 60;
+  const topOffset = scrollDirection === "down" ? 0 : 80;
 
   return (
     <div className={styles.HomeSidebar} style={{ top: `${topOffset}px` }}>
