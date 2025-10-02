@@ -1,26 +1,39 @@
 CURRENTLY WORKING ON
 
-UNRATED MEME RATING!!!!!!!!!!!!!!!! finish up if unrated not in cache
-
-PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS TO BE DONE BY WORKER]
+FRONTEND
 
 ---------------------------------------------------------------------
-pull users ratings for memes to load stars for already rated memes
 
+
+
+TAG POINTS ALONG TO MEME RATING?
+
+
+//222// CURRENTLY USED BY TEST PAGE, TO BE TRIGGERED BY USER RATE ATTEMPT AND SERVER START
+router.get("/meme-count", async (req, res) => {})
+
+
+implement, dont add duplicate meme
 
 write cloudinary link to airtable and cache
 
 remove file from cloudinary retry upload if file too large
 
-implement - get unrated memes worker
+ [maybe dont need] implement - get unrated memes worker ???
 
+figure a way to dynamically add unique subreddit cat to table
 
 
 implement - all cache context
 
 implement - animation for pages
 
+PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS TO BE DONE BY WORKER]
 
+
+USERDATA IS CURRENTLY PULLED FROM AIRTABLE AND NOT CACHE
+POST USER ONLY SENDS TO AIRTABLE, CACHE NOT UPDATED WITH USER DATA
+MAY NEED A CONTROLLER TO HANDLE POST & HSET
 
 
 NSFW filter and research if true
@@ -37,7 +50,7 @@ server pulls and stores memes into airtable (when unrated <10, add 5 new memes, 
 
 (DONE) redis to queue server to add 10 memes to airtable+cloudinary
 
-(DONE) store 10 (post link, url as image) to cloudinary
+ store 10 (post link, url as image) to cloudinary
 
 get 10 cloudinary image link based on url
 
@@ -52,7 +65,7 @@ home = all rated memes
 
 
 unseen = new memes
--- -- unseen page to only load a max amount
+(DONE) -- -- unseen page to only load a max amount
 
 
 leaderboard = ranking of user points
@@ -71,18 +84,17 @@ SHOP TO BUY STUFF, STUFF TO BE DISPLAYED ON PROFILE?
 ----------------------------------------------------------------------
 
 features on the meme
-- rate 1-5 stars
+(DONE)- rate 1-5 stars
 - favorite onto profile
 - flag as innapropriate
 - comment?
 
-after rating,
-if unseen, +5pts
-if seen, +2pts
+(DONE) after rating,
+(DONE) if unseen, +5pts
+(DONE) if seen, +2pts
 
 
-scroll bottom threshold load memes?
-cache 5 memes?
+(DONE) scroll bottom threshold load memes?
 
 ----------------------------------------
 
@@ -128,3 +140,15 @@ use table id in server env
 UserData context
 
 MEME API NOT RETURNING CORRECT NUMBER OF MEMES!
+
+pull users ratings for memes to load stars for already rated memes
+
+UNRATED MEME RATING!!!!!!!!!!!!!!!! finish up if unrated not in cache
+
+
+work on rating rated meme
+//222// UPDATE MEME RATING IF ALREADY RATED
+
+ADD POINTS TO RATING UNRATED MEME
+
+sort rated memes by created_at
