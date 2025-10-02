@@ -81,10 +81,10 @@ export async function getUnratedMemesFromCache(sourceData) {
 
 //111/////////////////////////////// --- MODULAR FUNCTIONS
 
-export async function getRecordsFromCache({sourceData, keyParam}) {
+export async function getRecordsFromCache({sourceData, keyPrefix, keyParam}) {
   console.log(`[${getTimestamp()}] TRYING: getRecordsFromCache from ${sourceData}`);
   try {
-    const keys = await redisConnection.keys(`${UNRATED_MEMES_CACHE_KEY}:${keyParam}`);
+    const keys = await redisConnection.keys(`${keyPrefix}:${keyParam}`);
 
     if (Array.isArray(keys) && keys.length > 0) {
 

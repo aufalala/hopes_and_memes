@@ -2,9 +2,9 @@ import express from "express";
 import { requireAuth, getAuth, clerkClient} from "@clerk/express";
 
 import { contGetMeUserData } from "../controllers/contGetMeUserData.js";
+import { getHashRecordsFromCache, getRecordsFromCache } from "../services/redisAPI.js";
 
 import getTimestamp from "../utils/utTimestamp.js";
-import { getHashRecordsFromCache } from "../services/redisAPI.js";
 
 const router = express.Router();
 
@@ -65,6 +65,27 @@ router.get("/me/ratings", requireAuth(), async (req, res) => {
 
   try {
     const result = await getHashRecordsFromCache({sourceData, keyPrefix, keyParam})
+    if (result.status === "success") {
+      return res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json(err.message);
+  }
+});
+
+//222// GET ALL USER RECORDS FROM CACHE
+router.get("/all", async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
+
+  const keyPrefix = "users";
+  const keyParam = "*";
+
+  try {
+    const result = await getRecordsFromCache({sourceData, keyPrefix, keyParam})
     if (result.status === "success") {
       return res.json(result);
     } else {
