@@ -262,7 +262,7 @@ export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T
   }
 }
 
-export async function getRatedMemes({ cursor = null, pageSize = 5 }) {
+export async function getRatedMemes({ cursor = null, subredditFilter = [], pageSize = 5 }) {
   try {
     
     const url = new URL(`${AIRTABLE_URL}/${encodeURIComponent(AIRTABLE_T_RATED_MEMES)}`);
@@ -271,8 +271,22 @@ export async function getRatedMemes({ cursor = null, pageSize = 5 }) {
     url.searchParams.append("sort[0][field]", "first_rated_at");
     url.searchParams.append("sort[0][direction]", "desc");
 
+    let filters = [];
+    
     if (cursor) {
-      url.searchParams.append("filterByFormula", `{first_rated_at} < "${cursor}"`);
+      filters.push(`{first_rated_at} < ${cursor}`); // numeric comparison since Unix timestamp
+    }
+
+    if (subredditFilter.length > 0) {
+      const subFilter = subredditFilter.map(s => `{subreddit} = "${s}"`);
+      filters.push(`OR(${subFilter.join(",")})`);
+    }
+
+    if (filters.length > 0) {
+      url.searchParams.append(
+        "filterByFormula",
+        filters.length > 1 ? `AND(${filters.join(",")})` : filters[0]
+      );
     }
     
     const response = await fetch(url, {

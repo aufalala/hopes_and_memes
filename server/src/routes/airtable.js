@@ -12,8 +12,10 @@ router.get("/rated-memes", async (req, res) => {
   console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
   
   try {
-    const { cursor } = req.query;
-    const result = await getRatedMemes({ cursor }); // pass cursor instead of offset
+    const { cursor, subreddits } = req.query;
+    const subredditFilter = subreddits ? JSON.parse(subreddits) : [];
+
+    const result = await getRatedMemes({ cursor, subredditFilter });
 
     if (result.status === "success") {
       res.json(result);
