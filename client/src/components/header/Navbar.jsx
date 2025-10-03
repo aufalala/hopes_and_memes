@@ -19,16 +19,6 @@ function Navbar() {
       text: "LEADERBOARDS",
       dropdown: false,
     },
-    // {
-    //   path: "/about",
-    //   text: "About",
-    //   dropdown: false,
-    // },
-    // {
-    //   path: "/more",
-    //   text: "More",
-    //   dropdown: false,
-    // },
   ]
 
   return (

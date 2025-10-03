@@ -11,7 +11,6 @@ function ProfileContent() {
   const { userId } = useParams();
   const [userProfile, setUserProfile] = useState();
 
-
   useEffect(() => {
     if (userId) {
       const fetchUser = async () => {
@@ -23,16 +22,18 @@ function ProfileContent() {
     }
   }, [userId]);
   
-  
   return (
     (userProfile && 
       <div className={styles.userContainer}>
+        
         <div className={styles.left}>
+          
           <img src={userProfile.image_url} className={styles.avatar}></img>
           <div className={styles.userDetails}>
             <div className={styles.points}>{userProfile.points} POINTS</div>
             <div className={styles.username}>{userProfile.username.toUpperCase()}</div>
           </div>
+
         </div>
         
         <div className={styles.right}>

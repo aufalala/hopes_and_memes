@@ -19,7 +19,6 @@
   text-align: center;
 
   background: rgba(42, 52, 54, 0.5);
-  /* border: 2px solid rgba(255, 255, 255, 0.2); */
   backdrop-filter: blur(10px);
   box-shadow: inset -1px -1px 5px 0 rgba(255, 255, 255, 0.5);
   color: inherit;

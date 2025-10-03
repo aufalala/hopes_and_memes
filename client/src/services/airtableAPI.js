@@ -31,7 +31,7 @@ export async function apiGetRatedMemes(fetchWithAuth, cursor = null, subredditFi
     if (subredditFilter.length > 0) {
       params.append("subreddits", JSON.stringify(subredditFilter));
     }
-    
+
     if ([...params].length > 0) {
       url += `?${params.toString()}`;
     }
@@ -47,21 +47,3 @@ export async function apiGetRatedMemes(fetchWithAuth, cursor = null, subredditFi
     return { records: [], cursor: null };
   }
 }
-
-
-
-
-
-//EXAMPLE MAY NO LONGER BE RELEVANT DUE TO CLERK AUTH FETCH ALREADY ADDING HEADER
-
-// EXAMPLE FOR POST
-// export async function submitMeme(fetchWithAuth, memeData) {
-//   return fetchWithAuth("/submit", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify(memeData),
-//   }, true); // true = with auth
-// }
-

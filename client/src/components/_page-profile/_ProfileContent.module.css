@@ -14,7 +14,6 @@
 }
 
 .left {
-  
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -28,7 +27,6 @@
   align-items: flex-end;
 }
 
-
 .avatar {
   width: 175px;
   border-radius: 25px;
@@ -40,10 +38,6 @@
   justify-content: space-between;
   margin-left: 20px;
   text-align: left;
-}
-
-.createdAt {
-
 }
 
 .points {

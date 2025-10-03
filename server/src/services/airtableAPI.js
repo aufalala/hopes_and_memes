@@ -43,7 +43,7 @@ export async function pingAirtable(sourceData, table = AIRTABLE_T_TEST_TABLE, re
 
       console.error(`Airtable ping failed (attempt ${i + 1}):`, err.message);
       if (i === 3) {console.log(err)}
-      if (i < retries) await delay(1000); // wait 1 second before retry
+      if (i < retries) await delay(1000);
     }
   }
 

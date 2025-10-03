@@ -23,7 +23,7 @@ export async function contGetMeUserData({sourceData, req, res}) {
 
       const userData = {clerk_user_id: userId, username: username, created_at: String(createdAt), num_memes_rated: "0", points: "0", image_url: imageUrl}
       try {
-        const result3 = await setRedisCache(`users:${userId}`, userData)
+        await setRedisCache(`users:${userId}`, userData)
       } catch (e) {
           console.error("Error posting user:", e.message);
           return res.status(500).json({ error: "Failed to post user" });

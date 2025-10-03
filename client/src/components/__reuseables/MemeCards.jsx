@@ -26,16 +26,14 @@ function MemeCards({ meme, rateType }) {
 
     if (rateType === "unrated") {
       try {
-        const result = await apiPostUnratedRating({ fetchWithAuth, payload });
-        console.log(result)
+        await apiPostUnratedRating({ fetchWithAuth, payload });
       } catch (e) {
         console.error("Error rating meme:", e);
       }
 
     } else if (rateType === "rated") {
       try {
-        const result = await apiPostRatedRating({ fetchWithAuth, payload });
-        console.log(result)
+        await apiPostRatedRating({ fetchWithAuth, payload });
       } catch (e) {
         console.error("Error rating meme:", e);
       }

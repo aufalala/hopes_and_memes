@@ -17,10 +17,8 @@ export const ModalProvider = ({ children }) => {
 
   useEffect(() => {
     const isAnyModalOpen = Object.values(modals).some((isOpen) => isOpen);
-
     document.documentElement.style.overflow = isAnyModalOpen ? "hidden" : "auto";
 
-    // Optional cleanup in case component unmounts
     return () => {
       document.documentElement.style.overflow = "auto";
     };

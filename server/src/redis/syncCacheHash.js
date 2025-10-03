@@ -37,9 +37,7 @@ export async function syncCacheHash({ table, keyPrefix, useKeySuffix, useIdentif
       //222// 000000000000000000 CAN USE MODULAR FUNCTION IN REDIS API
       await redisConnection.hset(redisKey, batch);
 
-    } else {
-      // No identifier field → store entire array under the key
-      
+    } else {      
       //222// 000000000000000000 CAN USE MODULAR FUNCTION IN REDIS API
       await redisConnection.set(redisKey, JSON.stringify(groupRecords));
     }

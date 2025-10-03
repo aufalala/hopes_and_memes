@@ -16,10 +16,10 @@ function LoginSignupModal() {
   const { signIn, setActive, isLoaded: signInLoaded } = useSignIn();
   const { signUp, isLoaded: signUpLoaded } = useSignUp();
 
-  // flag for steps for "username" | "login" | "signup" in modal
+  //222// FLAG FOR STEPS IN MODAL (USERNAME,SIGNIN,SIGNUP)
   const [step, setStep] = useState("username");
 
-  // flag disable submits and set spinner
+  //222// FLAG FOR SPINNER AND DISABLE SUBMIT
   const [loading, setLoading] = useState(false);
 
   const [username, setUsername] = useState("");

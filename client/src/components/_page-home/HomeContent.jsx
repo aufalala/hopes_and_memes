@@ -14,7 +14,6 @@ function HomeContent({ subredditFilter }) {
   const [cursor, setCursor] = useState(null);
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
-  // const initialFetchDone = useRef(false);
 
   const fetchMemes = async (reset = false) => {
     if (loading) return;
@@ -42,24 +41,18 @@ function HomeContent({ subredditFilter }) {
     }
   };
 
-  // useEffect(() => {
-  //   if (initialFetchDone.current) return;
-  //   initialFetchDone.current = true;
-  //   fetchMemes();
-  // }, []);
-  
-  // Fetch on first mount
+  //222// FIRST MOUNT FETCH
   useEffect(() => {
     fetchMemes(true);
   }, []);
 
-  // Refetch whenever subredditFilter changes
+  //222// FILTER CHANGE FETCH
   useEffect(() => {
-    fetchMemes(true); // reset mode
+    fetchMemes(true);
   }, [subredditFilter]);
 
 
-  // Infinite scroll
+  //222// PAGINATION
   useEffect(() => {
     if (!loaderRef.current) return;
     const observer = new IntersectionObserver(

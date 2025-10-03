@@ -11,7 +11,6 @@ export const ScrollContextProvider = ({ children }) => {
       {children}
     </ScrollContext.Provider>
   );
-
 }
 
 export const useScrollContext = () => useContext(ScrollContext);

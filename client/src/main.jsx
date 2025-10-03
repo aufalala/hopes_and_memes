@@ -31,7 +31,7 @@ createRoot(document.getElementById("root")).render(
             <ModalProvider>
               <ScrollContextProvider>
             
-                      <App />
+                <App />
                 
               </ScrollContextProvider>
             </ModalProvider>

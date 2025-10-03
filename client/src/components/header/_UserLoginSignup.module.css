@@ -7,7 +7,6 @@
   height: 80%;
   font-weight: 700;
   padding: 0 25px;
-  
   background: rgba(42, 52, 54, 0.5);
   color: inherit;
   box-shadow: inset -0.5px -0.5px 3px 0 rgba(255, 255, 255, 1);
@@ -25,11 +24,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: right;
-  /* right: 0; */
-  /* width: fit-content; */
   height: 100%;
   min-width: 100%;
-  /* gap: 20%; */
   overflow-wrap: break-word;
 }
 
@@ -45,13 +41,8 @@
 }
 
 .username {
-  /* margin-right: 20px; */
   max-width: 300px;
   text-align: right;
-
-  /* white-space: normal; */
-  /* overflow-wrap: break-word; */
-  /* word-break: break-word;   */
 }
 
 .avatar {
@@ -59,11 +50,6 @@
   height: 50px;
   min-width: 50px;
   margin: 15px 0 15px 15px;
-  /* min-height: 50px; */
-  /* width: 100%; */
-  /* margin-left: 40%; */
-  /* aspect-ratio: 1/1; */
-  /* height: 40px; */
   border-radius: 50%;
   cursor: pointer;
 }
@@ -74,9 +60,6 @@
   left: 0;
   height: 100dvh;
   width: 100vw;
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
   z-index: 999;
 }
 
@@ -89,9 +72,7 @@
   width: 12rem;
   background: rgba(58, 74, 77, 0.5);
   box-shadow: 1px 2px 5px 3px rgba(0, 0, 0, 0.5);
-  /* border-radius: 0.5rem; */
   z-index: 50;
-
   text-align: center;
 }
 

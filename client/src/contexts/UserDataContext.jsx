@@ -42,10 +42,6 @@ export const UserDataProvider = ({ children }) => {
   getMeUserData();
 }, [isSignedIn, isLoaded, user, userDataRefresher]);
 
-useEffect(() => {
-  console.log("userData changed:", userData);
-}, [userData]);
-
   return (
     <UserDataContext.Provider value={{ userData, setUserData, setUserDataRefresher }}>
       {children}

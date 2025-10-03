@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { useClerkAuthFetch } from "../hooks/useClerkAuthFetch";
 
-import { apiGetUserRatings } from "../services/redisAPI"; // API to get ratings for user
+import { apiGetUserRatings } from "../services/redisAPI";
 
 const UserRatingsContext = createContext();
 
@@ -12,9 +12,7 @@ export const UserRatingsProvider = ({ children }) => {
   const [ratings, setRatings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [ratingRefresher, setRatingRefresher] = useState(0);
-
-  let test;
-  // Fetch user's ratings on mount
+  
   useEffect(() => {
     if (!user) return;
 
@@ -32,10 +30,6 @@ export const UserRatingsProvider = ({ children }) => {
 
     loadRatings();
   }, [user, isLoaded, isSignedIn, ratingRefresher]);
-
-  useEffect(() => {
-    console.log(ratings)
-  }, [ratings])
 
   return (
     <UserRatingsContext.Provider value={{ ratings, setRatings, loading, setRatingRefresher }}>

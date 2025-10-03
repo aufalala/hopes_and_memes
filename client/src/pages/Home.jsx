@@ -19,10 +19,6 @@ function Home() {
     });
   }
 
-  useEffect(() => {
-    console.log(subredditFilter)
-  }, [subredditFilter])
-
   return (
     <div className={styles.homeContainer}>
       <HomeSidebar applyFilter={applyFilter}/>

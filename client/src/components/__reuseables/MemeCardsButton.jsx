@@ -21,7 +21,6 @@ function MemeCardsButton( { rateMeme, enlarge, currentRating } ) {
 
     } else {
       rateMeme(rating);
-      console.log(rating)
     }
   }
 
