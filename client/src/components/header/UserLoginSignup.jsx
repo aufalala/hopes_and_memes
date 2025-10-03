@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useClerk, useUser, } from "@clerk/clerk-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useUserData } from "../../contexts/UserDataContext.jsx";
 import { useModal } from "../../contexts/ModalContext.jsx";
@@ -11,7 +11,6 @@ import styles from "./_UserLoginSignup.module.css"
 
 function UserLoginSignup() {  
   
-  const navigate = useNavigate();
   const { signOut } = useClerk();
   const { user, isLoaded, isSignedIn } = useUser();
   const { userData } = useUserData();
@@ -52,8 +51,13 @@ function UserLoginSignup() {
 
               <button
                 onClick={async () => {
-                  const base = import.meta.env.DEV ? "/" : "/hopes_and_memes/#/";
-                  await signOut({ redirectUrl: `${window.location.origin}${base}` });
+                  const isDev = import.meta.env.DEV;
+                  const redirectUrl = isDev
+                    ? `${window.location.origin}/#/`
+                    : `${window.location.origin}/hopes_and_memes/#/`;
+
+                  await signOut({ redirectUrl });
+                  window.location.href = redirectUrl;
                 }}
                 className={styles.menuButton}
               >
