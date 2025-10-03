@@ -97,4 +97,26 @@ router.get("/all", async (req, res) => {
   }
 });
 
+
+router.get("/profile/:userId", async (req, res) => {
+  const sourceData = `${req.method} ${req.originalUrl} from ${req.ip}`;
+  console.log(`[${getTimestamp()}] CLIENT REACHED: ${sourceData}`);
+
+  const userId = req.params.userId;
+  const keyPrefix = "users";
+  const keyParam = userId;
+
+  try {
+    const result = await getRecordsFromCache({sourceData, keyPrefix, keyParam})
+    if (result.status === "success") {
+      return res.json(result);
+    } else {
+      res.status(500).json(result);
+    }
+  } catch (err) {
+      console.error(err);
+      return res.status(500).json(err.message);
+  }
+
+})
 export default router;
