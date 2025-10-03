@@ -4,9 +4,7 @@ import {
   AIRTABLE_T_UNRATED_MEMES,
   AIRTABLE_T_RATED_MEMES,
   AIRTABLE_T_ALL_USERS,
-  AIRTABLE_T_MEME_RATINGS,
   AIRTABLE_T_TEST_TABLE,
-  AIRTABLE_T_IMAGE_TEST,
 } from "../config.js";
 
 import getTimestamp from "../utils/utTimestamp.js";
@@ -48,46 +46,6 @@ export async function pingAirtable(sourceData, table = AIRTABLE_T_TEST_TABLE, re
   }
 
   return { status: "failed", message: "Airtable unreachable after retries" };
-}
-
-//111/////////////////////////////// --- TEST
-export async function getTestImage(sourceData, username = "test", table = AIRTABLE_T_IMAGE_TEST) {
-  console.log(`[${getTimestamp()}] TRYING: getTestImage from ${sourceData}`);
-  try {
-    const filterFormula = encodeURIComponent(`{username} = "${username}"`);
-    const url = `${AIRTABLE_URL}/${table}?filterByFormula=${filterFormula}`;
-    
-    const response = await fetch(url, {
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
-      agent,
-    });
-
-    if (!response.ok) {
-      throw new Error(`Airtable API error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-
-    if (!data.records.length) {
-      throw new Error(`No record found for username: ${username}`);
-    }
-
-    const imageUrl = data.records[0]?.fields?.image?.[0]?.url;
-
-    if (!imageUrl) {
-      throw new Error("No image found for user");
-    }
-
-    return {
-      status: "success",
-      imageUrl,
-      message: `Image found for user ${username}`,
-    };
-
-  } catch (e) {
-    console.error("Airtable failed:", e.message);
-    throw e;
-  }
 }
 
 //111/////////////////////////////// --- ALL USERS
@@ -263,6 +221,7 @@ export async function getUnratedMemesFromAirtable(sourceData, table = AIRTABLE_T
   }
 }
 
+//222// PAGINATION INCLUDED
 export async function getRatedMemes({ cursor = null, subredditFilter = [], pageSize = 5 }) {
   try {
     
@@ -275,7 +234,7 @@ export async function getRatedMemes({ cursor = null, subredditFilter = [], pageS
     let filters = [];
     
     if (cursor) {
-      filters.push(`{first_rated_at} < ${cursor}`); // numeric comparison since Unix timestamp
+      filters.push(`{first_rated_at} < ${cursor}`);
     }
 
     if (subredditFilter.length > 0) {
@@ -303,7 +262,6 @@ export async function getRatedMemes({ cursor = null, subredditFilter = [], pageS
 
     const data = await response.json();
 
-    // Prepare new cursor from the last record
     const records = data.records.map((record) => ({
       id: record.id, ...record.fields,
     }));
@@ -316,17 +274,12 @@ export async function getRatedMemes({ cursor = null, subredditFilter = [], pageS
       cursor: nextCursor,
     };
 
-  } catch (err) {
-    console.error("Error in getRatedMemes:", err);
-    return {
-      status: "error",
-      error: err.message,
-    };
+  } catch (e) {
+    console.error("Error in getRatedMemes:", e);
+    throw e;
   }
+  
 }
-
-
-
 
 
 //111/////////////////////////////// --- MODULAR FUNCTIONS

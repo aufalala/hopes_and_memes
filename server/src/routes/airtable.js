@@ -1,6 +1,6 @@
 import express from "express";
 
-import { getRatedMemes, getRecordsFromAirtable } from "../services/airtableAPI.js";
+import { getRatedMemes } from "../services/airtableAPI.js";
 
 import getTimestamp from "../utils/utTimestamp.js";
 

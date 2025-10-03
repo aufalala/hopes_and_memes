@@ -4,12 +4,11 @@ FRONTEND
 
 ---------------------------------------------------------------------
 
+
 optimistic rating
 
 points add animation
 
-//222// CURRENTLY USED BY TEST PAGE, TO BE TRIGGERED BY USER RATE ATTEMPT AND SERVER START
-router.get("/meme-count", async (req, res) => {})
 
 
 
@@ -61,7 +60,7 @@ store (payload) to airtable
 ---------------------------------------------------------------------
 
 home = all rated memes
--- -- sidebar for filtering through subreddit
+(DONE) -- -- sidebar for filtering through subreddit
 
 
 unseen = new memes
@@ -70,8 +69,8 @@ unseen = new memes
 
 leaderboard = ranking of user points
                             [monthly, all time]
--- -- leaderboard top 3? grpahics?
--- -- name, points
+(DONE) -- -- leaderboard top 3? grpahics?
+(DONE) -- -- name, points
 
 
 --------------------------------------------------------------------
@@ -157,3 +156,6 @@ sort rated memes by created_at
 
 POST USER ONLY SENDS TO AIRTABLE, CACHE NOT UPDATED WITH USER DATA
 MAY NEED A CONTROLLER TO HANDLE POST & HSET
+
+//222// CURRENTLY USED BY TEST PAGE, TO BE TRIGGERED BY USER RATE ATTEMPT AND SERVER START
+router.get("/meme-count", async (req, res) => {})

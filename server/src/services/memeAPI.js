@@ -2,36 +2,6 @@ import getTimestamp from "../utils/utTimestamp.js";
 
 const memeApiUrl = "https://meme-api.com/gimme";
 
-export async function getRandomMeme(sourceData) {
-  console.log(`[${getTimestamp()}] TRYING: getRandomMeme from ${sourceData}`);
-    try {
-      const response = await fetch(memeApiUrl)
-    if (!response.ok) {
-      throw new Error(`Meme API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const {postLink, subreddit, title, url, nsfw, spoiler, author, ups, preview} = data;
-    const payload = {
-                        status: "success",
-                        postLink: postLink,
-                        subreddit: subreddit,
-                        title: title,
-                        url: url,
-                        nsfw: nsfw,
-                        spoiler: spoiler,
-                        author: author,
-                        ups: ups,
-                        preview: preview,
-                    }
-    return payload;
-
-    } catch (e) {
-      console.error("meme retrieval failed:", e);
-      throw e;
-    }
-}
-
 //222// USED BY WORKER TO GET 10 MEMES FROM MEME API
 export async function getTenMemes(sourceData) {
   console.log(`[${getTimestamp()}] TRYING: getTenMemes from ${sourceData}`);
@@ -45,7 +15,7 @@ export async function getTenMemes(sourceData) {
       
       // get more memes if API returned <10
       while (data.memes.length <10) {
-        console.log(`[${getTimestamp()}] getTenMemes: Memes less than 10, count: data.memes.length`);
+        console.log(`[${getTimestamp()}] getTenMemes: Memes less than 10, count: ${data.memes.length}`);
         try {
           const memeRetry = await fetch(`${memeApiUrl}/${10-data.memes.length}`)
           if (!memeRetry.ok) {
