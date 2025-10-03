@@ -51,7 +51,7 @@ function LeaderboardContent() {
               {index + 1}) {user.username.toUpperCase()}
             </div>
             <div className={index < 3 ? styles.topThree : ""}>
-              {user.points} points
+              {user.points} POINTS
             </div>
           </div>
           <hr />

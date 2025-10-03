@@ -4,14 +4,16 @@ FRONTEND
 
 ---------------------------------------------------------------------
 
+optimistic rating
 
-
-TAG POINTS ALONG TO MEME RATING?
-
+points add animation
 
 //222// CURRENTLY USED BY TEST PAGE, TO BE TRIGGERED BY USER RATE ATTEMPT AND SERVER START
 router.get("/meme-count", async (req, res) => {})
 
+
+
+TAG POINTS ALONG TO MEME RATING?
 
 implement, dont add duplicate meme
 
@@ -32,8 +34,6 @@ PULLING MEMES FROM UNRATED CACHE and AT, if pull  AT, to set to cache. [ALL THIS
 
 
 USERDATA IS CURRENTLY PULLED FROM AIRTABLE AND NOT CACHE
-POST USER ONLY SENDS TO AIRTABLE, CACHE NOT UPDATED WITH USER DATA
-MAY NEED A CONTROLLER TO HANDLE POST & HSET
 
 
 NSFW filter and research if true
@@ -50,7 +50,7 @@ server pulls and stores memes into airtable (when unrated <10, add 5 new memes, 
 
 (DONE) redis to queue server to add 10 memes to airtable+cloudinary
 
- store 10 (post link, url as image) to cloudinary
+(DONE) store 10 (post link, url as image) to cloudinary
 
 get 10 cloudinary image link based on url
 
@@ -152,3 +152,8 @@ work on rating rated meme
 ADD POINTS TO RATING UNRATED MEME
 
 sort rated memes by created_at
+
+
+
+POST USER ONLY SENDS TO AIRTABLE, CACHE NOT UPDATED WITH USER DATA
+MAY NEED A CONTROLLER TO HANDLE POST & HSET

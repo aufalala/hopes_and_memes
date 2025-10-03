@@ -15,7 +15,7 @@ function UserLoginSignup() {
   const { signOut } = useClerk();
   const { user, isLoaded, isSignedIn } = useUser();
   const { userData } = useUserData();
-  const {openModal} = useModal();
+  const { openModal } = useModal();
 
   const [menuOpen, setMenuOpen] = useState(false);
 

@@ -1,15 +1,28 @@
-import { style } from "framer-motion/client";
 import { useState } from "react";
+import { useUser } from "@clerk/clerk-react";
+
+import { useModal } from "../../contexts/ModalContext.jsx";
+
 import styles from "./_MemeCardsButton.module.css"
 
 function MemeCardsButton( { rateMeme, enlarge, currentRating } ) {
+
+  const { isSignedIn } = useUser();
+  const { openModal } = useModal();
   
   const [hoveredRating, setHoveredRating] = useState(0);
   const stars = ["1", "2", "3", "4", "5"];
 
+
   function handleRateMeme(rating) {
-    rateMeme(rating);
-    console.log(rating)
+    if (!isSignedIn) {
+      openModal("LoginSignupModal_Vis")
+      return;
+
+    } else {
+      rateMeme(rating);
+      console.log(rating)
+    }
   }
 
   return (
@@ -28,10 +41,6 @@ function MemeCardsButton( { rateMeme, enlarge, currentRating } ) {
           (star <= hoveredRating ? "★" : "☆") : 
           (star <= currentRating ? "★" : "☆")} 
 
-          
-          {/* {hoveredRating ?
-          (star <= hoveredRating ? <div>★</div> : <div>☆</div>) : 
-          (star <= currentRating ? <div>★</div> : <div>☆</div>)}  */}
         </div>
       ))}
       </div>
