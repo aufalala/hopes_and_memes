@@ -12,7 +12,6 @@ import { orcSyncCache } from "./orchestrators/orcSyncCache.js";
 import { workerStartAll } from "./redis/workerUtils/workerStartAll.js";
 
 // ROUTES
-import test from "./routes/test.js";
 import meme from "./routes/meme.js";
 import airtable from "./routes/airtable.js";
 import users from "./routes/users.js";
@@ -36,9 +35,7 @@ async function startServer() {
   app.use(clerkMiddleware());
 
   //111/////////////////////////////// --- ROUTES
-  app.use("/api/test", test);
   app.use("/api/meme", meme);
-  
   app.use("/api/airtable", airtable);
   app.use("/api/users", users);
   app.use("/api/redis", redisRoutes)
@@ -70,7 +67,7 @@ async function startServer() {
  
   //111/////////////////////////////// --- UNRATED MEME COUNT CHECK
   try {
-    const result = await orcCheckUnrated({sourceData})
+    const result = await orcCheckUnrated({sourceData: "server"})
     if (result.status === "success") {
       console.log("orcRateUnratedMeme: orcCheckUnrated: SUCCESS");
     }
