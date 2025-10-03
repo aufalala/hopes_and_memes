@@ -52,8 +52,8 @@ function UserLoginSignup() {
 
               <button
                 onClick={async () => {
-                  await signOut();
-                  navigate("/");
+                  const base = import.meta.env.DEV ? "/" : "/hopes_and_memes/#/";
+                  await signOut({ redirectUrl: `${window.location.origin}${base}` });
                 }}
                 className={styles.menuButton}
               >
