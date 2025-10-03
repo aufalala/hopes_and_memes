@@ -93,7 +93,7 @@ export async function getTestImage(sourceData, username = "test", table = AIRTAB
 //111/////////////////////////////// --- ALL USERS
 
 // 00000000 CAN REFACTOR CALLER TO USE MODULAR CALLS
-export async function postUser(sourceData, userId, username, createdAt, table = AIRTABLE_T_ALL_USERS) {
+export async function postUser(sourceData, userId, username, createdAt, imageUrl, table = AIRTABLE_T_ALL_USERS) {
   console.log(`[${getTimestamp()}] TRYING: postUser from ${sourceData}`);
   try {
     const payload = {
@@ -105,6 +105,7 @@ export async function postUser(sourceData, userId, username, createdAt, table = 
             created_at: String(createdAt),
             num_memes_rated: "0",
             points: "0",
+            image_url: imageUrl,
           },
         },
       ],

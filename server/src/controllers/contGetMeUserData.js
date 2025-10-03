@@ -8,7 +8,7 @@ import getTimestamp from "../utils/utTimestamp.js";
 export async function contGetMeUserData({sourceData, req, res}) {
   console.log(`[${getTimestamp()}] TRYING: contGetMeUserData from ${sourceData}`);
   const {userId} = getAuth(req);
-  const {createdAt, username} = (await clerkClient.users.getUser(userId));
+  const {createdAt, username, imageUrl} = (await clerkClient.users.getUser(userId));
 
   if (!userId) {
     return res.status(401).json({ error: "Not authenticated" });
@@ -21,7 +21,7 @@ export async function contGetMeUserData({sourceData, req, res}) {
   } else if (result.status === "success" && result.records.length === 0) {
 
 
-      const userData = {clerk_user_id: userId, username: username, created_at: String(createdAt), num_memes_rated: "0", points: "0"}
+      const userData = {clerk_user_id: userId, username: username, created_at: String(createdAt), num_memes_rated: "0", points: "0", image_url: imageUrl}
       try {
         const result3 = await setRedisCache(`users:${userId}`, userData)
       } catch (e) {
@@ -30,7 +30,7 @@ export async function contGetMeUserData({sourceData, req, res}) {
       }
 
       try {   
-        const result2 = await postUser(sourceData, userId, username, createdAt)
+        const result2 = await postUser(sourceData, userId, username, createdAt, imageUrl)
         if (result2.status === "success") {
           return (result2);
         }
