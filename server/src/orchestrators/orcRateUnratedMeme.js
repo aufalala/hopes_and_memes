@@ -4,6 +4,7 @@ import { deleteRecordsFromCache, updateCacheHash } from "../services/redisAPI.js
 
 import getTimestamp from "../utils/utTimestamp.js";
 import { orcAddPoints } from "./orcAddPoints.js";
+import { orcCheckUnrated } from "./orcCheckUnrated.js";
 
 export async function orcRateUnratedMeme({sourceData, postParams}) {
   console.log(`[${getTimestamp()}] TRYING: orcRateUnratedMeme from ${sourceData}`);
@@ -103,13 +104,26 @@ export async function orcRateUnratedMeme({sourceData, postParams}) {
   try {
     const result = await orcAddPoints({sourceData, postParams, pointsToAdd: 5})
     if (result.status === "success") {
-      console.log("orcRateUnratedMeme: SUCCESS");
+      console.log("orcRateUnratedMeme: orcAddPoints: SUCCESS");
     }
     
   } catch (e) {
-    console.error("orcRateRatedMeme: updateCacheHash FAILED:", e);
+    console.error("orcRateRatedMeme: orcAddPoints: FAILED:", e);
     throw e;
   }
+
+  //222// ORC CHECK UNRATED
+  try {
+    const result = await orcCheckUnrated({sourceData})
+    if (result.status === "success") {
+      console.log("orcRateUnratedMeme: orcCheckUnrated: SUCCESS");
+    }
+    
+  } catch (e) {
+    console.error("orcRateRatedMeme: orcCheckUnrated: FAILED:", e);
+    throw e;
+  }
+
 
   return {status: "success", message: "Rated an unrated meme"}
     

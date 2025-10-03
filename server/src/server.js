@@ -20,6 +20,7 @@ import redisRoutes from "./routes/redis.js";
 
 // SERVICES
 import { pingAirtable } from "./services/airtableAPI.js";
+import { orcCheckUnrated } from "./orchestrators/orcCheckUnrated.js";
 
 // UTILS
 import getTimestamp from "./utils/utTimestamp.js";
@@ -66,7 +67,19 @@ async function startServer() {
   if (ok && ok.message) {
     console.log(`[${getTimestamp()}] ${ok.message}`);
   } else console.log(`[${getTimestamp()}] pingAirtable FAILED`);
-  
+ 
+  //111/////////////////////////////// --- UNRATED MEME COUNT CHECK
+  try {
+    const result = await orcCheckUnrated({sourceData})
+    if (result.status === "success") {
+      console.log("orcRateUnratedMeme: orcCheckUnrated: SUCCESS");
+    }
+    
+  } catch (e) {
+    console.error("orcRateRatedMeme: orcCheckUnrated: FAILED:", e);
+    throw e;
+  }
+
 }
 
 startServer();
