@@ -61,7 +61,7 @@ function App() {
           <Route path="/more" element={<More />} />
 
 
-          <Route path="/profile" element={<Profile />} />    
+          <Route path="/profile/:userId" element={<Profile />} />    
         </Routes>
       </Content>
 

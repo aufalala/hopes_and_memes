@@ -31,7 +31,7 @@ function UserLoginSignup() {
       
       { userData ? <div className={styles.userPoints}>{userData.points} POINTS</div> : null}
       
-      <Link to="/profile" className={styles.username}>{user.username.toUpperCase()}</Link>
+      <Link to={`/profile/${user.id}`} className={styles.username}>{user.username.toUpperCase()}</Link>
       </div>
 
       <div style={{ position: "relative" }}>
@@ -46,7 +46,7 @@ function UserLoginSignup() {
           <div className={styles.menuOverlay} onClick={() => setMenuOpen(!menuOpen)}>
             <div className={styles.menu} >
               
-              <Link to="/profile" className={styles.menuButton}>
+              <Link to={`/profile/${user.id}`} className={styles.menuButton}>
                 VIEW PROFILE
               </Link>
 

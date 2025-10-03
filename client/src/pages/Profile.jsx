@@ -1,8 +1,11 @@
-import React from 'react'
+import ProfileContent from "../components/_page-profile/ProfileContent"
+
 
 function Profile() {
   return (
-    <div>Profile</div>
+    <div>
+      <ProfileContent />
+    </div>
   )
 }
 

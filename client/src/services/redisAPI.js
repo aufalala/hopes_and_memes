@@ -54,3 +54,20 @@ export async function apiGetAllUsers(fetchWithAuth) {
     console.error("apiGetUserRatings FAILED:", e);
   }
 }
+
+export async function apiGetUserProfile(fetchWithAuth, userId) {
+  try {
+    if (!userId) throw new Error("No userId provided");
+
+    const url = `/api/users/profile/${encodeURIComponent(userId)}`;
+    const res = await fetchWithAuth(url, {}, false);
+
+    if (res.status !== "success") throw new Error("Server response not ok");
+
+    return {status: "success", records: res.records};
+
+  } catch (e) {
+    console.error("apiGetUserProfile FAILED:", e);
+    return null;
+  }
+}

@@ -1,0 +1,57 @@
+.userContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  background: rgba(42, 52, 54, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: inset -1px -1px 10px 0 rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  color: inherit;
+  padding: 2rem;
+  margin-top: 50px;
+  text-align: center;
+}
+
+.left {
+  
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  text-align: center;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+
+.avatar {
+  width: 175px;
+  border-radius: 25px;
+}
+
+.userDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 20px;
+  text-align: left;
+}
+
+.createdAt {
+
+}
+
+.points {
+  font-size: 30px;
+}
+
+.username {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 100%;
+}
