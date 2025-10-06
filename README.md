@@ -16,16 +16,16 @@ It was only supposed to be a React.js showcase, but it quickly grew into somethi
   
 *(React|Clerk|Express|Redis|BullMQ|Airtable|Cloudinary|...)*  
 
-## SCREENSHOTS  
+## PREVIEW  
 **HOME**  
 <img width="3839" height="1882" alt="image" src="https://github.com/user-attachments/assets/39061d33-0859-43fb-bb48-088bd6dce387" />
   
 ## GETTING STARTED
-**Note: This site was primarily developed and tested using Google Chrome on desktop.  
-FOR THE BEST EXPERIENCE, USE GOOGLE CHROME ON DESKTOP!**  
+>**Note: This site was primarily developed and tested using Google Chrome on desktop.  
+>FOR THE BEST EXPERIENCE, USE GOOGLE CHROME ON DESKTOP!**  
   
-**LINK:** https://aufalala.github.io/hopes_and_memes/#/  
-*you've been warned to use desktop chrome :')*  
+>**LINK:** https://aufalala.github.io/hopes_and_memes/#/  
+>*you've been warned to use desktop chrome :')*  
   
 ## SITE FEATURES  
 User account creation/login. Progressive login/sign up menu.  
@@ -34,7 +34,23 @@ Meme rating - points awarded. Mutex via Redis to prevent first rater bonus race 
 First Rater = 5pts. Subsequent rater = 2pts.  
 Global all time (points) leaderboard. Profile page through URL query.  
   
+## HOSTING/SERVICE PROVIDERS  
+**GITHUB PAGES:**  
+React Frontend  
+  
+**RAILWAY:**  
+Express Backend  
+Redis Instance    
+  
+**AIRTABLE** - primary database / source of truth  
+**CLOUDINARY** - fallback image hosting  
+**CLERK** - user auth and management  
+  
 ## ATTRIBUTIONS  
+**Meme API:**  
+meme-api.com/gimme  
+https://github.com/D3vd/Meme_Api  
+  
 **Font:**  
 Michroma  
 *https://fonts.google.com/specimen/Michroma*
@@ -78,4 +94,5 @@ Duplicate meme handling
 Leaderboard timeframes & category  
 Cloudinary image URL usage  
 Shop to "redeem" items using points  
+
 
